@@ -1,0 +1,285 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D01D7DD1158BCFAB00CD7E46 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D01D7DD0158BCFAB00CD7E46 /* Foundation.framework */; };
+		D01D7DD4158BCFAB00CD7E46 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D01D7DD3158BCFAB00CD7E46 /* main.m */; };
+		D01D7DD8158BCFAB00CD7E46 /* CmdLineOCFTester.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = D01D7DD7158BCFAB00CD7E46 /* CmdLineOCFTester.1 */; };
+		D01D7DE3158BD23900CD7E46 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D01D7DE2158BD23900CD7E46 /* libxml2.dylib */; };
+		D0A09A5D1599176700B90138 /* libEPUB3Processor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0A09A5C1599176700B90138 /* libEPUB3Processor.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D01D7DCA158BCFAB00CD7E46 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				D01D7DD8158BCFAB00CD7E46 /* CmdLineOCFTester.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D01D7DCC158BCFAB00CD7E46 /* CmdLineOCFTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CmdLineOCFTester; sourceTree = BUILT_PRODUCTS_DIR; };
+		D01D7DD0158BCFAB00CD7E46 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D01D7DD3158BCFAB00CD7E46 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D01D7DD6158BCFAB00CD7E46 /* CmdLineOCFTester-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CmdLineOCFTester-Prefix.pch"; sourceTree = "<group>"; };
+		D01D7DD7158BCFAB00CD7E46 /* CmdLineOCFTester.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = CmdLineOCFTester.1; sourceTree = "<group>"; };
+		D01D7DE2158BD23900CD7E46 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		D0466822159227E00040D5DD /* 9780316000000_MobyDick_r5.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = 9780316000000_MobyDick_r5.epub; sourceTree = "<group>"; };
+		D05BD05B15B28FD20051B9AB /* pg30723-images.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pg30723-images.epub"; sourceTree = "<group>"; };
+		D06F5519158BED8600CDB82F /* pg19033-images.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pg19033-images.epub"; sourceTree = "<group>"; };
+		D08420E415B4A3EF0009438C /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPUB3Processor.h; path = ../../EPUB3Processor.h; sourceTree = "<group>"; };
+		D0A09A5C1599176700B90138 /* libEPUB3Processor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libEPUB3Processor.a; path = ../DerivedData/EPUB3Processor/Build/Products/Debug/libEPUB3Processor.a; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D01D7DC9158BCFAB00CD7E46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01D7DE3158BD23900CD7E46 /* libxml2.dylib in Frameworks */,
+				D01D7DD1158BCFAB00CD7E46 /* Foundation.framework in Frameworks */,
+				D0A09A5D1599176700B90138 /* libEPUB3Processor.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D01D7DC1158BCFAB00CD7E46 = {
+			isa = PBXGroup;
+			children = (
+				D06F5518158BED8600CDB82F /* Resources */,
+				D01D7DDF158BD14500CD7E46 /* libs */,
+				D01D7DD2158BCFAB00CD7E46 /* CmdLineOCFTester */,
+				D01D7DCF158BCFAB00CD7E46 /* Frameworks */,
+				D01D7DCD158BCFAB00CD7E46 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D01D7DCD158BCFAB00CD7E46 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D01D7DCC158BCFAB00CD7E46 /* CmdLineOCFTester */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D01D7DCF158BCFAB00CD7E46 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D01D7DE2158BD23900CD7E46 /* libxml2.dylib */,
+				D01D7DD0158BCFAB00CD7E46 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D01D7DD2158BCFAB00CD7E46 /* CmdLineOCFTester */ = {
+			isa = PBXGroup;
+			children = (
+				D08420E415B4A3EF0009438C /* EPUB3Processor.h */,
+				D01D7DD3158BCFAB00CD7E46 /* main.m */,
+				D01D7DD7158BCFAB00CD7E46 /* CmdLineOCFTester.1 */,
+				D01D7DD5158BCFAB00CD7E46 /* Supporting Files */,
+			);
+			path = CmdLineOCFTester;
+			sourceTree = "<group>";
+		};
+		D01D7DD5158BCFAB00CD7E46 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D01D7DD6158BCFAB00CD7E46 /* CmdLineOCFTester-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D01D7DDF158BD14500CD7E46 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				D0A09A5C1599176700B90138 /* libEPUB3Processor.a */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+		D06F5518158BED8600CDB82F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D05BD05B15B28FD20051B9AB /* pg30723-images.epub */,
+				D0466822159227E00040D5DD /* 9780316000000_MobyDick_r5.epub */,
+				D06F5519158BED8600CDB82F /* pg19033-images.epub */,
+			);
+			name = Resources;
+			path = CmdLineOCFTester/Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D01D7DCB158BCFAB00CD7E46 /* CmdLineOCFTester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D01D7DDB158BCFAB00CD7E46 /* Build configuration list for PBXNativeTarget "CmdLineOCFTester" */;
+			buildPhases = (
+				D01D7DC8158BCFAB00CD7E46 /* Sources */,
+				D01D7DC9158BCFAB00CD7E46 /* Frameworks */,
+				D01D7DCA158BCFAB00CD7E46 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CmdLineOCFTester;
+			productName = CmdLineOCFTester;
+			productReference = D01D7DCC158BCFAB00CD7E46 /* CmdLineOCFTester */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D01D7DC3158BCFAB00CD7E46 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Triple Threat Mobile Development";
+			};
+			buildConfigurationList = D01D7DC6158BCFAB00CD7E46 /* Build configuration list for PBXProject "CmdLineOCFTester" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D01D7DC1158BCFAB00CD7E46;
+			productRefGroup = D01D7DCD158BCFAB00CD7E46 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D01D7DCB158BCFAB00CD7E46 /* CmdLineOCFTester */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D01D7DC8158BCFAB00CD7E46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D01D7DD4158BCFAB00CD7E46 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D01D7DD9158BCFAB00CD7E46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				LIBRARY_SEARCH_PATHS = "\"/Users/bbuck/Documents/Medallion/Projects/EPUB3Processor/DerivedData/EPUB3Processor/Build/Products/Debug\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D01D7DDA158BCFAB00CD7E46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
+				LIBRARY_SEARCH_PATHS = "\"/Users/bbuck/Documents/Medallion/Projects/EPUB3Processor/DerivedData/EPUB3Processor/Build/Products/Debug\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D01D7DDC158BCFAB00CD7E46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CmdLineOCFTester/CmdLineOCFTester-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../TREEbook/Dev/OCF3Processor/DerivedData/OCF3Processor/Build/Products/Debug-universal\"",
+					"\"$(SRCROOT)/../EPUB3Processor/DerivedData/EPUB3Processor/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D01D7DDD158BCFAB00CD7E46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CmdLineOCFTester/CmdLineOCFTester-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../TREEbook/Dev/OCF3Processor/DerivedData/OCF3Processor/Build/Products/Debug-universal\"",
+					"\"$(SRCROOT)/../EPUB3Processor/DerivedData/EPUB3Processor/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D01D7DC6158BCFAB00CD7E46 /* Build configuration list for PBXProject "CmdLineOCFTester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01D7DD9158BCFAB00CD7E46 /* Debug */,
+				D01D7DDA158BCFAB00CD7E46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D01D7DDB158BCFAB00CD7E46 /* Build configuration list for PBXNativeTarget "CmdLineOCFTester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D01D7DDC158BCFAB00CD7E46 /* Debug */,
+				D01D7DDD158BCFAB00CD7E46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D01D7DC3158BCFAB00CD7E46 /* Project object */;
+}
