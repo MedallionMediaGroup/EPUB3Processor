@@ -68,6 +68,67 @@
 		D0A09A521599069600B90138 /* validators.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A09A511599069600B90138 /* validators.c */; };
 		D0A09A541599076300B90138 /* validators.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A531599076300B90138 /* validators.h */; settings = {ATTRIBUTES = (); }; };
 		D0A09A59159908AB00B90138 /* EPUB3Processor.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A58159908AB00B90138 /* EPUB3Processor.h */; };
+		DF7557D315D2FDF5004153C6 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A11598FF7200C375CC /* ioapi.c */; };
+		DF7557D415D2FDF5004153C6 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A31598FF7200C375CC /* mztools.c */; };
+		DF7557D515D2FDF5004153C6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A51598FF7200C375CC /* unzip.c */; };
+		DF7557D615D2FDF5004153C6 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A71598FF7200C375CC /* zip.c */; };
+		DF7557D715D2FDF5004153C6 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96AA1598FF7200C375CC /* adler32.c */; };
+		DF7557D815D2FDF5004153C6 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96AB1598FF7200C375CC /* compress.c */; };
+		DF7557D915D2FDF5004153C6 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96AC1598FF7200C375CC /* crc32.c */; };
+		DF7557DA15D2FDF5004153C6 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96AE1598FF7200C375CC /* deflate.c */; };
+		DF7557DB15D2FDF5004153C6 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B01598FF7200C375CC /* gzclose.c */; };
+		DF7557DC15D2FDF5004153C6 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B31598FF7200C375CC /* gzlib.c */; };
+		DF7557DD15D2FDF5004153C6 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B41598FF7200C375CC /* gzread.c */; };
+		DF7557DE15D2FDF5004153C6 /* gzwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B51598FF7200C375CC /* gzwrite.c */; };
+		DF7557DF15D2FDF5004153C6 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B61598FF7200C375CC /* infback.c */; };
+		DF7557E015D2FDF5004153C6 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96B71598FF7200C375CC /* inffast.c */; };
+		DF7557E115D2FDF5004153C6 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96BA1598FF7200C375CC /* inflate.c */; };
+		DF7557E215D2FDF5004153C6 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96BC1598FF7200C375CC /* inftrees.c */; };
+		DF7557E315D2FDF5004153C6 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96BE1598FF7200C375CC /* trees.c */; };
+		DF7557E415D2FDF5004153C6 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96C01598FF7200C375CC /* uncompr.c */; };
+		DF7557E515D2FDF5004153C6 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96C31598FF7200C375CC /* zutil.c */; };
+		DF7557E615D2FDF5004153C6 /* validators.c in Sources */ = {isa = PBXBuildFile; fileRef = D0A09A511599069600B90138 /* validators.c */; };
+		DF7557E715D2FDF5004153C6 /* arraylist.c in Sources */ = {isa = PBXBuildFile; fileRef = D0359606159E091600E87091 /* arraylist.c */; };
+		DF7557E815D2FDF5004153C6 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = D035960E159E091600E87091 /* debug.c */; };
+		DF7557E915D2FDF5004153C6 /* json_object.c in Sources */ = {isa = PBXBuildFile; fileRef = D0359615159E091600E87091 /* json_object.c */; };
+		DF7557EA15D2FDF5004153C6 /* json_object_iterator.c in Sources */ = {isa = PBXBuildFile; fileRef = D0359617159E091600E87091 /* json_object_iterator.c */; };
+		DF7557EB15D2FDF5004153C6 /* json_tokener.c in Sources */ = {isa = PBXBuildFile; fileRef = D035961A159E091600E87091 /* json_tokener.c */; };
+		DF7557EC15D2FDF5004153C6 /* json_util.c in Sources */ = {isa = PBXBuildFile; fileRef = D035961C159E091600E87091 /* json_util.c */; };
+		DF7557ED15D2FDF5004153C6 /* linkhash.c in Sources */ = {isa = PBXBuildFile; fileRef = D035961E159E091600E87091 /* linkhash.c */; };
+		DF7557EE15D2FDF5004153C6 /* printbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = D0359620159E091600E87091 /* printbuf.c */; };
+		DF7557F015D2FDF5004153C6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D05B96E91598FFAA00C375CC /* libxml2.dylib */; };
+		DF7557F215D2FDF5004153C6 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A01598FF7200C375CC /* crypt.h */; };
+		DF7557F315D2FDF5004153C6 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A21598FF7200C375CC /* ioapi.h */; };
+		DF7557F415D2FDF5004153C6 /* mztools.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A41598FF7200C375CC /* mztools.h */; };
+		DF7557F515D2FDF5004153C6 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A61598FF7200C375CC /* unzip.h */; };
+		DF7557F615D2FDF5004153C6 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A81598FF7200C375CC /* zip.h */; };
+		DF7557F715D2FDF5004153C6 /* crc32.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96AD1598FF7200C375CC /* crc32.h */; };
+		DF7557F815D2FDF5004153C6 /* deflate.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96AF1598FF7200C375CC /* deflate.h */; };
+		DF7557F915D2FDF5004153C6 /* gzguts.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96B11598FF7200C375CC /* gzguts.h */; };
+		DF7557FA15D2FDF5004153C6 /* inffast.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96B81598FF7200C375CC /* inffast.h */; };
+		DF7557FB15D2FDF5004153C6 /* inffixed.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96B91598FF7200C375CC /* inffixed.h */; };
+		DF7557FC15D2FDF5004153C6 /* inflate.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96BB1598FF7200C375CC /* inflate.h */; };
+		DF7557FD15D2FDF5004153C6 /* inftrees.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96BD1598FF7200C375CC /* inftrees.h */; };
+		DF7557FE15D2FDF5004153C6 /* trees.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96BF1598FF7200C375CC /* trees.h */; };
+		DF7557FF15D2FDF5004153C6 /* zconf.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96C11598FF7200C375CC /* zconf.h */; };
+		DF75580015D2FDF5004153C6 /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96C21598FF7200C375CC /* zlib.h */; };
+		DF75580115D2FDF5004153C6 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96C41598FF7200C375CC /* zutil.h */; };
+		DF75580215D2FDF5004153C6 /* validators.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A531599076300B90138 /* validators.h */; settings = {ATTRIBUTES = (); }; };
+		DF75580315D2FDF5004153C6 /* EPUB3Processor.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A58159908AB00B90138 /* EPUB3Processor.h */; };
+		DF75580415D2FDF5004153C6 /* arraylist.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359607159E091600E87091 /* arraylist.h */; };
+		DF75580515D2FDF5004153C6 /* bits.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359609159E091600E87091 /* bits.h */; };
+		DF75580615D2FDF5004153C6 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = D035960B159E091600E87091 /* config.h */; };
+		DF75580715D2FDF5004153C6 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = D035960F159E091600E87091 /* debug.h */; };
+		DF75580815D2FDF5004153C6 /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359612159E091600E87091 /* json.h */; };
+		DF75580915D2FDF5004153C6 /* json_config.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359613159E091600E87091 /* json_config.h */; };
+		DF75580A15D2FDF5004153C6 /* json_inttypes.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359614159E091600E87091 /* json_inttypes.h */; };
+		DF75580B15D2FDF5004153C6 /* json_object.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359616159E091600E87091 /* json_object.h */; };
+		DF75580C15D2FDF5004153C6 /* json_object_iterator.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359618159E091600E87091 /* json_object_iterator.h */; };
+		DF75580D15D2FDF5004153C6 /* json_object_private.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359619159E091600E87091 /* json_object_private.h */; };
+		DF75580E15D2FDF5004153C6 /* json_tokener.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961B159E091600E87091 /* json_tokener.h */; };
+		DF75580F15D2FDF5004153C6 /* json_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961D159E091600E87091 /* json_util.h */; };
+		DF75581015D2FDF5004153C6 /* linkhash.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961F159E091600E87091 /* linkhash.h */; };
+		DF75581115D2FDF5004153C6 /* printbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359621159E091600E87091 /* printbuf.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -143,6 +204,7 @@
 		D0A09A511599069600B90138 /* validators.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = validators.c; sourceTree = "<group>"; };
 		D0A09A531599076300B90138 /* validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validators.h; sourceTree = "<group>"; };
 		D0A09A58159908AB00B90138 /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPUB3Processor.h; sourceTree = "<group>"; };
+		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +213,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D05B96EA1598FFAA00C375CC /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF7557EF15D2FDF5004153C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF7557F015D2FDF5004153C6 /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				D05B96971598DC4C00C375CC /* libEPUB3Processor.a */,
+				DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -341,6 +412,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DF7557F115D2FDF5004153C6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF7557F215D2FDF5004153C6 /* crypt.h in Headers */,
+				DF7557F315D2FDF5004153C6 /* ioapi.h in Headers */,
+				DF7557F415D2FDF5004153C6 /* mztools.h in Headers */,
+				DF7557F515D2FDF5004153C6 /* unzip.h in Headers */,
+				DF7557F615D2FDF5004153C6 /* zip.h in Headers */,
+				DF7557F715D2FDF5004153C6 /* crc32.h in Headers */,
+				DF7557F815D2FDF5004153C6 /* deflate.h in Headers */,
+				DF7557F915D2FDF5004153C6 /* gzguts.h in Headers */,
+				DF7557FA15D2FDF5004153C6 /* inffast.h in Headers */,
+				DF7557FB15D2FDF5004153C6 /* inffixed.h in Headers */,
+				DF7557FC15D2FDF5004153C6 /* inflate.h in Headers */,
+				DF7557FD15D2FDF5004153C6 /* inftrees.h in Headers */,
+				DF7557FE15D2FDF5004153C6 /* trees.h in Headers */,
+				DF7557FF15D2FDF5004153C6 /* zconf.h in Headers */,
+				DF75580015D2FDF5004153C6 /* zlib.h in Headers */,
+				DF75580115D2FDF5004153C6 /* zutil.h in Headers */,
+				DF75580215D2FDF5004153C6 /* validators.h in Headers */,
+				DF75580315D2FDF5004153C6 /* EPUB3Processor.h in Headers */,
+				DF75580415D2FDF5004153C6 /* arraylist.h in Headers */,
+				DF75580515D2FDF5004153C6 /* bits.h in Headers */,
+				DF75580615D2FDF5004153C6 /* config.h in Headers */,
+				DF75580715D2FDF5004153C6 /* debug.h in Headers */,
+				DF75580815D2FDF5004153C6 /* json.h in Headers */,
+				DF75580915D2FDF5004153C6 /* json_config.h in Headers */,
+				DF75580A15D2FDF5004153C6 /* json_inttypes.h in Headers */,
+				DF75580B15D2FDF5004153C6 /* json_object.h in Headers */,
+				DF75580C15D2FDF5004153C6 /* json_object_iterator.h in Headers */,
+				DF75580D15D2FDF5004153C6 /* json_object_private.h in Headers */,
+				DF75580E15D2FDF5004153C6 /* json_tokener.h in Headers */,
+				DF75580F15D2FDF5004153C6 /* json_util.h in Headers */,
+				DF75581015D2FDF5004153C6 /* linkhash.h in Headers */,
+				DF75581115D2FDF5004153C6 /* printbuf.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -359,6 +469,23 @@
 			name = EPUB3Processor;
 			productName = EPUB3Processor;
 			productReference = D05B96971598DC4C00C375CC /* libEPUB3Processor.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOSDevice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOSDevice" */;
+			buildPhases = (
+				DF7557D215D2FDF5004153C6 /* Sources */,
+				DF7557EF15D2FDF5004153C6 /* Frameworks */,
+				DF7557F115D2FDF5004153C6 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "EPUB3Processor-iOSDevice";
+			productName = EPUB3Processor;
+			productReference = DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -383,6 +510,7 @@
 			projectRoot = "";
 			targets = (
 				D05B96961598DC4C00C375CC /* EPUB3Processor */,
+				DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOSDevice */,
 			);
 		};
 /* End PBXProject section */
@@ -423,6 +551,41 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DF7557D215D2FDF5004153C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF7557D315D2FDF5004153C6 /* ioapi.c in Sources */,
+				DF7557D415D2FDF5004153C6 /* mztools.c in Sources */,
+				DF7557D515D2FDF5004153C6 /* unzip.c in Sources */,
+				DF7557D615D2FDF5004153C6 /* zip.c in Sources */,
+				DF7557D715D2FDF5004153C6 /* adler32.c in Sources */,
+				DF7557D815D2FDF5004153C6 /* compress.c in Sources */,
+				DF7557D915D2FDF5004153C6 /* crc32.c in Sources */,
+				DF7557DA15D2FDF5004153C6 /* deflate.c in Sources */,
+				DF7557DB15D2FDF5004153C6 /* gzclose.c in Sources */,
+				DF7557DC15D2FDF5004153C6 /* gzlib.c in Sources */,
+				DF7557DD15D2FDF5004153C6 /* gzread.c in Sources */,
+				DF7557DE15D2FDF5004153C6 /* gzwrite.c in Sources */,
+				DF7557DF15D2FDF5004153C6 /* infback.c in Sources */,
+				DF7557E015D2FDF5004153C6 /* inffast.c in Sources */,
+				DF7557E115D2FDF5004153C6 /* inflate.c in Sources */,
+				DF7557E215D2FDF5004153C6 /* inftrees.c in Sources */,
+				DF7557E315D2FDF5004153C6 /* trees.c in Sources */,
+				DF7557E415D2FDF5004153C6 /* uncompr.c in Sources */,
+				DF7557E515D2FDF5004153C6 /* zutil.c in Sources */,
+				DF7557E615D2FDF5004153C6 /* validators.c in Sources */,
+				DF7557E715D2FDF5004153C6 /* arraylist.c in Sources */,
+				DF7557E815D2FDF5004153C6 /* debug.c in Sources */,
+				DF7557E915D2FDF5004153C6 /* json_object.c in Sources */,
+				DF7557EA15D2FDF5004153C6 /* json_object_iterator.c in Sources */,
+				DF7557EB15D2FDF5004153C6 /* json_tokener.c in Sources */,
+				DF7557EC15D2FDF5004153C6 /* json_util.c in Sources */,
+				DF7557ED15D2FDF5004153C6 /* linkhash.c in Sources */,
+				DF7557EE15D2FDF5004153C6 /* printbuf.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -441,15 +604,16 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "";
 			};
 			name = Debug;
@@ -463,14 +627,16 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_LDFLAGS = "";
 			};
 			name = Release;
@@ -491,6 +657,22 @@
 			};
 			name = Release;
 		};
+		DF75581315D2FDF5004153C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = EPUB3Processor;
+			};
+			name = Debug;
+		};
+		DF75581415D2FDF5004153C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = EPUB3Processor;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -508,6 +690,15 @@
 			buildConfigurations = (
 				D05B969C1598DC4C00C375CC /* Debug */,
 				D05B969D1598DC4C00C375CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOSDevice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF75581315D2FDF5004153C6 /* Debug */,
+				DF75581415D2FDF5004153C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
