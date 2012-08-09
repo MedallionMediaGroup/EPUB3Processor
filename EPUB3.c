@@ -107,9 +107,7 @@ EXPORT EPUB3MetadataRef EPUB3MetadataCreate() {
 
 EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub) {
   EPUB3MetadataRef copy = EPUB3MetadataCreate();
-  char * title = malloc(sizeof(char) * (strlen(epub->metadata->title) + 1));
-  (void)strcpy(title, epub->metadata->title);
-  copy->title = title;
+  EPUB3MetadataSetTitle(copy, epub->metadata->title);
   return copy;
 }
 
