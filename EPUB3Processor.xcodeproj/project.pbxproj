@@ -129,6 +129,8 @@
 		DF75580F15D2FDF5004153C6 /* json_util.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961D159E091600E87091 /* json_util.h */; };
 		DF75581015D2FDF5004153C6 /* linkhash.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961F159E091600E87091 /* linkhash.h */; };
 		DF75581115D2FDF5004153C6 /* printbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359621159E091600E87091 /* printbuf.h */; };
+		DF819DF515D4240D0074F9C2 /* EPUB3.c in Sources */ = {isa = PBXBuildFile; fileRef = DF819DF415D4240D0074F9C2 /* EPUB3.c */; };
+		DFD2C2F915D462170022EC17 /* EPUB3.c in Sources */ = {isa = PBXBuildFile; fileRef = DF819DF415D4240D0074F9C2 /* EPUB3.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -205,6 +207,8 @@
 		D0A09A531599076300B90138 /* validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validators.h; sourceTree = "<group>"; };
 		D0A09A58159908AB00B90138 /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPUB3Processor.h; sourceTree = "<group>"; };
 		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EPUB3.c; sourceTree = "<group>"; };
+		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +295,8 @@
 		D05B968C1598DC4C00C375CC = {
 			isa = PBXGroup;
 			children = (
+				DF819DF715D4241E0074F9C2 /* EPUB3.h */,
+				DF819DF415D4240D0074F9C2 /* EPUB3.c */,
 				D01877E115B4A07B009F21AC /* README.md */,
 				D0521A9D15B3B8D900B5075E /* license */,
 				D0A09A58159908AB00B90138 /* EPUB3Processor.h */,
@@ -548,6 +554,7 @@
 				D0359636159E091600E87091 /* json_util.c in Sources */,
 				D0359638159E091600E87091 /* linkhash.c in Sources */,
 				D035963A159E091600E87091 /* printbuf.c in Sources */,
+				DF819DF515D4240D0074F9C2 /* EPUB3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,6 +590,7 @@
 				DF7557EC15D2FDF5004153C6 /* json_util.c in Sources */,
 				DF7557ED15D2FDF5004153C6 /* linkhash.c in Sources */,
 				DF7557EE15D2FDF5004153C6 /* printbuf.c in Sources */,
+				DFD2C2F915D462170022EC17 /* EPUB3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +635,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -644,16 +653,20 @@
 		D05B969C1598DC4C00C375CC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		D05B969D1598DC4C00C375CC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

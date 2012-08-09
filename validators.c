@@ -248,7 +248,7 @@ uint checkMimetype(struct FilesInZipCount* fileInZip, unzFile unzipFile)
             return UNKNOWN_ZIP_ERR;
         }
         // read the mimetype
-        if (readFileFromEPubMatchingStr(unzipFile, "application/epub+zip", 256) > 0)
+        if (readFileFromEPubMatchingStr(unzipFile, "application/epub+zip", strlen("application/epub+zip") + 1) > 0)
         {
             fprintf(stdout, "EPUB invalid mimetype.\n");
             return INVALID_EPUB_MIMETYPE;
