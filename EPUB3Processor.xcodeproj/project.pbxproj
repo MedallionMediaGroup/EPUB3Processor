@@ -69,18 +69,7 @@
 		D0A09A541599076300B90138 /* validators.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A531599076300B90138 /* validators.h */; settings = {ATTRIBUTES = (); }; };
 		D0A09A59159908AB00B90138 /* EPUB3Processor.h in Headers */ = {isa = PBXBuildFile; fileRef = D0A09A58159908AB00B90138 /* EPUB3Processor.h */; };
 		DF06B6D415DC33CC00675923 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B6D315DC33CC00675923 /* main.c */; };
-		DF06B76F15DC34B400675923 /* fileno.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71315DC34B300675923 /* fileno.c */; };
-		DF06B77015DC34B400675923 /* libcompat.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71415DC34B300675923 /* libcompat.c */; };
 		DF06B77115DC34B400675923 /* localtime_r.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71615DC34B300675923 /* localtime_r.c */; };
-		DF06B77215DC34B400675923 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71915DC34B300675923 /* malloc.c */; };
-		DF06B77315DC34B400675923 /* pipe.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71A15DC34B300675923 /* pipe.c */; };
-		DF06B77415DC34B400675923 /* putenv.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71B15DC34B300675923 /* putenv.c */; };
-		DF06B77515DC34B400675923 /* realloc.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71C15DC34B300675923 /* realloc.c */; };
-		DF06B77615DC34B400675923 /* setenv.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71D15DC34B300675923 /* setenv.c */; };
-		DF06B77715DC34B400675923 /* sleep.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71E15DC34B300675923 /* sleep.c */; };
-		DF06B77815DC34B400675923 /* strdup.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71F15DC34B300675923 /* strdup.c */; };
-		DF06B77915DC34B400675923 /* strsignal.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B72015DC34B300675923 /* strsignal.c */; };
-		DF06B77A15DC34B400675923 /* unsetenv.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B72115DC34B300675923 /* unsetenv.c */; };
 		DF06B77B15DC34B400675923 /* check.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B73015DC34B400675923 /* check.c */; };
 		DF06B77C15DC34B400675923 /* check_error.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B73315DC34B400675923 /* check_error.c */; };
 		DF06B77D15DC34B400675923 /* check_list.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B73615DC34B400675923 /* check_list.c */; };
@@ -232,54 +221,6 @@
 		D0A09A58159908AB00B90138 /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPUB3Processor.h; sourceTree = "<group>"; };
 		DF06B6D015DC33CC00675923 /* TestEPUB3Processor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestEPUB3Processor; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF06B6D315DC33CC00675923 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DF06B6DD15DC34B300675923 /* aclocal.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
-		DF06B6DE15DC34B300675923 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
-		DF06B6E015DC34B300675923 /* compile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = compile; sourceTree = "<group>"; };
-		DF06B6E115DC34B300675923 /* config.guess */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = config.guess; sourceTree = "<group>"; };
-		DF06B6E215DC34B300675923 /* config.sub */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = config.sub; sourceTree = "<group>"; };
-		DF06B6E315DC34B300675923 /* depcomp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = depcomp; sourceTree = "<group>"; };
-		DF06B6E415DC34B300675923 /* install-sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "install-sh"; sourceTree = "<group>"; };
-		DF06B6E515DC34B300675923 /* ltmain.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ltmain.sh; sourceTree = "<group>"; };
-		DF06B6E615DC34B300675923 /* mdate-sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "mdate-sh"; sourceTree = "<group>"; };
-		DF06B6E715DC34B300675923 /* missing */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = missing; sourceTree = "<group>"; };
-		DF06B6E815DC34B300675923 /* texinfo.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = texinfo.tex; sourceTree = "<group>"; };
-		DF06B6E915DC34B300675923 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
-		DF06B6EA15DC34B300675923 /* ChangeLogOld */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLogOld; sourceTree = "<group>"; };
-		DF06B6EB15DC34B300675923 /* check.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = check.m4; sourceTree = "<group>"; };
-		DF06B6EC15DC34B300675923 /* check.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = check.pc.in; sourceTree = "<group>"; };
-		DF06B6ED15DC34B300675923 /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.in; sourceTree = "<group>"; };
-		DF06B6EE15DC34B300675923 /* configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
-		DF06B6EF15DC34B300675923 /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
-		DF06B6F015DC34B300675923 /* COPYING.LESSER */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING.LESSER; sourceTree = "<group>"; };
-		DF06B6F215DC34B300675923 /* check.info */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = check.info; sourceTree = "<group>"; };
-		DF06B6F315DC34B300675923 /* check.texi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = check.texi; sourceTree = "<group>"; };
-		DF06B6F515DC34B300675923 /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
-		DF06B6F615DC34B300675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B6F715DC34B300675923 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DF06B6F915DC34B300675923 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DF06B6FA15DC34B300675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B6FB15DC34B300675923 /* money.1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.1.c; sourceTree = "<group>"; };
-		DF06B6FC15DC34B300675923 /* money.1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = money.1.h; sourceTree = "<group>"; };
-		DF06B6FD15DC34B300675923 /* money.2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = money.2.h; sourceTree = "<group>"; };
-		DF06B6FE15DC34B300675923 /* money.3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.3.c; sourceTree = "<group>"; };
-		DF06B6FF15DC34B300675923 /* money.4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.4.c; sourceTree = "<group>"; };
-		DF06B70015DC34B300675923 /* money.5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.5.c; sourceTree = "<group>"; };
-		DF06B70115DC34B300675923 /* money.6.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.6.c; sourceTree = "<group>"; };
-		DF06B70215DC34B300675923 /* money.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = money.c; sourceTree = "<group>"; };
-		DF06B70315DC34B300675923 /* money.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = money.h; sourceTree = "<group>"; };
-		DF06B70515DC34B300675923 /* check_money.1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.1.c; sourceTree = "<group>"; };
-		DF06B70615DC34B300675923 /* check_money.2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.2.c; sourceTree = "<group>"; };
-		DF06B70715DC34B300675923 /* check_money.3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.3.c; sourceTree = "<group>"; };
-		DF06B70815DC34B300675923 /* check_money.6.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.6.c; sourceTree = "<group>"; };
-		DF06B70915DC34B300675923 /* check_money.7.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.7.c; sourceTree = "<group>"; };
-		DF06B70A15DC34B300675923 /* check_money.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_money.c; sourceTree = "<group>"; };
-		DF06B70B15DC34B300675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B70C15DC34B300675923 /* fdl.texi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fdl.texi; sourceTree = "<group>"; };
-		DF06B70D15DC34B300675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B70E15DC34B300675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DF06B70F15DC34B300675923 /* stamp-vti */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "stamp-vti"; sourceTree = "<group>"; };
-		DF06B71015DC34B300675923 /* version.texi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.texi; sourceTree = "<group>"; };
-		DF06B71115DC34B300675923 /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
 		DF06B71315DC34B300675923 /* fileno.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fileno.c; sourceTree = "<group>"; };
 		DF06B71415DC34B300675923 /* libcompat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libcompat.c; sourceTree = "<group>"; };
 		DF06B71515DC34B300675923 /* libcompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libcompat.h; sourceTree = "<group>"; };
@@ -295,18 +236,6 @@
 		DF06B71F15DC34B300675923 /* strdup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strdup.c; sourceTree = "<group>"; };
 		DF06B72015DC34B300675923 /* strsignal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strsignal.c; sourceTree = "<group>"; };
 		DF06B72115DC34B300675923 /* unsetenv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unsetenv.c; sourceTree = "<group>"; };
-		DF06B72315DC34B300675923 /* acx_pthread.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = acx_pthread.m4; sourceTree = "<group>"; };
-		DF06B72415DC34B300675923 /* ax_c_check_flag.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ax_c_check_flag.m4; sourceTree = "<group>"; };
-		DF06B72515DC34B300675923 /* ax_cflags_warn_all_ansi.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ax_cflags_warn_all_ansi.m4; sourceTree = "<group>"; };
-		DF06B72615DC34B300675923 /* libtool.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libtool.m4; sourceTree = "<group>"; };
-		DF06B72715DC34B300675923 /* ltoptions.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ltoptions.m4; sourceTree = "<group>"; };
-		DF06B72815DC34B400675923 /* ltsugar.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ltsugar.m4; sourceTree = "<group>"; };
-		DF06B72915DC34B400675923 /* ltversion.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ltversion.m4; sourceTree = "<group>"; };
-		DF06B72A15DC34B400675923 /* lt~obsolete.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lt~obsolete.m4"; sourceTree = "<group>"; };
-		DF06B72B15DC34B400675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B72C15DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DF06B72D15DC34B400675923 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
-		DF06B72E15DC34B400675923 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		DF06B73015DC34B400675923 /* check.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check.c; sourceTree = "<group>"; };
 		DF06B73115DC34B400675923 /* check.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check.h; sourceTree = "<group>"; };
 		DF06B73215DC34B400675923 /* check.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = check.h.in; sourceTree = "<group>"; };
@@ -328,35 +257,8 @@
 		DF06B74215DC34B400675923 /* check_str.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check_str.h; sourceTree = "<group>"; };
 		DF06B74315DC34B400675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		DF06B74415DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DF06B74515DC34B400675923 /* SVNChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SVNChangeLog; sourceTree = "<group>"; };
-		DF06B74715DC34B400675923 /* check_check.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check_check.h; sourceTree = "<group>"; };
-		DF06B74815DC34B400675923 /* check_check_exit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_exit.c; sourceTree = "<group>"; };
-		DF06B74915DC34B400675923 /* check_check_export_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_export_main.c; sourceTree = "<group>"; };
-		DF06B74A15DC34B400675923 /* check_check_fixture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_fixture.c; sourceTree = "<group>"; };
-		DF06B74B15DC34B400675923 /* check_check_fork.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_fork.c; sourceTree = "<group>"; };
-		DF06B74C15DC34B400675923 /* check_check_limit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_limit.c; sourceTree = "<group>"; };
-		DF06B74D15DC34B400675923 /* check_check_log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_log.c; sourceTree = "<group>"; };
-		DF06B74E15DC34B400675923 /* check_check_log_internal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_log_internal.c; sourceTree = "<group>"; };
-		DF06B74F15DC34B400675923 /* check_check_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_main.c; sourceTree = "<group>"; };
-		DF06B75015DC34B400675923 /* check_check_master.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_master.c; sourceTree = "<group>"; };
-		DF06B75115DC34B400675923 /* check_check_msg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_msg.c; sourceTree = "<group>"; };
-		DF06B75215DC34B400675923 /* check_check_pack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_pack.c; sourceTree = "<group>"; };
-		DF06B75315DC34B400675923 /* check_check_sub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_check_sub.c; sourceTree = "<group>"; };
-		DF06B75415DC34B400675923 /* check_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_list.c; sourceTree = "<group>"; };
-		DF06B75515DC34B400675923 /* check_stress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_stress.c; sourceTree = "<group>"; };
-		DF06B75615DC34B400675923 /* check_thread_stress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_thread_stress.c; sourceTree = "<group>"; };
-		DF06B75715DC34B400675923 /* ex_log_output.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ex_log_output.c; sourceTree = "<group>"; };
-		DF06B75815DC34B400675923 /* ex_output.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ex_output.c; sourceTree = "<group>"; };
-		DF06B75915DC34B400675923 /* ex_xml_output.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ex_xml_output.c; sourceTree = "<group>"; };
-		DF06B75A15DC34B400675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B75B15DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DF06B75C15DC34B400675923 /* test_log_output.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test_log_output.sh; sourceTree = "<group>"; };
-		DF06B75D15DC34B400675923 /* test_output.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test_output.sh; sourceTree = "<group>"; };
-		DF06B75E15DC34B400675923 /* test_vars.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test_vars.in; sourceTree = "<group>"; };
-		DF06B75F15DC34B400675923 /* test_xml_output.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test_xml_output.sh; sourceTree = "<group>"; };
-		DF06B76015DC34B400675923 /* THANKS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = THANKS; sourceTree = "<group>"; };
-		DF06B76115DC34B400675923 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		DF06B79615DC35E500675923 /* check_EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_EPUB3.c; sourceTree = "<group>"; };
+		DF06B79915DC39BE00675923 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EPUB3.c; sourceTree = "<group>"; };
 		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
@@ -558,107 +460,11 @@
 		DF06B6DC15DC34B300675923 /* check-0.9.8 */ = {
 			isa = PBXGroup;
 			children = (
-				DF06B6DD15DC34B300675923 /* aclocal.m4 */,
-				DF06B6DE15DC34B300675923 /* AUTHORS */,
-				DF06B6DF15DC34B300675923 /* build-aux */,
-				DF06B6E915DC34B300675923 /* ChangeLog */,
-				DF06B6EA15DC34B300675923 /* ChangeLogOld */,
-				DF06B6EB15DC34B300675923 /* check.m4 */,
-				DF06B6EC15DC34B300675923 /* check.pc.in */,
-				DF06B6ED15DC34B300675923 /* config.h.in */,
-				DF06B6EE15DC34B300675923 /* configure */,
-				DF06B6EF15DC34B300675923 /* configure.ac */,
-				DF06B6F015DC34B300675923 /* COPYING.LESSER */,
-				DF06B6F115DC34B300675923 /* doc */,
-				DF06B71115DC34B300675923 /* INSTALL */,
+				DF06B79915DC39BE00675923 /* config.h */,
 				DF06B71215DC34B300675923 /* lib */,
-				DF06B72215DC34B300675923 /* m4 */,
-				DF06B72B15DC34B400675923 /* Makefile.am */,
-				DF06B72C15DC34B400675923 /* Makefile.in */,
-				DF06B72D15DC34B400675923 /* NEWS */,
-				DF06B72E15DC34B400675923 /* README */,
 				DF06B72F15DC34B400675923 /* src */,
-				DF06B74515DC34B400675923 /* SVNChangeLog */,
-				DF06B74615DC34B400675923 /* tests */,
-				DF06B76015DC34B400675923 /* THANKS */,
-				DF06B76115DC34B400675923 /* TODO */,
 			);
 			path = "check-0.9.8";
-			sourceTree = "<group>";
-		};
-		DF06B6DF15DC34B300675923 /* build-aux */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B6E015DC34B300675923 /* compile */,
-				DF06B6E115DC34B300675923 /* config.guess */,
-				DF06B6E215DC34B300675923 /* config.sub */,
-				DF06B6E315DC34B300675923 /* depcomp */,
-				DF06B6E415DC34B300675923 /* install-sh */,
-				DF06B6E515DC34B300675923 /* ltmain.sh */,
-				DF06B6E615DC34B300675923 /* mdate-sh */,
-				DF06B6E715DC34B300675923 /* missing */,
-				DF06B6E815DC34B300675923 /* texinfo.tex */,
-			);
-			path = "build-aux";
-			sourceTree = "<group>";
-		};
-		DF06B6F115DC34B300675923 /* doc */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B6F215DC34B300675923 /* check.info */,
-				DF06B6F315DC34B300675923 /* check.texi */,
-				DF06B6F415DC34B300675923 /* example */,
-				DF06B70C15DC34B300675923 /* fdl.texi */,
-				DF06B70D15DC34B300675923 /* Makefile.am */,
-				DF06B70E15DC34B300675923 /* Makefile.in */,
-				DF06B70F15DC34B300675923 /* stamp-vti */,
-				DF06B71015DC34B300675923 /* version.texi */,
-			);
-			path = doc;
-			sourceTree = "<group>";
-		};
-		DF06B6F415DC34B300675923 /* example */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B6F515DC34B300675923 /* configure.ac */,
-				DF06B6F615DC34B300675923 /* Makefile.am */,
-				DF06B6F715DC34B300675923 /* README */,
-				DF06B6F815DC34B300675923 /* src */,
-				DF06B70415DC34B300675923 /* tests */,
-			);
-			path = example;
-			sourceTree = "<group>";
-		};
-		DF06B6F815DC34B300675923 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B6F915DC34B300675923 /* main.c */,
-				DF06B6FA15DC34B300675923 /* Makefile.am */,
-				DF06B6FB15DC34B300675923 /* money.1.c */,
-				DF06B6FC15DC34B300675923 /* money.1.h */,
-				DF06B6FD15DC34B300675923 /* money.2.h */,
-				DF06B6FE15DC34B300675923 /* money.3.c */,
-				DF06B6FF15DC34B300675923 /* money.4.c */,
-				DF06B70015DC34B300675923 /* money.5.c */,
-				DF06B70115DC34B300675923 /* money.6.c */,
-				DF06B70215DC34B300675923 /* money.c */,
-				DF06B70315DC34B300675923 /* money.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		DF06B70415DC34B300675923 /* tests */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B70515DC34B300675923 /* check_money.1.c */,
-				DF06B70615DC34B300675923 /* check_money.2.c */,
-				DF06B70715DC34B300675923 /* check_money.3.c */,
-				DF06B70815DC34B300675923 /* check_money.6.c */,
-				DF06B70915DC34B300675923 /* check_money.7.c */,
-				DF06B70A15DC34B300675923 /* check_money.c */,
-				DF06B70B15DC34B300675923 /* Makefile.am */,
-			);
-			path = tests;
 			sourceTree = "<group>";
 		};
 		DF06B71215DC34B300675923 /* lib */ = {
@@ -681,21 +487,6 @@
 				DF06B72115DC34B300675923 /* unsetenv.c */,
 			);
 			path = lib;
-			sourceTree = "<group>";
-		};
-		DF06B72215DC34B300675923 /* m4 */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B72315DC34B300675923 /* acx_pthread.m4 */,
-				DF06B72415DC34B300675923 /* ax_c_check_flag.m4 */,
-				DF06B72515DC34B300675923 /* ax_cflags_warn_all_ansi.m4 */,
-				DF06B72615DC34B300675923 /* libtool.m4 */,
-				DF06B72715DC34B300675923 /* ltoptions.m4 */,
-				DF06B72815DC34B400675923 /* ltsugar.m4 */,
-				DF06B72915DC34B400675923 /* ltversion.m4 */,
-				DF06B72A15DC34B400675923 /* lt~obsolete.m4 */,
-			);
-			path = m4;
 			sourceTree = "<group>";
 		};
 		DF06B72F15DC34B400675923 /* src */ = {
@@ -724,38 +515,6 @@
 				DF06B74415DC34B400675923 /* Makefile.in */,
 			);
 			path = src;
-			sourceTree = "<group>";
-		};
-		DF06B74615DC34B400675923 /* tests */ = {
-			isa = PBXGroup;
-			children = (
-				DF06B74715DC34B400675923 /* check_check.h */,
-				DF06B74815DC34B400675923 /* check_check_exit.c */,
-				DF06B74915DC34B400675923 /* check_check_export_main.c */,
-				DF06B74A15DC34B400675923 /* check_check_fixture.c */,
-				DF06B74B15DC34B400675923 /* check_check_fork.c */,
-				DF06B74C15DC34B400675923 /* check_check_limit.c */,
-				DF06B74D15DC34B400675923 /* check_check_log.c */,
-				DF06B74E15DC34B400675923 /* check_check_log_internal.c */,
-				DF06B74F15DC34B400675923 /* check_check_main.c */,
-				DF06B75015DC34B400675923 /* check_check_master.c */,
-				DF06B75115DC34B400675923 /* check_check_msg.c */,
-				DF06B75215DC34B400675923 /* check_check_pack.c */,
-				DF06B75315DC34B400675923 /* check_check_sub.c */,
-				DF06B75415DC34B400675923 /* check_list.c */,
-				DF06B75515DC34B400675923 /* check_stress.c */,
-				DF06B75615DC34B400675923 /* check_thread_stress.c */,
-				DF06B75715DC34B400675923 /* ex_log_output.c */,
-				DF06B75815DC34B400675923 /* ex_output.c */,
-				DF06B75915DC34B400675923 /* ex_xml_output.c */,
-				DF06B75A15DC34B400675923 /* Makefile.am */,
-				DF06B75B15DC34B400675923 /* Makefile.in */,
-				DF06B75C15DC34B400675923 /* test_log_output.sh */,
-				DF06B75D15DC34B400675923 /* test_output.sh */,
-				DF06B75E15DC34B400675923 /* test_vars.in */,
-				DF06B75F15DC34B400675923 /* test_xml_output.sh */,
-			);
-			path = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -865,6 +624,7 @@
 			buildPhases = (
 				DF06B6CC15DC33CC00675923 /* Sources */,
 				DF06B6CD15DC33CC00675923 /* Frameworks */,
+				DF06B7B015DC53B800675923 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -920,6 +680,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		DF06B7B015DC53B800675923 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BIN=\"$TARGET_BUILD_DIR/$TARGET_NAME\";\n$BIN $TARGET_BUILD_DIR/test_output.xml";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D05B96931598DC4C00C375CC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -962,18 +738,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF06B6D415DC33CC00675923 /* main.c in Sources */,
-				DF06B76F15DC34B400675923 /* fileno.c in Sources */,
-				DF06B77015DC34B400675923 /* libcompat.c in Sources */,
 				DF06B77115DC34B400675923 /* localtime_r.c in Sources */,
-				DF06B77215DC34B400675923 /* malloc.c in Sources */,
-				DF06B77315DC34B400675923 /* pipe.c in Sources */,
-				DF06B77415DC34B400675923 /* putenv.c in Sources */,
-				DF06B77515DC34B400675923 /* realloc.c in Sources */,
-				DF06B77615DC34B400675923 /* setenv.c in Sources */,
-				DF06B77715DC34B400675923 /* sleep.c in Sources */,
-				DF06B77815DC34B400675923 /* strdup.c in Sources */,
-				DF06B77915DC34B400675923 /* strsignal.c in Sources */,
-				DF06B77A15DC34B400675923 /* unsetenv.c in Sources */,
 				DF06B77B15DC34B400675923 /* check.c in Sources */,
 				DF06B77C15DC34B400675923 /* check_error.c in Sources */,
 				DF06B77D15DC34B400675923 /* check_list.c in Sources */,
@@ -1107,9 +872,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CONFIG_H,
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2",
+					"$(SRCROOT)/TestEPUB3Processor/Vendor/check-0.9.8/**",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1124,8 +900,14 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2",
+					"$(SRCROOT)/TestEPUB3Processor/Vendor/check-0.9.8/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};

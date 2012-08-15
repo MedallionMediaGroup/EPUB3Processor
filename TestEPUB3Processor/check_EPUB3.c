@@ -1,10 +1,15 @@
-//
-//  check_EPUB3.c
-//  EPUB3Processor
-//
-//  Created by Nathan Eror on 8/15/12.
-//  Copyright (c) 2012 Triple Threat Mobile Development. All rights reserved.
-//
+#include <config.h>
+#include <check.h>
 
-#include "EPUB3.h"
+START_TEST(test_fail)
+{
+  fail_if(1==0, "You are not god!");
+}
+END_TEST
 
+TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
+{
+  TCase *test_case = tcase_create("EPUB3");
+  tcase_add_test(test_case, test_fail);
+  return test_case;
+}
