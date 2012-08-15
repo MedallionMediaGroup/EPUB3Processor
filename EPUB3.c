@@ -28,23 +28,10 @@ struct EPUB3Metadata {
 };
 
 #pragma mark - Function Declarations
-#pragma mark Private
+
 static void _EPUB3ObjectRelease(void *object);
 static void * _EPUB3ObjectRetain(void *object);
 static void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
-
-#pragma mark Public
-EXPORT EPUB3Ref EPUB3Retain(EPUB3Ref epub);
-EXPORT void EPUB3Release(EPUB3Ref epub);
-EXPORT EPUB3MetadataRef EPUB3MetadataRetain(EPUB3MetadataRef metadata);
-EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
-
-EXPORT EPUB3Ref EPUB3Create();
-
-EXPORT EPUB3MetadataRef EPUB3MetadataCreate();
-EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
-EXPORT void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
-EXPORT void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 
 #pragma mark - Memory Management (Reference Counting)
 
