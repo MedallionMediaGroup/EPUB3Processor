@@ -692,7 +692,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "BIN=\"$TARGET_BUILD_DIR/$TARGET_NAME\";\n$BIN $TARGET_BUILD_DIR/test_output.xml";
+			shellScript = "BIN=\"$TARGET_BUILD_DIR/$TARGET_NAME\";\nTEST_OUTPUT=$TARGET_BUILD_DIR/test_output.xml\nTEST_TRANSFORMER=$SRCROOT/TestEPUB3Processor/Support/check2junitxml.py\n\n$BIN $TEST_OUTPUT\n$TEST_TRANSFORMER $TEST_OUTPUT -o $TARGET_BUILD_DIR/junit_output.xml\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -957,6 +957,7 @@
 				DF06B6D815DC33CC00675923 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOSDevice" */ = {
 			isa = XCConfigurationList;
