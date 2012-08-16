@@ -13,7 +13,7 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-  
+
 typedef struct EPUB3 * EPUB3Ref;
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
 

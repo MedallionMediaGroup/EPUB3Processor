@@ -94,9 +94,9 @@ def junit_case_from_check_case(check_case):
     message = check_case.find(".//{%s}message" % ns)
     case = ET.Element('testcase', {'name': name.text, 'classname': classname.text})
     if(result == "failure"):
-        case.append(ET.Element('failure', {'message': message.text}))
+        case.append(ET.Element('failure', {'message': message.text or ''}))
     if(result == "error"):
-        case.append(ET.Element('error', {'message': message.text}))
+        case.append(ET.Element('error', {'message': message.text or ''}))
     return case
 
 
@@ -187,7 +187,6 @@ def _parse_commandline_args(arglist):
     True
 
     """
-
     parser = argparse.ArgumentParser()
     parser.add_argument("input_path", help="The XML output file from Check")
     parser.add_argument("-o", "--output_path", help="The destination for the junit formatted XML output")
@@ -201,6 +200,9 @@ if __name__ == '__main__':
     check_etree = ET.ElementTree(file=input_path)
     junit_tree = junit_etree_from_check_etree(check_etree)
     junit_tree.write(output_path, encoding='utf8', xml_declaration=True)
+    if(junit_tree.find('.//failure') is not None or junit_tree.find('.//error') is not None):
+        sys.exit(1)
+    sys.exit(0)
 
 
 __check_test_string = u'''<?xml version="1.0"?>

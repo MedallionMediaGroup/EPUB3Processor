@@ -1,37 +1,8 @@
 #include "EPUB3.h"
+#include "EPUB3_private.h"
 
-#define EXPORT __attribute__((visibility("default")))
-
-#pragma mark - Type definitions
-
-static const char * kEPUB3TypeID = "_EPUB3_t";
-static const char * kEPUB3MetadataTypeID = "_EPUB3Metadata_t";
-
-typedef struct EPUB3Type {
-  const char *typeID;
-  uint32_t refCount;
-} EPUB3Type;
-
-struct EPUB3Object {
-  EPUB3Type _type;
-};
-typedef struct EPUB3Object *EPUB3ObjectRef;
-
-struct EPUB3 {
-  EPUB3Type _type;
-  EPUB3MetadataRef metadata;
-};
-
-struct EPUB3Metadata {
-  EPUB3Type _type;
-  const char *title;
-};
-
-#pragma mark - Function Declarations
-
-static void _EPUB3ObjectRelease(void *object);
-static void * _EPUB3ObjectRetain(void *object);
-static void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
+const char * kEPUB3TypeID = "_EPUB3_t";
+const char * kEPUB3MetadataTypeID = "_EPUB3Metadata_t";
 
 #pragma mark - Memory Management (Reference Counting)
 
@@ -63,6 +34,11 @@ EXPORT EPUB3Ref EPUB3Retain(EPUB3Ref epub) {
 
 EXPORT void EPUB3Release(EPUB3Ref epub) {
   EPUB3MetadataRelease(epub->metadata);
+  if(epub->archive != NULL) {
+    unzClose(epub->archive);
+    epub->archive = NULL;
+  }
+  free(epub->archivePath);
   _EPUB3ObjectRelease(epub);
 }
 
@@ -71,6 +47,7 @@ EXPORT EPUB3MetadataRef EPUB3MetadataRetain(EPUB3MetadataRef metadata) {
 }
 
 EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata) {
+  free(metadata->title);
   _EPUB3ObjectRelease(metadata);
 }
 
@@ -81,6 +58,15 @@ EXPORT EPUB3Ref EPUB3Create() {
   memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
   memory->metadata = NULL;
   return memory;
+}
+
+EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path) {
+  EPUB3Ref epub = EPUB3Create();
+  unzFile archive = unzOpen(path);
+  epub->archive = archive;
+  epub->archiveFileCount = numberOfFilesInZip(archive);
+  //TODO: parse and load metadata?
+  return epub;
 }
 
 #pragma mark - EPUB3MetadataRef
@@ -99,8 +85,14 @@ EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub) {
 }
 
 EXPORT void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title) {
-  char * titleCopy = malloc(sizeof(char) * (strlen(title) + 1));
-  (void)strcpy(titleCopy, title);
+  if(metadata->title != NULL) {
+    free(metadata->title);
+  }
+  if(title == NULL) {
+    metadata->title = NULL;
+    return;
+  }
+  char * titleCopy = strdup(title);
   metadata->title = titleCopy;
 }
 
@@ -111,3 +103,12 @@ EXPORT void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata) {
   epub->metadata = EPUB3MetadataRetain(metadata);
 }
 
+unsigned long numberOfFilesInZip(unzFile file)
+{
+  unz_global_info gi;
+	int err = unzGetGlobalInfo(file, &gi);
+	if (err != UNZ_OK)
+    return err;
+	
+	return gi.number_entry;
+}
