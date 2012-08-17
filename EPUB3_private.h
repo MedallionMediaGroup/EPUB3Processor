@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef EPUB3_private_h
 #define EPUB3_private_h
 

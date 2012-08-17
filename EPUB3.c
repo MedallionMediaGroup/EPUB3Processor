@@ -1,5 +1,13 @@
 #include "EPUB3.h"
 #include "EPUB3_private.h"
+
+#include <stdio.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+#include <sys/types.h>
+#include <string.h>
 #include <assert.h>
 
 const char * kEPUB3TypeID = "_EPUB3_t";
