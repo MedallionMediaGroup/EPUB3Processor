@@ -1,4 +1,13 @@
+#include <stdio.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+#include <sys/types.h>
+#include <string.h>
+#include <assert.h>
 #include <stdint.h>
+
 
 #ifndef EPUB3_private_h
 #define EPUB3_private_h
