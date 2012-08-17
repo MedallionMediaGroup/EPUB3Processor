@@ -35,11 +35,15 @@ struct EPUB3Metadata {
 
 #pragma mark - Function Declarations
 
-static void _EPUB3ObjectRelease(void *object);
-static void * _EPUB3ObjectRetain(void *object);
-static void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
-unsigned long numberOfFilesInZip(unzFile file);
-void copyStringInto(char **dest, const char *src);
+void _EPUB3ObjectRelease(void *object);
+void _EPUB3ObjectRetain(void *object);
+void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
+
+EPUB3Ref EPUB3Create();
+EPUB3MetadataRef EPUB3MetadataCreate();
+void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
+
+unsigned long _GetFileCountInZipFile(unzFile file);
 
 
 #endif

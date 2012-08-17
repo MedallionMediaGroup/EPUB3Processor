@@ -7,17 +7,87 @@
 #define TEST_DATA_PATH
 #endif
 
-START_TEST(test_create_epub3_object)
+static EPUB3Ref epub;
+
+void setup()
 {
-  EPUB3Ref epub = EPUB3Create();
-  ck_assert_int_eq(epub->_type.refCount, 1);
-  ck_assert_str_eq(epub->_type.typeID, kEPUB3TypeID);
+  epub = EPUB3CreateWithArchiveAtPath(TEST_DATA_PATH);
+}
+
+void teardown()
+{
+  EPUB3Release(epub);
+}
+
+START_TEST(test_epub3_object_creation)
+{
+  fail_if(epub->archive == NULL);
+  fail_unless(epub->archiveFileCount > 0);
+  ck_assert_str_eq(epub->archivePath, TEST_DATA_PATH);
+  fail_if(epub->archivePath == TEST_DATA_PATH);
+}
+END_TEST
+
+START_TEST(test_epub3_object_ref_counting)
+{
+  EPUB3Ref anEpub = EPUB3Create();
+  ck_assert_int_eq(anEpub->_type.refCount, 1);
+  ck_assert_str_eq(anEpub->_type.typeID, kEPUB3TypeID);
+  EPUB3Retain(anEpub);
+  ck_assert_int_eq(anEpub->_type.refCount, 2);
+  EPUB3Release(anEpub);
+  ck_assert_int_eq(anEpub->_type.refCount, 1);
+}
+END_TEST
+
+START_TEST(test_epub3_object_metadata_property)
+{
+  fail_unless(epub->metadata == NULL);
+  EPUB3MetadataRef nullMeta = EPUB3CopyMetadata(epub);
+  fail_unless(nullMeta == NULL);
+  
+  const char * title = "A book";
+  EPUB3MetadataRef meta = EPUB3MetadataCreate();
+  EPUB3MetadataSetTitle(meta, title);
+  EPUB3SetMetadata(epub, meta);
+  fail_unless(epub->metadata == meta);
+  
+  EPUB3MetadataRef metaCopy = EPUB3CopyMetadata(epub);
+  ck_assert_str_eq(metaCopy->title, title);
+  fail_if(metaCopy == meta);
+  
+  EPUB3MetadataRelease(metaCopy);
+}
+END_TEST
+
+START_TEST(test_metadata_object)
+{
+  // Creation
+  EPUB3MetadataRef meta = EPUB3MetadataCreate();
+  ck_assert_int_eq(meta->_type.refCount, 1);
+  ck_assert_str_eq(meta->_type.typeID, kEPUB3MetadataTypeID);
+  fail_unless(meta->title == NULL);
+  
+  // Title attribute
+  const char * title = "A book";
+  EPUB3MetadataSetTitle(meta, title);
+  ck_assert_str_eq(title, meta->title);
+  fail_if(title == meta->title);
+  char * titleCopy = EPUB3CopyMetadataTitle(meta);
+  ck_assert_str_eq(title, titleCopy);
+  fail_if(title == titleCopy);
+  free(titleCopy);
+  
 }
 END_TEST
 
 TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");
-  tcase_add_test(test_case, test_create_epub3_object);
+  tcase_add_checked_fixture(test_case, setup, teardown);
+  tcase_add_test(test_case, test_epub3_object_creation);
+  tcase_add_test(test_case, test_epub3_object_ref_counting);
+  tcase_add_test(test_case, test_epub3_object_metadata_property);
+  tcase_add_test(test_case, test_metadata_object);
   return test_case;
 }
