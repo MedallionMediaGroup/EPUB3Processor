@@ -111,7 +111,7 @@ int upack (char *buf, CheckMsg *msg, enum ck_msg_type *type)
   
   upftab[*type] (&buf, msg);
 
-  nread = buf - obuf;
+  nread = (int)(buf - obuf);
   return nread;
 }
 
@@ -147,7 +147,7 @@ static void pack_str (char **buf, const char *val)
   if (val == NULL)
     strsz = 0;
   else
-    strsz = strlen (val);
+    strsz = (int)strlen (val);
 
   pack_int (buf, strsz);  
 
@@ -212,7 +212,7 @@ static int pack_loc (char **buf, LocMsg *lmsg)
   char *ptr;
   int len;
 
-  len = 4 + 4 + (lmsg->file ? strlen (lmsg->file) : 0) + 4;
+  len = (int)(4 + 4 + (lmsg->file ? strlen (lmsg->file) : 0) + 4);
   *buf = ptr = emalloc (len);
 
   pack_type (&ptr, CK_MSG_LOC);
@@ -233,7 +233,7 @@ static int pack_fail (char **buf, FailMsg *fmsg)
   char *ptr;
   int len;
 
-  len = 4 + 4 + (fmsg->msg ? strlen (fmsg->msg) : 0);
+  len = (int)(4 + 4 + (fmsg->msg ? strlen (fmsg->msg) : 0));
   *buf = ptr = emalloc (len);
 
   pack_type (&ptr, CK_MSG_FAIL);
@@ -284,7 +284,7 @@ static int read_buf (int fdes, char **buf)
   *buf = emalloc(size);
   readloc = *buf;
   while (1) {
-    n = read (fdes, readloc, size - nread);
+    n = (int)read (fdes, readloc, size - nread);
     if (n == 0)
       break;
     if (n == -1)
@@ -384,7 +384,7 @@ static void rcvmsg_update_ctx (RcvMsg *rmsg, enum ck_result_ctx ctx)
 
 static void rcvmsg_update_loc (RcvMsg *rmsg, const char *file, int line)
 {
-  int flen = strlen(file);
+  int flen = (int)strlen(file);
   
   if (rmsg->lastctx == CK_CTX_TEST) {
     free(rmsg->test_file);
