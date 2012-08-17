@@ -1,20 +1,20 @@
 #include <config.h>
 #include <check.h>
+#include "test_common.h"
 #include "EPUB3.h"
 #include "EPUB3_private.h"
 
-#ifndef TEST_DATA_PATH
-#define TEST_DATA_PATH
-#endif
-
 static EPUB3Ref epub;
 
-void setup()
+static void setup()
 {
-  epub = EPUB3CreateWithArchiveAtPath(TEST_DATA_PATH);
+  uint64_t length = EPUB3TestPathLengthForFileNamed("pg100.epub");
+  char path[length];
+  (void)EPUB3GetTestPathForFileNamed(path, "pg100.epub");
+  epub = EPUB3CreateWithArchiveAtPath(path);
 }
 
-void teardown()
+static void teardown()
 {
   EPUB3Release(epub);
 }
@@ -23,8 +23,12 @@ START_TEST(test_epub3_object_creation)
 {
   fail_if(epub->archive == NULL);
   fail_unless(epub->archiveFileCount > 0);
-  ck_assert_str_eq(epub->archivePath, TEST_DATA_PATH);
-  fail_if(epub->archivePath == TEST_DATA_PATH);
+  
+  uint64_t length = EPUB3TestPathLengthForFileNamed("pg100.epub");
+  char path[length];
+  (void)EPUB3GetTestPathForFileNamed(path, "pg100.epub");
+  ck_assert_str_eq(epub->archivePath, path);
+  fail_if(epub->archivePath == path);
 }
 END_TEST
 
@@ -77,7 +81,6 @@ START_TEST(test_metadata_object)
   ck_assert_str_eq(title, titleCopy);
   fail_if(title == titleCopy);
   free(titleCopy);
-  
 }
 END_TEST
 

@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <config.h>
 #include <check.h>
+#include "test_common.h"
 
 // Test suite prototypes
 TCase * check_EPUB3_make_tcase();
+TCase * check_EPUB3_parsing_make_tcase();
 
 int main(int argc, const char * argv[])
 {
@@ -12,6 +14,7 @@ int main(int argc, const char * argv[])
   Suite *suite = suite_create("TestEPUB3Processor");
   
   suite_add_tcase(suite, check_EPUB3_make_tcase());
+  suite_add_tcase(suite, check_EPUB3_parsing_make_tcase());
   
   SRunner *suite_runner = srunner_create(suite);
   

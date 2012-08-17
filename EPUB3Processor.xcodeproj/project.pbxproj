@@ -99,6 +99,7 @@
 		DF75581015D2FDF5004153C6 /* linkhash.h in Headers */ = {isa = PBXBuildFile; fileRef = D035961F159E091600E87091 /* linkhash.h */; };
 		DF75581115D2FDF5004153C6 /* printbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = D0359621159E091600E87091 /* printbuf.h */; };
 		DF819DF515D4240D0074F9C2 /* EPUB3.c in Sources */ = {isa = PBXBuildFile; fileRef = DF819DF415D4240D0074F9C2 /* EPUB3.c */; };
+		DF8CE03F15DEA03C00F0857B /* check_EPUB3_parsing.c in Sources */ = {isa = PBXBuildFile; fileRef = DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */; };
 		DFD2C2F915D462170022EC17 /* EPUB3.c in Sources */ = {isa = PBXBuildFile; fileRef = DF819DF415D4240D0074F9C2 /* EPUB3.c */; };
 /* End PBXBuildFile section */
 
@@ -189,12 +190,15 @@
 		DF06B74415DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		DF06B79615DC35E500675923 /* check_EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_EPUB3.c; sourceTree = "<group>"; };
 		DF06B79915DC39BE00675923 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		DF08369715DEE59F00E9CEC9 /* bad_metadata.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = bad_metadata.epub; sourceTree = "<group>"; };
 		DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libz.1.dylib; sourceTree = DEVELOPER_DIR; };
 		DF59F19215DDA9E7004A37D5 /* pg100.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = pg100.epub; sourceTree = "<group>"; };
 		DF59F19815DDB19F004A37D5 /* EPUB3_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3_private.h; sourceTree = "<group>"; };
 		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EPUB3.c; sourceTree = "<group>"; };
 		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
+		DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_EPUB3_parsing.c; sourceTree = "<group>"; };
+		DF8CE04115DEA71000F0857B /* test_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_common.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,6 +354,8 @@
 				DF06B6DB15DC34B300675923 /* Vendor */,
 				DF06B6D315DC33CC00675923 /* main.c */,
 				DF06B79615DC35E500675923 /* check_EPUB3.c */,
+				DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */,
+				DF8CE04115DEA71000F0857B /* test_common.h */,
 			);
 			name = Tests;
 			path = TestEPUB3Processor;
@@ -426,6 +432,7 @@
 		DF59F19015DDA9E7004A37D5 /* TestData */ = {
 			isa = PBXGroup;
 			children = (
+				DF08369715DEE59F00E9CEC9 /* bad_metadata.epub */,
 				DF59F19215DDA9E7004A37D5 /* pg100.epub */,
 			);
 			path = TestData;
@@ -631,6 +638,7 @@
 				DF59F18315DDA65C004A37D5 /* mztools.c in Sources */,
 				DF59F18415DDA65C004A37D5 /* unzip.c in Sources */,
 				DF59F18515DDA65C004A37D5 /* zip.c in Sources */,
+				DF8CE03F15DEA03C00F0857B /* check_EPUB3_parsing.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,7 +757,7 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
-					"TEST_DATA_PATH=\\\"$(SRCROOT)/TestEPUB3Processor/TestData/pg100.epub\\\"",
+					"TEST_DATA_PATH=\\\"$(SRCROOT)/TestEPUB3Processor/TestData/\\\"",
 					"DEBUG=1",
 					"$(inherited)",
 				);
@@ -776,7 +784,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"TEST_DATA_PATH=\\\"$(SRCROOT)/TestEPUB3Processor/TestData/pg100.epub\\\"",
+					"TEST_DATA_PATH=\\\"$(SRCROOT)/TestEPUB3Processor/TestData/\\\"",
 					HAVE_CONFIG_H,
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;

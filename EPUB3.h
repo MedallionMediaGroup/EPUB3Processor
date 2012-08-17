@@ -4,7 +4,18 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
+  
+#include <stdint.h>
 
+typedef uint32_t EPUB3Error;
+
+enum _EPUB3Error {
+  kEPUB3Success = 0,
+  kEPUB3InvalidMimetypeError = 1001
+};
+  
+#define E3_INVALID_MIMETYPE UINT32_C(1)
+  
 typedef struct EPUB3 * EPUB3Ref;
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
 

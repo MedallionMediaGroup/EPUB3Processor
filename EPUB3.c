@@ -139,12 +139,41 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
     EPUB3MetadataRelease(epub->metadata);
   }
   EPUB3MetadataRetain(metadata);
-  epub->metadata = metadata;
+  epub->metadata = metadata;    
 }
+
+#pragma mark - Validation
+
+EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
+{
+  EPUB3Error status = kEPUB3InvalidMimetypeError;
+  static const char * requiredMimetype = "application/epub+zip";
+  static const int stringLength = 20;
+  char buffer[stringLength];
+  
+  if(unzGoToFirstFile(epub->archive) == UNZ_OK)
+  {
+    uint32_t stringLength = (uint32_t)strlen(requiredMimetype);
+    if(unzOpenCurrentFile(epub->archive) == UNZ_OK)
+    {
+      int byteCount = unzReadCurrentFile(epub->archive, buffer, stringLength);
+      if(byteCount == stringLength)
+      {
+        if(strncmp(requiredMimetype, buffer, stringLength) == 0)
+        {
+          status = kEPUB3Success;
+        }
+      }
+    }
+    unzCloseCurrentFile(epub->archive);
+  }
+  return status;
+}
+
 
 #pragma mark - Utility functions
 
-unsigned long _GetFileCountInZipFile(unzFile file)
+u_long _GetFileCountInZipFile(unzFile file)
 {
   unz_global_info gi;
 	int err = unzGetGlobalInfo(file, &gi);

@@ -6,8 +6,9 @@
 #include <sys/types.h>
 #include <string.h>
 #include <assert.h>
-#include <stdint.h>
-
+#include <stdlib.h>
+#include <dirent.h>
+#include "EPUB3.h"
 
 #ifndef EPUB3_private_h
 #define EPUB3_private_h
@@ -36,7 +37,7 @@ struct EPUB3 {
   EPUB3MetadataRef metadata;
   char * archivePath;
   unzFile archive;
-  unsigned long archiveFileCount;
+  u_long archiveFileCount;
 };
 
 struct EPUB3Metadata {
@@ -54,7 +55,10 @@ EPUB3Ref EPUB3Create();
 EPUB3MetadataRef EPUB3MetadataCreate();
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 
-unsigned long _GetFileCountInZipFile(unzFile file);
+#pragma mark - Validation
+uint EPUB3ValidateMimetype(EPUB3Ref epub);
+
+u_long _GetFileCountInZipFile(unzFile file);
 
 
 #endif

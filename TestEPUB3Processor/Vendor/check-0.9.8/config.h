@@ -1,7 +1,3 @@
-#define EXIT_SUCCESS 0
-#define EXIT_FAILURE 1
-#define TEST_EXPORT __attribute__((visibility("default")))
-
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
