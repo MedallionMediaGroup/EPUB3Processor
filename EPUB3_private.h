@@ -58,6 +58,7 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 #pragma mark - Validation
 uint EPUB3ValidateMimetype(EPUB3Ref epub);
 
+#pragma mark - Utility Functions
 u_long _GetFileCountInZipFile(unzFile file);
 
 

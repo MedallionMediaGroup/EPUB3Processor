@@ -12,6 +12,12 @@
 #define TEST_DATA_PATH "/tmp/"
 #endif
 
+#define TEST_PATH_VAR_FOR_FILENAME(__varname, __filename) \
+  uint64_t __length = EPUB3TestPathLengthForFileNamed(__filename); \
+  char __varname[__length]; \
+  (void)EPUB3GetTestPathForFileNamed(path, __filename);
+
+
 static uint64_t EPUB3TestPathLengthForFileNamed(const char * name) {
   return strlen(TEST_DATA_PATH) + strlen(name) + 1;
 }

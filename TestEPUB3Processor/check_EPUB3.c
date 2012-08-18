@@ -8,9 +8,7 @@ static EPUB3Ref epub;
 
 static void setup()
 {
-  uint64_t length = EPUB3TestPathLengthForFileNamed("pg100.epub");
-  char path[length];
-  (void)EPUB3GetTestPathForFileNamed(path, "pg100.epub");
+  TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
   epub = EPUB3CreateWithArchiveAtPath(path);
 }
 
@@ -24,9 +22,7 @@ START_TEST(test_epub3_object_creation)
   fail_if(epub->archive == NULL);
   fail_unless(epub->archiveFileCount > 0);
   
-  uint64_t length = EPUB3TestPathLengthForFileNamed("pg100.epub");
-  char path[length];
-  (void)EPUB3GetTestPathForFileNamed(path, "pg100.epub");
+  TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
   ck_assert_str_eq(epub->archivePath, path);
   fail_if(epub->archivePath == path);
 }
