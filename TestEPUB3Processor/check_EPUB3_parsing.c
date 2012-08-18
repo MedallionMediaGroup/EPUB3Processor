@@ -19,15 +19,82 @@ static void teardown()
 
 START_TEST(test_epub3_get_file_count_in_zip)
 {
+  u_long expectedCount = 115U;
   u_long count = _GetFileCountInZipFile(epub->archive);
-  fail_unless(count == 115U, "Expected %u files, but found %u in %s.", 115U, count, epub->archivePath);
+  fail_unless(count == expectedCount, "Expected %u files, but found %u in %s.", expectedCount, count, epub->archivePath);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
   count = _GetFileCountInZipFile(badMetadataEpub->archive);
-  fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 115U, count, badMetadataEpub->archivePath);
+  fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
   EPUB3Release(badMetadataEpub);
   
+}
+END_TEST
+
+START_TEST(test_epub3_get_file_size_in_zip)
+{
+  const char * filename = "META-INF/container.xml";
+  uint32_t expectedSize = 250U;
+  uint32_t size;
+  EPUB3Error result = EPUB3GetUncompressedSizeOfFileInArchive(epub, &size, filename);
+  fail_if(result == kEPUB3FileNotFoundError, "Expected, but couldn't find %s in %s.", filename, epub->archivePath);
+  fail_unless(result == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, epub->archivePath);
+  fail_unless(size == expectedSize, "Expected size of %u, but got %u for %s.", expectedSize, size, filename);
+  
+  TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
+  
+  filename = "mimetype";
+  expectedSize = 16U;
+  result = EPUB3GetUncompressedSizeOfFileInArchive(badMetadataEpub, &size, filename);
+  fail_if(result == kEPUB3FileNotFoundError, "Expected, but couldn't find %s in %s.", filename, badMetadataEpub->archivePath);
+  fail_unless(result == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, badMetadataEpub->archivePath);
+  fail_unless(size == expectedSize, "Expected size of %u, but got %u for %s.", expectedSize, size, badMetadataEpub);
+  
+  EPUB3Release(badMetadataEpub);
+}
+END_TEST
+
+START_TEST(test_epub3_validate_file_exists_in_zip)
+{
+  const char * filename = "META-INF/container.xml";
+  EPUB3Error result = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
+  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, epub->archivePath);
+  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
+  
+  filename = "mimetype";
+  result = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
+  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, epub->archivePath);
+  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
+
+  TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
+  result = EPUB3ValidateFileExistsAndSeekInArchive(badEpub, filename);
+  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, badEpub->archivePath);
+  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, badEpub->archivePath);
+  EPUB3Release(badEpub);
+}
+END_TEST
+
+START_TEST(test_epub3_copy_file_into_buffer)
+{
+  void *buffer = NULL;
+  uint32_t bufferSize;
+  uint32_t bytesCopied;
+  const char * filename = "META-INF/container.xml";
+  uint32_t expectedSize = 250U;
+  EPUB3Error error = EPUB3CopyFileIntoBuffer(epub, buffer, &bufferSize, &bytesCopied, filename);
+  fail_unless(error == kEPUB3Success);
+  fail_unless(bufferSize == expectedSize);
+  fail_unless(bytesCopied == expectedSize);
+  fail_unless(bytesCopied == bufferSize);
+  
+//  TEST_PATH_VAR_FOR_FILENAME(path, "pg100_container.xml");
+//  FILE *containerFP = fopen(path, "r");
+//  fread
+  
+  free(buffer);
 }
 END_TEST
 
@@ -44,11 +111,14 @@ START_TEST(test_epub3_validate_mimetype)
 }
 END_TEST
 
+
 TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");
   tcase_add_checked_fixture(test_case, setup, teardown);
   tcase_add_test(test_case, test_epub3_get_file_count_in_zip);
+  tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
+  tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
   tcase_add_test(test_case, test_epub3_validate_mimetype);
   return test_case;
 }

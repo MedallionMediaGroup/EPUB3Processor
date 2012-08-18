@@ -11,7 +11,11 @@ typedef uint32_t EPUB3Error;
 
 enum _EPUB3Error {
   kEPUB3Success = 0,
-  kEPUB3InvalidMimetypeError = 1001
+  kEPUB3UnknownError = 1001,
+  kEPUB3InvalidArgumentError = 1002,
+  kEPUB3InvalidMimetypeError = 1003,
+  kEPUB3FileNotFoundError = 1004,
+  kEPUB3FileReadError = 1004,
 };
   
 #define E3_INVALID_MIMETYPE UINT32_C(1)

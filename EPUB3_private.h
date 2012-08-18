@@ -54,12 +54,15 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 EPUB3Ref EPUB3Create();
 EPUB3MetadataRef EPUB3MetadataCreate();
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
+EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void *buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 
 #pragma mark - Validation
-uint EPUB3ValidateMimetype(EPUB3Ref epub);
+EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub);
+EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * filename);
 
 #pragma mark - Utility Functions
 u_long _GetFileCountInZipFile(unzFile file);
+EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename);
 
 
 #endif

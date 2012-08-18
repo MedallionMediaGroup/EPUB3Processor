@@ -142,6 +142,32 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
   epub->metadata = metadata;    
 }
 
+// TODO: All of the EPUB3* functions which operate on the zip archive should
+//       ckeck for a NULL archive before proceeding
+
+EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void *buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
+{
+  EPUB3Error error = kEPUB3InvalidArgumentError;
+  if(buffer != NULL && filename != NULL) {
+    error = EPUB3GetUncompressedSizeOfFileInArchive(epub, bufferSize, filename);
+    if(error == kEPUB3Success)
+    {
+      error = kEPUB3FileReadError;
+      if(unzOpenCurrentFile(epub->archive) == UNZ_OK)
+      {
+        buffer = malloc(*bufferSize);
+        int32_t copied = unzReadCurrentFile(epub->archive, buffer, *bufferSize);
+        if(copied >= 0)
+        {
+          *bytesCopied = copied;
+          error = kEPUB3Success;
+        }
+      }
+    }
+  }
+  return error;
+}
+
 #pragma mark - Validation
 
 EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
@@ -170,8 +196,32 @@ EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
   return status;
 }
 
+EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * filename)
+{
+  EPUB3Error error = kEPUB3FileNotFoundError;
+  if(unzLocateFile(epub->archive, filename, 1) == UNZ_OK)
+  {
+    error = kEPUB3Success;
+  }
+  return error;
+}
 
 #pragma mark - Utility functions
+
+EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename)
+{
+  EPUB3Error error = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
+  if(error == kEPUB3Success)
+  {
+    unz_file_info fileInfo;
+    if(unzGetCurrentFileInfo(epub->archive, &fileInfo, NULL, 0, NULL, 0, NULL, 0) == UNZ_OK)
+    {
+      *uncompressedSize = (uint32_t)fileInfo.uncompressed_size;
+      error = kEPUB3Success;
+    }
+  }
+  return error;
+}
 
 u_long _GetFileCountInZipFile(unzFile file)
 {
