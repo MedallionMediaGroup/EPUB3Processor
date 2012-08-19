@@ -28,7 +28,6 @@ START_TEST(test_epub3_get_file_count_in_zip)
   count = _GetFileCountInZipFile(badMetadataEpub->archive);
   fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
   EPUB3Release(badMetadataEpub);
-  
 }
 END_TEST
 
@@ -37,9 +36,9 @@ START_TEST(test_epub3_get_file_size_in_zip)
   const char * filename = "META-INF/container.xml";
   uint32_t expectedSize = 250U;
   uint32_t size;
-  EPUB3Error result = EPUB3GetUncompressedSizeOfFileInArchive(epub, &size, filename);
-  fail_if(result == kEPUB3FileNotFoundError, "Expected, but couldn't find %s in %s.", filename, epub->archivePath);
-  fail_unless(result == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, epub->archivePath);
+  EPUB3Error error = EPUB3GetUncompressedSizeOfFileInArchive(epub, &size, filename);
+  fail_if(error == kEPUB3FileNotFoundInArchiveError, "Expected, but couldn't find %s in %s.", filename, epub->archivePath);
+  fail_unless(error == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, epub->archivePath);
   fail_unless(size == expectedSize, "Expected size of %u, but got %u for %s.", expectedSize, size, filename);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
@@ -47,33 +46,42 @@ START_TEST(test_epub3_get_file_size_in_zip)
   
   filename = "mimetype";
   expectedSize = 16U;
-  result = EPUB3GetUncompressedSizeOfFileInArchive(badMetadataEpub, &size, filename);
-  fail_if(result == kEPUB3FileNotFoundError, "Expected, but couldn't find %s in %s.", filename, badMetadataEpub->archivePath);
-  fail_unless(result == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, badMetadataEpub->archivePath);
+  error = EPUB3GetUncompressedSizeOfFileInArchive(badMetadataEpub, &size, filename);
+  fail_if(error == kEPUB3FileNotFoundInArchiveError, "Expected, but couldn't find %s in %s.", filename, badMetadataEpub->archivePath);
+  fail_unless(error == kEPUB3Success, "Something went wrong when looking for %s in %s.", filename, badMetadataEpub->archivePath);
   fail_unless(size == expectedSize, "Expected size of %u, but got %u for %s.", expectedSize, size, badMetadataEpub);
-  
   EPUB3Release(badMetadataEpub);
+  
+  EPUB3Ref archiveless = EPUB3Create();
+  error =  EPUB3GetUncompressedSizeOfFileInArchive(archiveless, &size, filename);
+  fail_unless(error == kEPUB3ArchiveUnavailableError, "Function should not try to operate on an EPUB3Ref with an uninitialized archive.");
+  EPUB3Release(archiveless);
 }
 END_TEST
 
 START_TEST(test_epub3_validate_file_exists_in_zip)
 {
   const char * filename = "META-INF/container.xml";
-  EPUB3Error result = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
-  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, epub->archivePath);
-  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
+  EPUB3Error error = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
+  fail_if(error == kEPUB3FileNotFoundInArchiveError, "File %s not found in %s.", filename, epub->archivePath);
+  fail_unless(error == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
   
   filename = "mimetype";
-  result = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
-  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, epub->archivePath);
-  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
+  error = EPUB3ValidateFileExistsAndSeekInArchive(epub, filename);
+  fail_if(error == kEPUB3FileNotFoundInArchiveError, "File %s not found in %s.", filename, epub->archivePath);
+  fail_unless(error == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
 
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
-  result = EPUB3ValidateFileExistsAndSeekInArchive(badEpub, filename);
-  fail_if(result == kEPUB3FileNotFoundError, "File %s not found in %s.", filename, badEpub->archivePath);
-  fail_unless(result == kEPUB3Success, "Had a problem looking for %s in %s.", filename, badEpub->archivePath);
+  error = EPUB3ValidateFileExistsAndSeekInArchive(badEpub, filename);
+  fail_if(error == kEPUB3FileNotFoundInArchiveError, "File %s not found in %s.", filename, badEpub->archivePath);
+  fail_unless(error == kEPUB3Success, "Had a problem looking for %s in %s.", filename, badEpub->archivePath);
   EPUB3Release(badEpub);
+  
+  EPUB3Ref archiveless = EPUB3Create();
+  error =  EPUB3ValidateFileExistsAndSeekInArchive(archiveless, filename);
+  fail_unless(error == kEPUB3ArchiveUnavailableError, "Function should not try to operate on an EPUB3Ref with an uninitialized archive.");
+  EPUB3Release(archiveless);
 }
 END_TEST
 
@@ -102,19 +110,31 @@ START_TEST(test_epub3_copy_file_into_buffer)
   fclose(containerFP);
   free(newBuf);
   free(buffer);
+  
+  EPUB3Ref archiveless = EPUB3Create();
+  error = EPUB3CopyFileIntoBuffer(archiveless, &buffer, &bufferSize, &bytesCopied, filename);
+  fail_unless(error == kEPUB3ArchiveUnavailableError, "Function should not try to operate on an EPUB3Ref with an uninitialized archive.");
+  EPUB3Release(archiveless);
 }
 END_TEST
 
+// Validation tests
+
 START_TEST(test_epub3_validate_mimetype)
 {
-  int result = EPUB3ValidateMimetype(epub);
-  fail_unless(result == kEPUB3Success);
+  EPUB3Error error = EPUB3ValidateMimetype(epub);
+  fail_unless(error == kEPUB3Success);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
-  result = EPUB3ValidateMimetype(badEpub);
-  fail_if(result == kEPUB3Success);
+  error = EPUB3ValidateMimetype(badEpub);
+  fail_if(error == kEPUB3Success);
   EPUB3Release(badEpub);
+  
+  EPUB3Ref archiveless = EPUB3Create();
+  error =  EPUB3ValidateMimetype(archiveless);
+  fail_unless(error == kEPUB3ArchiveUnavailableError, "Function should not try to operate on an EPUB3Ref with an uninitialized archive.");
+  EPUB3Release(archiveless);
 }
 END_TEST
 

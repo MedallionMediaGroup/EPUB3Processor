@@ -14,8 +14,9 @@ enum _EPUB3Error {
   kEPUB3UnknownError = 1001,
   kEPUB3InvalidArgumentError = 1002,
   kEPUB3InvalidMimetypeError = 1003,
-  kEPUB3FileNotFoundError = 1004,
-  kEPUB3FileReadError = 1004,
+  kEPUB3FileNotFoundInArchiveError = 1004,
+  kEPUB3FileReadFromArchiveError = 1005,
+  kEPUB3ArchiveUnavailableError = 1006,
 };
   
 #define E3_INVALID_MIMETYPE UINT32_C(1)
