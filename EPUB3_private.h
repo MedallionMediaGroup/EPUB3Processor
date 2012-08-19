@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
+#include <libxml/xmlreader.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 #include <sys/types.h>
@@ -17,6 +18,12 @@
 #include "unzip.h"
 
 #define EXPORT __attribute__((visibility("default")))
+
+typedef uint8_t EPUB3Bool;
+#define NO 0
+#define FALSE 0
+#define TRUE 1
+#define YES 1
 
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;
@@ -59,6 +66,7 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
 
 #pragma mark - Validation
 EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub);
+EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * filename);
 
 #pragma mark - Utility Functions

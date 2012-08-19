@@ -118,6 +118,22 @@ START_TEST(test_epub3_copy_file_into_buffer)
 }
 END_TEST
 
+START_TEST(test_epub3_copy_root_file_path_from_container)
+{
+  char *rootPath = NULL;
+  const char * expectedPath = "100/content.opf";
+  EPUB3Error error = EPUB3CopyRootFilePathFromContainer(epub, &rootPath);
+  fail_unless(error == kEPUB3Success, "Error %d when trying to retrieve the root file path.", error);
+  ck_assert_str_eq(rootPath, expectedPath);
+  free(rootPath);
+  
+  EPUB3Ref archiveless = EPUB3Create();
+  error = EPUB3CopyRootFilePathFromContainer(archiveless, &rootPath);
+  fail_unless(error == kEPUB3ArchiveUnavailableError, "Function should not try to operate on an EPUB3Ref with an uninitialized archive.");
+  EPUB3Release(archiveless);
+}
+END_TEST
+
 // Validation tests
 
 START_TEST(test_epub3_validate_mimetype)
@@ -147,6 +163,7 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
   tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
   tcase_add_test(test_case, test_epub3_copy_file_into_buffer);
+  tcase_add_test(test_case, test_epub3_copy_root_file_path_from_container);
   tcase_add_test(test_case, test_epub3_validate_mimetype);
   return test_case;
 }

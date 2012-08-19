@@ -6,7 +6,7 @@ extern "C" {
 #endif
   
 #include <stdint.h>
-
+  
 typedef uint32_t EPUB3Error;
 
 enum _EPUB3Error {
@@ -17,10 +17,12 @@ enum _EPUB3Error {
   kEPUB3FileNotFoundInArchiveError = 1004,
   kEPUB3FileReadFromArchiveError = 1005,
   kEPUB3ArchiveUnavailableError = 1006,
+  kEPUB3XMLReadFromBufferError = 1007,
+  kEPUB3XMLParseError = 1008,
+  kEPUB3XMLXElementNotFoundError = 1009,
+  kEPUB3XMLXDocumentInvalidError = 1010,
 };
-  
-#define E3_INVALID_MIMETYPE UINT32_C(1)
-  
+
 typedef struct EPUB3 * EPUB3Ref;
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
 

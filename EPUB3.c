@@ -53,6 +53,7 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
   }
   free(epub->archivePath);
   _EPUB3ObjectRelease(epub);
+  xmlCleanupParser();
 }
 
 EXPORT void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
@@ -92,6 +93,7 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   epub->archive = archive;
   epub->archiveFileCount = _GetFileCountInZipFile(archive);
   epub->archivePath = strdup(path);
+  xmlInitParser();
   //TODO: parse and load metadata?
   return epub;
 }
@@ -165,11 +167,10 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
   
   EPUB3Error error = kEPUB3InvalidArgumentError;
   if(filename != NULL) {
-    uint32_t bufSize;
+    uint32_t bufSize = 1;
     error = EPUB3GetUncompressedSizeOfFileInArchive(epub, &bufSize, filename);
     if(error == kEPUB3Success)
     {
-      error = kEPUB3FileReadFromArchiveError;
       if(unzOpenCurrentFile(epub->archive) == UNZ_OK)
       {
         *buffer = calloc(bufSize, sizeof(char));
@@ -183,6 +184,11 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
             *bufferSize = bufSize;
           }
           error = kEPUB3Success;
+        }
+        else
+        {
+          free(*buffer);
+          error = kEPUB3FileReadFromArchiveError;
         }
       }
     }
@@ -220,6 +226,73 @@ EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
     unzCloseCurrentFile(epub->archive);
   }
   return status;
+}
+
+EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
+{
+  assert(epub != NULL);
+  
+  if(epub->archive == NULL) return kEPUB3ArchiveUnavailableError;
+  
+  static const char *containerFilename = "META-INF/container.xml";
+
+  void *buffer = NULL;
+  uint32_t bufferSize = 0;
+  uint32_t bytesCopied;
+
+  xmlTextReaderPtr reader = NULL;
+  EPUB3Bool foundPath = NO;
+  
+  EPUB3Error error = kEPUB3Success;
+
+  error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, containerFilename);
+  if(error == kEPUB3Success)
+  {
+    reader = xmlReaderForMemory(buffer, bufferSize, "", NULL, XML_PARSE_RECOVER);
+    if(reader != NULL)
+    {
+      int retVal;
+      while((retVal = xmlTextReaderRead(reader)) == 1)
+      {
+        const char *rootFileName = "rootfile";
+        const xmlChar *name = xmlTextReaderConstName(reader);
+
+        if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
+           strcmp((char *)name, rootFileName) == 0)
+        {
+          xmlChar *fullPath = xmlTextReaderGetAttribute(reader, BAD_CAST "full-path");
+          if(fullPath != NULL)
+          {
+            // TODD: validate that the full-path attribute is of the form path-rootless
+            //       see http://idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf-container.xml
+            foundPath = YES;
+            *rootPath = (char *)fullPath;
+          }
+          else
+          {
+            // The spec requires the full-path attribute
+            error = kEPUB3XMLXDocumentInvalidError;
+          }
+          break;
+        }
+      }
+      if(retVal < 0)
+      {
+        error = kEPUB3XMLParseError;
+      }
+      if(!foundPath)
+      {
+        error = kEPUB3XMLXElementNotFoundError;
+      }
+    }
+    else
+    {
+      error = kEPUB3XMLReadFromBufferError;
+    }
+    free(buffer);
+  }
+  xmlFreeTextReader(reader);
+  return error;
 }
 
 EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * filename)
