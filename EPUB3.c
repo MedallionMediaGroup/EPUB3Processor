@@ -145,18 +145,18 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
 // TODO: All of the EPUB3* functions which operate on the zip archive should
 //       ckeck for a NULL archive before proceeding
 
-EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void *buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
+EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
 {
   EPUB3Error error = kEPUB3InvalidArgumentError;
-  if(buffer != NULL && filename != NULL) {
+  if(filename != NULL) {
     error = EPUB3GetUncompressedSizeOfFileInArchive(epub, bufferSize, filename);
     if(error == kEPUB3Success)
     {
       error = kEPUB3FileReadError;
       if(unzOpenCurrentFile(epub->archive) == UNZ_OK)
       {
-        buffer = malloc(*bufferSize);
-        int32_t copied = unzReadCurrentFile(epub->archive, buffer, *bufferSize);
+        *buffer = calloc(*bufferSize, sizeof(char));
+        int32_t copied = unzReadCurrentFile(epub->archive, *buffer, *bufferSize);
         if(copied >= 0)
         {
           *bytesCopied = copied;

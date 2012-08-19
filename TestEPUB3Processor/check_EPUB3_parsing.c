@@ -84,16 +84,23 @@ START_TEST(test_epub3_copy_file_into_buffer)
   uint32_t bytesCopied;
   const char * filename = "META-INF/container.xml";
   uint32_t expectedSize = 250U;
-  EPUB3Error error = EPUB3CopyFileIntoBuffer(epub, buffer, &bufferSize, &bytesCopied, filename);
-  fail_unless(error == kEPUB3Success);
-  fail_unless(bufferSize == expectedSize);
-  fail_unless(bytesCopied == expectedSize);
-  fail_unless(bytesCopied == bufferSize);
+  EPUB3Error error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, filename);
+  fail_unless(error == kEPUB3Success, "Copy into buffer failed with error: %d", error);
+  fail_unless(bufferSize == expectedSize, "Expected %s to be %u bytes but was %u bytes.", filename, expectedSize, bufferSize);
+  fail_unless(bytesCopied == expectedSize, "Expected %s to be %u bytes but was %u bytes.", filename, expectedSize, bufferSize);
+  fail_unless(bytesCopied == bufferSize, "Expected %s to be %u bytes but was %u bytes.", filename, expectedSize, bufferSize);
   
-//  TEST_PATH_VAR_FOR_FILENAME(path, "pg100_container.xml");
-//  FILE *containerFP = fopen(path, "r");
-//  fread
+  TEST_PATH_VAR_FOR_FILENAME(path, "pg100_container.xml");
+  FILE *containerFP = fopen(path, "r");
+  char *newBuf = (char *)calloc(bufferSize, sizeof(char));
+  size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, containerFP);
+  fail_if(ferror(containerFP) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(containerFP)));
+  fail_unless(feof(containerFP) == 0, "The test data file %s is bigger than the archive's file.");
+  fail_unless(bytesRead == bufferSize, "The test data file %s is bigger than the archive's file.");
+  fail_unless(strcmp(newBuf, buffer) == 0, "%s does not match the test data in %s.", filename, path);
   
+  fclose(containerFP);
+  free(newBuf);
   free(buffer);
 }
 END_TEST
@@ -119,6 +126,7 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_get_file_count_in_zip);
   tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
   tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
+  tcase_add_test(test_case, test_epub3_copy_file_into_buffer);
   tcase_add_test(test_case, test_epub3_validate_mimetype);
   return test_case;
 }
