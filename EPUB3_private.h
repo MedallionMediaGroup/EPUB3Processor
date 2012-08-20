@@ -19,11 +19,7 @@
 
 #define EXPORT __attribute__((visibility("default")))
 
-typedef uint8_t EPUB3Bool;
-#define NO 0
-#define FALSE 0
-#define TRUE 1
-#define YES 1
+typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
 
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;

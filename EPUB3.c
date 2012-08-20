@@ -241,7 +241,7 @@ EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
   uint32_t bytesCopied;
 
   xmlTextReaderPtr reader = NULL;
-  EPUB3Bool foundPath = NO;
+  EPUB3Bool foundPath = kEPUB3_NO;
   
   EPUB3Error error = kEPUB3Success;
 
@@ -265,7 +265,7 @@ EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
           {
             // TODD: validate that the full-path attribute is of the form path-rootless
             //       see http://idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf-container.xml
-            foundPath = YES;
+            foundPath = kEPUB3_YES;
             *rootPath = (char *)fullPath;
           }
           else
