@@ -594,6 +594,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "BIN=\"$TARGET_BUILD_DIR/$TARGET_NAME\";\nTEST_OUTPUT=$TARGET_BUILD_DIR/test_output.xml\nTEST_TRANSFORMER=$SRCROOT/TestEPUB3Processor/Support/check2junitxml.py\n\n$BIN $TEST_OUTPUT\n$TEST_TRANSFORMER $TEST_OUTPUT -o $TARGET_BUILD_DIR/junit_output.xml\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -134,6 +134,27 @@ START_TEST(test_epub3_copy_root_file_path_from_container)
 }
 END_TEST
 
+START_TEST(test_epub3_parse_metadata_from_opf)
+{
+  const char * expectedTitle = "The Complete Works of William Shakespeare";
+  const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
+  const char * expectedLanguage = "en";
+
+  EPUB3Error error = EPUB3InitMetadataFromOPF(epub, "100/content.opf");
+  fail_unless(error == kEPUB3Success);
+  fail_if(epub->metadata == NULL);
+  
+  fail_if(epub->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->title, expectedTitle);
+
+  fail_if(epub->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->identifier, expectedIdentifier);
+
+  fail_if(epub->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->language, expectedLanguage);
+}
+END_TEST
+
 // Validation tests
 
 START_TEST(test_epub3_validate_mimetype)
@@ -163,6 +184,7 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
   tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
   tcase_add_test(test_case, test_epub3_copy_file_into_buffer);
+  tcase_add_test(test_case, test_epub3_parse_metadata_from_opf);
   tcase_add_test(test_case, test_epub3_copy_root_file_path_from_container);
   tcase_add_test(test_case, test_epub3_validate_mimetype);
   return test_case;
