@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
@@ -13,9 +14,8 @@
 #endif
 
 #define TEST_PATH_VAR_FOR_FILENAME(__varname, __filename) \
-  uint64_t __length = EPUB3TestPathLengthForFileNamed(__filename); \
-  char __varname[__length]; \
-  (void)EPUB3GetTestPathForFileNamed(path, __filename);
+  char __varname[EPUB3TestPathLengthForFileNamed(__filename)]; \
+  (void)EPUB3GetTestPathForFileNamed(__varname, __filename);
 
 
 static uint64_t EPUB3TestPathLengthForFileNamed(const char * name) {

@@ -85,6 +85,7 @@ char * EPUB3CopyStringValue(char ** location);
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseStateContextPtr *currentContext);
+EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename);
 
 #pragma mark - Validation

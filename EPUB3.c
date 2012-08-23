@@ -15,7 +15,7 @@ void _EPUB3ObjectRelease(void *object)
   if(object == NULL) return;
 
   EPUB3ObjectRef obj = (EPUB3ObjectRef)object;
-  obj->_type.refCount -= 1;
+  obj->_type.refCount--;
   if(obj->_type.refCount == 0) {
     free(obj);
   }
@@ -26,7 +26,7 @@ void _EPUB3ObjectRetain(void *object)
   if(object == NULL) return;
   
   EPUB3ObjectRef obj = (EPUB3ObjectRef)object;
-  obj->_type.refCount += 1;
+  obj->_type.refCount++;
 }
 
 void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
@@ -89,6 +89,8 @@ EPUB3Ref EPUB3Create()
   memory->archive = NULL;
   memory->archivePath = NULL;
   memory->archiveFileCount = 0;
+  //TODO: find a better place for the xmlInitParser() call
+  xmlInitParser();
   return memory;
 }
 
@@ -102,8 +104,7 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   epub->archiveFileCount = _GetFileCountInZipFile(archive);
   epub->archivePath = strdup(path);
   epub->metadata = NULL;
-  xmlInitParser();
-  //TODO: parse and load metadata?
+  //TODO: parse and load metadata here?
   return epub;
 }
 
@@ -384,6 +385,39 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
   return error;
 }
 
+EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
+{
+  assert(epub != NULL);
+  assert(buffer != NULL);
+  assert(bufferSize > 0);
+
+  EPUB3Error error = kEPUB3Success;
+  xmlTextReaderPtr reader = NULL;
+  reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
+  // (void)xmlTextReaderSetParserProp(reader, XML_PARSER_VALIDATE, 1);
+  if(reader != NULL) {
+    EPUB3OPFParseStateContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
+    EPUB3OPFParseStateContextPtr currentContext = &contextStack[0];
+
+    int retVal = xmlTextReaderRead(reader);
+    currentContext->state = kEPUB3OPFStateRoot;
+    currentContext->tagName = xmlTextReaderConstName(reader);
+    currentContext->depth = xmlTextReaderDepth(reader);
+    while(retVal == 1)
+    {
+      error = _EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
+      retVal = xmlTextReaderRead(reader);
+    }
+    if(retVal < 0) {
+      error = kEPUB3XMLParseError;
+    }
+  } else {
+    error = kEPUB3XMLReadFromBufferError;
+  }
+  xmlFreeTextReader(reader);
+  return error;
+}
+
 EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename)
 {
   assert(epub != NULL);
@@ -399,36 +433,13 @@ EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename)
   uint32_t bufferSize = 0;
   uint32_t bytesCopied;
   
-  xmlTextReaderPtr reader = NULL;
-  
   EPUB3Error error = kEPUB3Success;
   
   error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
   if(error == kEPUB3Success) {
-    reader = xmlReaderForMemory(buffer, bufferSize, "", NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
-    // (void)xmlTextReaderSetParserProp(reader, XML_PARSER_VALIDATE, 1);
-    if(reader != NULL) {
-      EPUB3OPFParseStateContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
-      EPUB3OPFParseStateContextPtr currentContext = &contextStack[0];
-
-      int retVal = xmlTextReaderRead(reader);
-      currentContext->state = kEPUB3OPFStateRoot;
-      currentContext->tagName = xmlTextReaderConstName(reader);
-      currentContext->depth = xmlTextReaderDepth(reader);
-      while(retVal == 1)
-      {
-        error = _EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
-        retVal = xmlTextReaderRead(reader);
-      }
-      if(retVal < 0) {
-        error = kEPUB3XMLParseError;
-      }
-    } else {
-      error = kEPUB3XMLReadFromBufferError;
-    }
+    error = _EPUB3ParseMetadataFromOPFData(epub, buffer, bufferSize);
     free(buffer);
   }
-  xmlFreeTextReader(reader);
   return error;
 }
 

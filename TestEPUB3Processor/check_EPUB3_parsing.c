@@ -1,5 +1,6 @@
 #include <config.h>
 #include <check.h>
+#include <sys/stat.h>
 #include "test_common.h"
 #include "EPUB3.h"
 #include "EPUB3_private.h"
@@ -134,7 +135,88 @@ START_TEST(test_epub3_copy_root_file_path_from_container)
 }
 END_TEST
 
-START_TEST(test_epub3_parse_metadata_from_opf)
+START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
+{
+  const char * expectedTitle = "The Complete Works of William Shakespeare";
+  const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
+  const char * expectedLanguage = "en";
+
+  TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
+  EPUB3Ref blankEPUB = EPUB3Create();
+  EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
+  EPUB3SetMetadata(blankEPUB, blankMetadata);
+  
+  struct stat st;
+  stat(path, &st);
+  off_t bufferSize = st.st_size;
+  FILE *fp = fopen(path, "r");
+  char *newBuf = (char *)calloc(bufferSize, sizeof(char));
+  size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, fp);
+  
+  fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
+  fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
+
+  EPUB3Error error = _EPUB3ParseMetadataFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  fail_unless(error == kEPUB3Success);
+  fail_if(blankEPUB->metadata == NULL);
+  
+  fail_if(blankEPUB->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->title, expectedTitle);
+
+  fail_if(blankEPUB->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->identifier, expectedIdentifier);
+
+  fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
+
+  free(newBuf);
+  EPUB3Release(blankEPUB);
+}
+END_TEST
+
+START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
+{
+  const char * expectedTitle = "Moby-Dick";
+  const char * expectedIdentifier = "urn:isbn:9780316000000";
+  const char * expectedLanguage = "en-US";
+
+  TEST_PATH_VAR_FOR_FILENAME(path, "moby_dick_package.opf");
+  EPUB3Ref blankEPUB = EPUB3Create();
+  EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
+  EPUB3SetMetadata(blankEPUB, blankMetadata);
+  
+  struct stat st;
+  stat(path, &st);
+  off_t bufferSize = st.st_size;
+  FILE *fp = fopen(path, "r");
+  char *newBuf = (char *)calloc(bufferSize, sizeof(char));
+  size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, fp);
+  
+  fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
+  fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
+
+  EPUB3Error error = _EPUB3ParseMetadataFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  fail_unless(error == kEPUB3Success);
+  fail_if(blankEPUB->metadata == NULL);
+  
+  fail_if(blankEPUB->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->title, expectedTitle);
+
+  fail_if(blankEPUB->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->identifier, expectedIdentifier);
+
+  fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
+
+  free(newBuf);
+  EPUB3Release(blankEPUB);
+
+  TEST_PATH_VAR_FOR_FILENAME(mobyDickPath, "moby_dick_package.opf");
+
+}
+END_TEST
+
+START_TEST(test_epub3_parse_metadata_from_opf_using_real_epub)
 {
   const char * expectedTitle = "The Complete Works of William Shakespeare";
   const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
@@ -184,7 +266,9 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
   tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
   tcase_add_test(test_case, test_epub3_copy_file_into_buffer);
-  tcase_add_test(test_case, test_epub3_parse_metadata_from_opf);
+  tcase_add_test(test_case, test_epub3_parse_metadata_from_shakespeare_opf_data);
+  tcase_add_test(test_case, test_epub3_parse_metadata_from_moby_dick_opf_data);
+  tcase_add_test(test_case, test_epub3_parse_metadata_from_opf_using_real_epub);
   tcase_add_test(test_case, test_epub3_copy_root_file_path_from_container);
   tcase_add_test(test_case, test_epub3_validate_mimetype);
   return test_case;
