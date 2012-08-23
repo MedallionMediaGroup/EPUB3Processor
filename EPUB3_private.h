@@ -35,6 +35,7 @@ typedef enum {
 typedef struct _EPUB3OPFParseStateContext {
   EPUB3OPFParseState state;
   const xmlChar *tagName;
+  EPUB3Bool shouldParseTextNode;
   int depth;
 } EPUB3OPFParseStateContext;
 
@@ -65,6 +66,7 @@ struct EPUB3Metadata {
   EPUB3Type _type;
   EPUB3Version version;
   char * title;
+  char * _uniqueIdentifierID;
   char * identifier;
   char * language;
   // char * modified;
