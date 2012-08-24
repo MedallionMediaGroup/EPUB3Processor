@@ -240,7 +240,7 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
   return error;
 }
 
-EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseStateContextPtr *context)
+EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -248,7 +248,6 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
   EPUB3Error error = kEPUB3Success;
   const xmlChar *name = xmlTextReaderConstLocalName(reader);
   xmlReaderTypes nodeType = xmlTextReaderNodeType(reader);
-  int depth = xmlTextReaderDepth(reader);
 
   switch(nodeType)
   {
@@ -259,7 +258,6 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
         (*context)->state = kEPUB3OPFStateMetadata;
         (*context)->tagName = name;
         (*context)->shouldParseTextNode = kEPUB3_YES;
-        (*context)->depth = depth;
 
         // Only parse text node for the identifier marked as unique-identifier in the package tag
         // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
@@ -305,7 +303,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
   return error;
 }
 
-EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseStateContextPtr *currentContext)
+EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -313,7 +311,6 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
 
   EPUB3Error error = kEPUB3Success;
   const xmlChar *name = xmlTextReaderConstLocalName(reader);
-  int depth = xmlTextReaderDepth(reader);
   xmlReaderTypes currentNodeType = xmlTextReaderNodeType(reader);
   
   if(name != NULL && currentNodeType != XML_READER_TYPE_COMMENT) {
@@ -333,21 +330,18 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
             (*currentContext)->state = kEPUB3OPFStateMetadata;
             (*currentContext)->tagName = name;
             (*currentContext)->shouldParseTextNode = kEPUB3_YES;
-            (*currentContext)->depth = depth;
           }
           else if(xmlStrcmp(name, BAD_CAST "manifest") == 0) {
             (*currentContext)++;
             (*currentContext)->state = kEPUB3OPFStateManifest;
             (*currentContext)->tagName = name;
             (*currentContext)->shouldParseTextNode = kEPUB3_YES;
-            (*currentContext)->depth = depth;
           }
           else if(xmlStrcmp(name, BAD_CAST "spine") == 0) {
             (*currentContext)++;
             (*currentContext)->state = kEPUB3OPFStateSpine;
             (*currentContext)->tagName = name;
             (*currentContext)->shouldParseTextNode = kEPUB3_YES;
-            (*currentContext)->depth = depth;
           }
         }
         break;
@@ -396,13 +390,12 @@ EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t
   reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
   // (void)xmlTextReaderSetParserProp(reader, XML_PARSER_VALIDATE, 1);
   if(reader != NULL) {
-    EPUB3OPFParseStateContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
-    EPUB3OPFParseStateContextPtr currentContext = &contextStack[0];
+    EPUB3OPFParseContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
+    EPUB3OPFParseContextPtr currentContext = &contextStack[0];
 
     int retVal = xmlTextReaderRead(reader);
     currentContext->state = kEPUB3OPFStateRoot;
     currentContext->tagName = xmlTextReaderConstName(reader);
-    currentContext->depth = xmlTextReaderDepth(reader);
     while(retVal == 1)
     {
       error = _EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);

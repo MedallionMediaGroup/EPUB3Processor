@@ -32,14 +32,13 @@ typedef enum {
   kEPUB3OPFStateSpine
 } EPUB3OPFParseState;
 
-typedef struct _EPUB3OPFParseStateContext {
+typedef struct _EPUB3OPFParseContext {
   EPUB3OPFParseState state;
   const xmlChar *tagName;
   EPUB3Bool shouldParseTextNode;
-  int depth;
-} EPUB3OPFParseStateContext;
+} EPUB3OPFParseContext;
 
-typedef EPUB3OPFParseStateContext * EPUB3OPFParseStateContextPtr;
+typedef EPUB3OPFParseContext * EPUB3OPFParseContextPtr;
 
 #pragma mark - Type definitions
 
@@ -84,7 +83,7 @@ void EPUB3SetStringValue(char ** location, const char *value);
 char * EPUB3CopyStringValue(char ** location);
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
-EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseStateContextPtr *currentContext);
+EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
 EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename);
 
