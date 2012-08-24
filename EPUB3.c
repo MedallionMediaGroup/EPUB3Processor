@@ -276,7 +276,11 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   assert(id != NULL);
 
   EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, id);
-
+  
+  if(itemPtr == NULL) {
+    return NULL;
+  }
+  
   EPUB3ManifestItemRef item = itemPtr->item;
   EPUB3ManifestItemRef copy = EPUB3ManifestItemCreate();
   copy->id = item->id != NULL ? strdup(item->id) : NULL;

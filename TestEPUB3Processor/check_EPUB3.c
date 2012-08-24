@@ -103,6 +103,9 @@ START_TEST(test_epub3_manifest_hash)
   fail_if(itemCopy->id == id);
   ck_assert_str_eq(item->id, itemCopy->id);
   fail_if(item->id == itemCopy->id);
+  
+  itemCopy = EPUB3ManifestCopyItemWithId(manifest, "doesnotexist");
+  fail_unless(itemCopy == NULL, "Non existent items in the manifest should be NULL.");
 
   EPUB3ManifestItemRelease(item);
   EPUB3ManifestRelease(manifest);
