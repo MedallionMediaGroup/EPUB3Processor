@@ -186,6 +186,7 @@ EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
       next = tmp->next;
       free(tmp);
     }
+    manifest->itemTable[i] = NULL;
   }
   manifest->itemCount = 0;
   _EPUB3ObjectRelease(manifest);
