@@ -63,7 +63,6 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
       epub->archive = NULL;
     }
     free(epub->archivePath);
-    xmlCleanupParser();
   }
 
   EPUB3MetadataRelease(epub->metadata);
@@ -414,8 +413,6 @@ EPUB3Ref EPUB3Create()
   memory->archive = NULL;
   memory->archivePath = NULL;
   memory->archiveFileCount = 0;
-  //TODO: find a better place for the xmlInitParser() call
-  xmlInitParser();
   return memory;
 }
 
@@ -695,6 +692,7 @@ EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferS
   assert(bufferSize > 0);
 
   EPUB3Error error = kEPUB3Success;
+  xmlInitParser();
   xmlTextReaderPtr reader = NULL;
   reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
   // (void)xmlTextReaderSetParserProp(reader, XML_PARSER_VALIDATE, 1);
@@ -717,6 +715,7 @@ EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferS
     error = kEPUB3XMLReadFromBufferError;
   }
   xmlFreeTextReader(reader);
+  xmlCleanupParser();
   return error;
 }
 
