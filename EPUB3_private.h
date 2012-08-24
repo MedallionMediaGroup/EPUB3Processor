@@ -64,6 +64,7 @@ struct EPUB3 {
   EPUB3Type _type;
   EPUB3MetadataRef metadata;
   EPUB3ManifestRef manifest;
+  EPUB3SpineRef spine;
   char * archivePath;
   unzFile archive;
   uint32_t archiveFileCount;
@@ -116,6 +117,7 @@ struct EPUB3Spine {
 struct EPUB3SpineItem {
   EPUB3Type _type;
   EPUB3Bool isLinear;
+  char * idref;
   EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
@@ -136,6 +138,7 @@ EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manif
 
 EPUB3SpineRef EPUB3SpineCreate();
 EPUB3SpineItemRef EPUB3SpineItemCreate();
+void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
 void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item);
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem);
 
@@ -146,6 +149,7 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
 EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
 EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
+EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
 
 void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
