@@ -21,12 +21,12 @@ static void teardown()
 START_TEST(test_epub3_get_file_count_in_zip)
 {
   u_long expectedCount = 115U;
-  u_long count = _GetFileCountInZipFile(epub->archive);
+  u_long count = EPUB3GetFileCountInZipFile(epub->archive);
   fail_unless(count == expectedCount, "Expected %u files, but found %u in %s.", expectedCount, count, epub->archivePath);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
-  count = _GetFileCountInZipFile(badMetadataEpub->archive);
+  count = EPUB3GetFileCountInZipFile(badMetadataEpub->archive);
   fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
   EPUB3Release(badMetadataEpub);
 }
@@ -163,7 +163,7 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   assert(blankEPUB->metadata != NULL);
@@ -216,7 +216,7 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   assert(blankEPUB->metadata != NULL);
@@ -321,7 +321,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
   
-  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   
@@ -385,7 +385,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
   
-  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   

@@ -15,7 +15,7 @@ const char * kEPUB3SpineItemTypeID = "_EPUB3SpineItem_t";
 
 #pragma mark - Base Object
 
-void _EPUB3ObjectRelease(void *object)
+void EPUB3ObjectRelease(void *object)
 {
   if(object == NULL) return;
 
@@ -26,7 +26,7 @@ void _EPUB3ObjectRelease(void *object)
   }
 }
 
-void _EPUB3ObjectRetain(void *object)
+void EPUB3ObjectRetain(void *object)
 {
   if(object == NULL) return;
   
@@ -34,7 +34,7 @@ void _EPUB3ObjectRetain(void *object)
   obj->_type.refCount++;
 }
 
-void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
+void * EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
 {
   assert(object != NULL);
   EPUB3ObjectRef obj = (EPUB3ObjectRef)object;
@@ -48,7 +48,7 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
 EPUB3Ref EPUB3Create()
 {
   EPUB3Ref memory = malloc(sizeof(struct EPUB3));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
   memory->metadata = NULL;
   memory->manifest = NULL;
   memory->spine = NULL;
@@ -65,7 +65,7 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   EPUB3Ref epub = EPUB3Create();
   unzFile archive = unzOpen(path);
   epub->archive = archive;
-  epub->archiveFileCount = _GetFileCountInZipFile(archive);
+  epub->archiveFileCount = EPUB3GetFileCountInZipFile(archive);
   epub->archivePath = strdup(path);
   //TODO: parse and load metadata here?
   return epub;
@@ -78,7 +78,7 @@ EXPORT void EPUB3Retain(EPUB3Ref epub)
   EPUB3MetadataRetain(epub->metadata);
   EPUB3ManifestRetain(epub->manifest);
   EPUB3SpineRetain(epub->spine);
-  _EPUB3ObjectRetain(epub);
+  EPUB3ObjectRetain(epub);
 }
 
 EXPORT void EPUB3Release(EPUB3Ref epub)
@@ -96,7 +96,7 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
   EPUB3MetadataRelease(epub->metadata);
   EPUB3ManifestRelease(epub->manifest);
   EPUB3SpineRelease(epub->spine);
-  _EPUB3ObjectRelease(epub);
+  EPUB3ObjectRelease(epub);
 }
 
 EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
@@ -179,7 +179,7 @@ EXPORT void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
 {
   if(metadata == NULL) return;
   
-  _EPUB3ObjectRetain(metadata);
+  EPUB3ObjectRetain(metadata);
 }
 
 EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
@@ -192,13 +192,13 @@ EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
     free(metadata->identifier);
     free(metadata->language);
   }
-  _EPUB3ObjectRelease(metadata);
+  EPUB3ObjectRelease(metadata);
 }
 
 EPUB3MetadataRef EPUB3MetadataCreate()
 {
   EPUB3MetadataRef memory = malloc(sizeof(struct EPUB3Metadata));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3MetadataTypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3MetadataTypeID);
   memory->title = NULL;
   memory->_uniqueIdentifierID = NULL;
   memory->identifier = NULL;
@@ -255,7 +255,7 @@ EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
       itemPtr = itemPtr->next;
     }
   }
-  _EPUB3ObjectRetain(manifest);
+  EPUB3ObjectRetain(manifest);
 }
 
 EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
@@ -280,14 +280,14 @@ EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
   if(manifest->_type.refCount == 1) {
     manifest->itemCount = 0;
   }
-  _EPUB3ObjectRelease(manifest);
+  EPUB3ObjectRelease(manifest);
 }
 
 EXPORT void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item)
 {
   if(item == NULL) return;
   
-  _EPUB3ObjectRetain(item);
+  EPUB3ObjectRetain(item);
 }
 
 EXPORT void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
@@ -301,13 +301,13 @@ EXPORT void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
     free(item->properties);
   }
   
-  _EPUB3ObjectRelease(item);
+  EPUB3ObjectRelease(item);
 }
 
 EPUB3ManifestRef EPUB3ManifestCreate()
 {
   EPUB3ManifestRef memory = malloc(sizeof(struct EPUB3Manifest));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestTypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestTypeID);
   memory->itemCount = 0;
   for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
     memory->itemTable[i] = NULL;
@@ -318,7 +318,7 @@ EPUB3ManifestRef EPUB3ManifestCreate()
 EPUB3ManifestItemRef EPUB3ManifestItemCreate()
 {
   EPUB3ManifestItemRef memory = malloc(sizeof(struct EPUB3ManifestItem));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestItemTypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestItemTypeID);
   memory->itemId = NULL;
   memory->href = NULL;
   memory->mediaType = NULL;
@@ -333,7 +333,7 @@ void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef ite
   assert(item->itemId != NULL);
 
   EPUB3ManifestItemRetain(item);
-  EPUB3ManifestItemListItemPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->itemId);
+  EPUB3ManifestItemListItemPtr itemPtr = EPUB3ManifestFindItemWithId(manifest, item->itemId);
   if(itemPtr == NULL) {
     itemPtr = (EPUB3ManifestItemListItemPtr) malloc(sizeof(struct EPUB3ManifestItemListItem));
     int32_t bucket = SuperFastHash(item->itemId, (int32_t)strlen(item->itemId)) % MANIFEST_HASH_SIZE;
@@ -352,7 +352,7 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   assert(manifest != NULL);
   assert(itemId != NULL);
 
-  EPUB3ManifestItemListItemPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, itemId);
+  EPUB3ManifestItemListItemPtr itemPtr = EPUB3ManifestFindItemWithId(manifest, itemId);
   
   if(itemPtr == NULL) {
     return NULL;
@@ -367,7 +367,7 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   return copy;
 }
 
-EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId)
+EPUB3ManifestItemListItemPtr EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId)
 {
   assert(manifest != NULL);
   assert(itemId != NULL);
@@ -388,7 +388,7 @@ EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manif
 EPUB3SpineRef EPUB3SpineCreate()
 {
   EPUB3SpineRef memory = malloc(sizeof(struct EPUB3Spine));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineTypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineTypeID);
   memory->itemCount = 0;
   memory->head = NULL;
   memory->tail = NULL;
@@ -403,7 +403,7 @@ EXPORT void EPUB3SpineRetain(EPUB3SpineRef spine)
   for(itemPtr = spine->head; itemPtr != NULL; itemPtr = itemPtr->next) {
     EPUB3SpineItemRetain(itemPtr->item);
   }
-  _EPUB3ObjectRetain(spine);
+  EPUB3ObjectRetain(spine);
 }
 
 EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
@@ -419,13 +419,13 @@ EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
     }
     spine->itemCount = 0;
   }
-  _EPUB3ObjectRelease(spine);
+  EPUB3ObjectRelease(spine);
 }
 
 EPUB3SpineItemRef EPUB3SpineItemCreate()
 {
   EPUB3SpineItemRef memory = malloc(sizeof(struct EPUB3SpineItem));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineItemTypeID);
+  memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineItemTypeID);
   memory->isLinear = kEPUB3_NO;
   memory->idref = NULL;
   memory->manifestItem = NULL;
@@ -436,7 +436,7 @@ EXPORT void EPUB3SpineItemRetain(EPUB3SpineItemRef item)
 {
   if(item == NULL) return;
   EPUB3ManifestItemRetain(item->manifestItem);
-  _EPUB3ObjectRetain(item);
+  EPUB3ObjectRetain(item);
 }
 
 EXPORT void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
@@ -448,7 +448,7 @@ EXPORT void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
       free(item->idref);
     }
   }
-  _EPUB3ObjectRelease(item);
+  EPUB3ObjectRelease(item);
 }
 
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem)
@@ -514,13 +514,13 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
   
   error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
   if(error == kEPUB3Success) {
-    error = _EPUB3ParseFromOPFData(epub, buffer, bufferSize);
+    error = EPUB3ParseFromOPFData(epub, buffer, bufferSize);
     free(buffer);
   }
   return error;
 }
 
-void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode)
+void EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode)
 {
   (*ctxPtr)++;
   (*ctxPtr)->state = state;
@@ -530,7 +530,7 @@ void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState 
   (*ctxPtr)->shouldParseTextNode = shouldParseTextNode;
 }
 
-void _EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr)
+void EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr)
 {
   EPUB3OPFParseContextPtr ctx = (*contextPtr);
   (*contextPtr)--;
@@ -542,7 +542,7 @@ void _EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr)
   }
 }
 
-EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -556,7 +556,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)_EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
 
         // Only parse text node for the identifier marked as unique-identifier in the package tag
         // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
@@ -594,7 +594,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
     }
     case XML_READER_TYPE_END_ELEMENT:
     {
-      (void)_EPUB3PopAndFreeParseContext(context);
+      (void)EPUB3PopAndFreeParseContext(context);
       break;
     }
     default: break;
@@ -602,7 +602,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
   return error;
 }
 
-EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -616,7 +616,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextRead
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)_EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
       } else {
         if(xmlStrcmp(name, BAD_CAST "item") == 0) {
           EPUB3ManifestItemRef newItem = EPUB3ManifestItemCreate();
@@ -634,7 +634,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextRead
     }
     case XML_READER_TYPE_END_ELEMENT:
     {
-      (void)_EPUB3PopAndFreeParseContext(context);
+      (void)EPUB3PopAndFreeParseContext(context);
       break;
     }
     default: break;
@@ -642,7 +642,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextRead
   return error;
 }
 
-EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -656,7 +656,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderP
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)_EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
       } else {
         if(xmlStrcmp(name, BAD_CAST "itemref") == 0) {
           EPUB3SpineItemRef newItem = EPUB3SpineItemCreate();
@@ -668,7 +668,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderP
           free(linear);
           newItem->idref = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "idref");
           if(newItem->idref != NULL) {
-            EPUB3ManifestItemListItemPtr manifestPtr = _EPUB3ManifestFindItemWithId(epub->manifest, newItem->idref);
+            EPUB3ManifestItemListItemPtr manifestPtr = EPUB3ManifestFindItemWithId(epub->manifest, newItem->idref);
             newItem->manifestItem = manifestPtr->item;
           }
           EPUB3SpineAppendItem(epub->spine, newItem);
@@ -682,7 +682,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderP
     }
     case XML_READER_TYPE_END_ELEMENT:
     {
-      (void)_EPUB3PopAndFreeParseContext(context);
+      (void)EPUB3PopAndFreeParseContext(context);
       break;
     }
     default: break;
@@ -690,7 +690,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderP
   return error;
 }
 
-EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext)
+EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -714,13 +714,13 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
             epub->metadata->_uniqueIdentifierID = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "unique-identifier");
           }
           else if(xmlStrcmp(name, BAD_CAST "metadata") == 0) {
-            (void)_EPUB3SaveParseContext(currentContext, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
           }
           else if(xmlStrcmp(name, BAD_CAST "manifest") == 0) {
-            (void)_EPUB3SaveParseContext(currentContext, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
           }
           else if(xmlStrcmp(name, BAD_CAST "spine") == 0) {
-            (void)_EPUB3SaveParseContext(currentContext, kEPUB3OPFStateSpine, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateSpine, name, 0, NULL, kEPUB3_YES);
           }
         }
         break;
@@ -729,9 +729,9 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       {
 //        fprintf(stdout, "METADATA: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "metadata") == 0) {
-          (void)_EPUB3PopAndFreeParseContext(currentContext);
+          (void)EPUB3PopAndFreeParseContext(currentContext);
         } else {
-          error = _EPUB3ProcessXMLReaderNodeForMetadataInOPF(epub, reader, currentContext);
+          error = EPUB3ProcessXMLReaderNodeForMetadataInOPF(epub, reader, currentContext);
         }
         break;
       }
@@ -739,9 +739,9 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       {
 //        fprintf(stdout, "MANIFEST: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "manifest") == 0) {
-          (void)_EPUB3PopAndFreeParseContext(currentContext);
+          (void)EPUB3PopAndFreeParseContext(currentContext);
         } else {
-          error = _EPUB3ProcessXMLReaderNodeForManifestInOPF(epub, reader, currentContext);
+          error = EPUB3ProcessXMLReaderNodeForManifestInOPF(epub, reader, currentContext);
         }
         break;
       }
@@ -749,9 +749,9 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       {
 //        fprintf(stdout, "SPINE: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "spine") == 0) {
-          (void)_EPUB3PopAndFreeParseContext(currentContext);
+          (void)EPUB3PopAndFreeParseContext(currentContext);
         } else {
-          error = _EPUB3ProcessXMLReaderNodeForSpineInOPF(epub, reader, currentContext);
+          error = EPUB3ProcessXMLReaderNodeForSpineInOPF(epub, reader, currentContext);
         }
         break;
       }
@@ -761,7 +761,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
   return error;
 }
 
-EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
+EPUB3Error EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
 {
   assert(epub != NULL);
   assert(buffer != NULL);
@@ -781,7 +781,7 @@ EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferS
     currentContext->tagName = xmlTextReaderConstName(reader);
     while(retVal == 1)
     {
-      error = _EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
+      error = EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
       retVal = xmlTextReaderRead(reader);
     }
     if(retVal < 0) {
@@ -948,7 +948,7 @@ EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *unco
   return error;
 }
 
-uint32_t _GetFileCountInZipFile(unzFile file)
+uint32_t EPUB3GetFileCountInZipFile(unzFile file)
 {
   unz_global_info gi;
 	int err = unzGetGlobalInfo(file, &gi);
