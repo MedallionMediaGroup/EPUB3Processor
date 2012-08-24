@@ -45,6 +45,32 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
 
 #pragma mark - Main EPUB3 Object
 
+EPUB3Ref EPUB3Create()
+{
+  EPUB3Ref memory = malloc(sizeof(struct EPUB3));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
+  memory->metadata = NULL;
+  memory->manifest = NULL;
+  memory->spine = NULL;
+  memory->archive = NULL;
+  memory->archivePath = NULL;
+  memory->archiveFileCount = 0;
+  return memory;
+}
+
+EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
+{
+  assert(path != NULL);
+  
+  EPUB3Ref epub = EPUB3Create();
+  unzFile archive = unzOpen(path);
+  epub->archive = archive;
+  epub->archiveFileCount = _GetFileCountInZipFile(archive);
+  epub->archivePath = strdup(path);
+  //TODO: parse and load metadata here?
+  return epub;
+}
+
 EXPORT void EPUB3Retain(EPUB3Ref epub)
 {
   if(epub == NULL) return;
@@ -71,6 +97,59 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
   EPUB3ManifestRelease(epub->manifest);
   EPUB3SpineRelease(epub->spine);
   _EPUB3ObjectRelease(epub);
+}
+
+EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  
+  if(epub->metadata == NULL) {
+    return NULL;
+  }
+  EPUB3MetadataRef copy = EPUB3MetadataCreate();
+  (void)EPUB3MetadataSetTitle(copy, epub->metadata->title);
+  (void)EPUB3MetadataSetIdentifier(copy, epub->metadata->identifier);
+  (void)EPUB3MetadataSetLanguage(copy, epub->metadata->language);
+  return copy;
+}
+
+void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
+{
+  assert(epub != NULL);
+  
+  if(epub->metadata != NULL) {
+    EPUB3MetadataRelease(epub->metadata);
+  }
+  if(metadata != NULL) {
+    EPUB3MetadataRetain(metadata);
+  }
+  epub->metadata = metadata;
+}
+
+void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest)
+{
+  assert(epub != NULL);
+  
+  if(epub->manifest != NULL) {
+    EPUB3ManifestRelease(epub->manifest);
+  }
+  if(manifest != NULL) {
+    EPUB3ManifestRetain(manifest);
+  }
+  epub->manifest = manifest;
+}
+
+void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine)
+{
+  assert(epub != NULL);
+  
+  if(epub->spine != NULL) {
+    EPUB3SpineRelease(epub->spine);
+  }
+  if(spine != NULL) {
+    EPUB3SpineRetain(spine);
+  }
+  epub->spine = spine;
 }
 
 void EPUB3SetStringValue(char ** location, const char *value)
@@ -236,20 +315,6 @@ EPUB3ManifestRef EPUB3ManifestCreate()
   return memory;
 }
 
-void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest)
-{
-  assert(epub != NULL);
-  
-  if(epub->manifest != NULL) {
-    EPUB3ManifestRelease(epub->manifest);
-  }
-  if(manifest != NULL) {
-    EPUB3ManifestRetain(manifest);
-  }
-  epub->manifest = manifest;
-}
-
-
 EPUB3ManifestItemRef EPUB3ManifestItemCreate()
 {
   EPUB3ManifestItemRef memory = malloc(sizeof(struct EPUB3ManifestItem));
@@ -357,20 +422,6 @@ EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
   _EPUB3ObjectRelease(spine);
 }
 
-void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine)
-{
-  assert(epub != NULL);
-  
-  if(epub->spine != NULL) {
-    EPUB3SpineRelease(epub->spine);
-  }
-  if(spine != NULL) {
-    EPUB3SpineRetain(spine);
-  }
-  epub->spine = spine;
-}
-
-
 EPUB3SpineItemRef EPUB3SpineItemCreate()
 {
   EPUB3SpineItemRef memory = malloc(sizeof(struct EPUB3SpineItem));
@@ -434,93 +485,37 @@ void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
   spine->itemCount++;
 }
 
-#pragma mark - EPUB3Ref
-
-EPUB3Ref EPUB3Create()
-{
-  EPUB3Ref memory = malloc(sizeof(struct EPUB3));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
-  memory->metadata = NULL;
-  memory->manifest = NULL;
-  memory->spine = NULL;
-  memory->archive = NULL;
-  memory->archivePath = NULL;
-  memory->archiveFileCount = 0;
-  return memory;
-}
-
-EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
-{
-  assert(path != NULL);
-  
-  EPUB3Ref epub = EPUB3Create();
-  unzFile archive = unzOpen(path);
-  epub->archive = archive;
-  epub->archiveFileCount = _GetFileCountInZipFile(archive);
-  epub->archivePath = strdup(path);
-  //TODO: parse and load metadata here?
-  return epub;
-}
-
-EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
-{
-  assert(epub != NULL);
-  
-  if(epub->metadata == NULL) {
-    return NULL;
-  }
-  EPUB3MetadataRef copy = EPUB3MetadataCreate();
-  (void)EPUB3MetadataSetTitle(copy, epub->metadata->title);
-  (void)EPUB3MetadataSetIdentifier(copy, epub->metadata->identifier);
-  (void)EPUB3MetadataSetLanguage(copy, epub->metadata->language);
-  return copy;
-}
-
-void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
-{
-  assert(epub != NULL);
-
-  if(epub->metadata != NULL) {
-    EPUB3MetadataRelease(epub->metadata);
-  }
-  if(metadata != NULL) {
-    EPUB3MetadataRetain(metadata);
-  }
-  epub->metadata = metadata;
-}
-
 #pragma mark - XML Parsing Utilities
 
-EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
+EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
 {
   assert(epub != NULL);
-  assert(filename != NULL);
-  assert(buffer != NULL);
+  assert(opfFilename != NULL);
   
   if(epub->archive == NULL) return kEPUB3ArchiveUnavailableError;
   
-  EPUB3Error error = kEPUB3InvalidArgumentError;
-  if(filename != NULL) {
-    uint32_t bufSize = 1;
-    error = EPUB3GetUncompressedSizeOfFileInArchive(epub, &bufSize, filename);
-    if(error == kEPUB3Success) {
-      if(unzOpenCurrentFile(epub->archive) == UNZ_OK) {
-        *buffer = calloc(bufSize, sizeof(char));
-        int32_t copied = unzReadCurrentFile(epub->archive, *buffer, bufSize);
-        if(copied >= 0) {
-          if(bytesCopied != NULL) {
-            *bytesCopied = copied;
-          }
-          if(bufferSize != NULL) {
-            *bufferSize = bufSize;
-          }
-          error = kEPUB3Success;
-        } else {
-          free(*buffer);
-          error = kEPUB3FileReadFromArchiveError;
-        }
-      }
-    }
+  if(epub->metadata == NULL) {
+    epub->metadata = EPUB3MetadataCreate();
+  }
+  
+  if(epub->manifest == NULL) {
+    epub->manifest = EPUB3ManifestCreate();
+  }
+  
+  if(epub->spine == NULL) {
+    epub->spine = EPUB3SpineCreate();
+  }
+  
+  void *buffer = NULL;
+  uint32_t bufferSize = 0;
+  uint32_t bytesCopied;
+  
+  EPUB3Error error = kEPUB3Success;
+  
+  error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
+  if(error == kEPUB3Success) {
+    error = _EPUB3ParseFromOPFData(epub, buffer, bufferSize);
+    free(buffer);
   }
   return error;
 }
@@ -800,39 +795,6 @@ EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferS
   return error;
 }
 
-EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
-{
-  assert(epub != NULL);
-  assert(opfFilename != NULL);
-  
-  if(epub->archive == NULL) return kEPUB3ArchiveUnavailableError;
-
-  if(epub->metadata == NULL) {
-    epub->metadata = EPUB3MetadataCreate();
-  }
-
-  if(epub->manifest == NULL) {
-    epub->manifest = EPUB3ManifestCreate();
-  }
-
-  if(epub->spine == NULL) {
-    epub->spine = EPUB3SpineCreate();
-  }
-
-  void *buffer = NULL;
-  uint32_t bufferSize = 0;
-  uint32_t bytesCopied;
-  
-  EPUB3Error error = kEPUB3Success;
-  
-  error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
-  if(error == kEPUB3Success) {
-    error = _EPUB3ParseFromOPFData(epub, buffer, bufferSize);
-    free(buffer);
-  }
-  return error;
-}
-
 #pragma mark - Validation
 
 EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
@@ -932,6 +894,40 @@ EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * f
 }
 
 #pragma mark - Utility functions
+
+EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
+{
+  assert(epub != NULL);
+  assert(filename != NULL);
+  assert(buffer != NULL);
+  
+  if(epub->archive == NULL) return kEPUB3ArchiveUnavailableError;
+  
+  EPUB3Error error = kEPUB3InvalidArgumentError;
+  if(filename != NULL) {
+    uint32_t bufSize = 1;
+    error = EPUB3GetUncompressedSizeOfFileInArchive(epub, &bufSize, filename);
+    if(error == kEPUB3Success) {
+      if(unzOpenCurrentFile(epub->archive) == UNZ_OK) {
+        *buffer = calloc(bufSize, sizeof(char));
+        int32_t copied = unzReadCurrentFile(epub->archive, *buffer, bufSize);
+        if(copied >= 0) {
+          if(bytesCopied != NULL) {
+            *bytesCopied = copied;
+          }
+          if(bufferSize != NULL) {
+            *bufferSize = bufSize;
+          }
+          error = kEPUB3Success;
+        } else {
+          free(*buffer);
+          error = kEPUB3FileReadFromArchiveError;
+        }
+      }
+    }
+  }
+  return error;
+}
 
 EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename)
 {

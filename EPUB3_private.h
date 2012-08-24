@@ -121,48 +121,63 @@ struct EPUB3SpineItem {
   EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
-#pragma mark - Function Declarations
+#pragma mark - Base Object
 
 void _EPUB3ObjectRelease(void *object);
 void _EPUB3ObjectRetain(void *object);
 void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 
+#pragma mark - Main EPUB3 Object
+
 EPUB3Ref EPUB3Create();
-EPUB3MetadataRef EPUB3MetadataCreate();
-EPUB3ManifestRef EPUB3ManifestCreate();
+void EPUB3SetStringValue(char ** location, const char *value);
+char * EPUB3CopyStringValue(char ** location);
+void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest);
+void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
+
+#pragma mark - Metadata
+
+EPUB3MetadataRef EPUB3MetadataCreate();
+void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
+void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
+void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
+
+#pragma mark - Manifest
+
+EPUB3ManifestRef EPUB3ManifestCreate();
 EPUB3ManifestItemRef EPUB3ManifestItemCreate();
 void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item);
 EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * itemId);
 EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId);
 
+#pragma mark - Spine
+
 EPUB3SpineRef EPUB3SpineCreate();
 EPUB3SpineItemRef EPUB3SpineItemCreate();
-void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
 void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item);
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem);
-void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
-void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
-void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
 
-void EPUB3SetStringValue(char ** location, const char *value);
-char * EPUB3CopyStringValue(char ** location);
-void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
-EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
-EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
-EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+#pragma mark - XML Parsing
+
+EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
+void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
+void _EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr);
+EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error _EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
-EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
-
-void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
+EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
+EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 
 #pragma mark - Validation
+
 EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub);
-EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * filename);
 
-#pragma mark - Utility Functions
+#pragma mark - File and Zip Functions
+
+EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
+EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 uint32_t _GetFileCountInZipFile(unzFile file);
 EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename);
 
