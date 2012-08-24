@@ -588,7 +588,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
   return error;
 }
 
-EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
+EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
 {
   assert(epub != NULL);
   assert(buffer != NULL);
@@ -620,7 +620,7 @@ EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t
   return error;
 }
 
-EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename)
+EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
 {
   assert(epub != NULL);
   assert(opfFilename != NULL);
@@ -643,7 +643,7 @@ EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename)
   
   error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
   if(error == kEPUB3Success) {
-    error = _EPUB3ParseMetadataFromOPFData(epub, buffer, bufferSize);
+    error = _EPUB3ParseFromOPFData(epub, buffer, bufferSize);
     free(buffer);
   }
   return error;

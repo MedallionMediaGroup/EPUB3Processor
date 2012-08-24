@@ -119,9 +119,9 @@ char * EPUB3CopyStringValue(char ** location);
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
-EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+EPUB3Error _EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
-EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename);
+EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
 
 void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
 

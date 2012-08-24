@@ -160,7 +160,7 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = _EPUB3ParseMetadataFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   
@@ -203,7 +203,7 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = _EPUB3ParseMetadataFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   
@@ -230,7 +230,7 @@ START_TEST(test_epub3_parse_metadata_from_opf_using_real_epub)
   const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
   const char * expectedLanguage = "en";
 
-  EPUB3Error error = EPUB3InitMetadataFromOPF(epub, "100/content.opf");
+  EPUB3Error error = EPUB3InitFromOPF(epub, "100/content.opf");
   fail_unless(error == kEPUB3Success);
   fail_if(epub->metadata == NULL);
   
@@ -275,7 +275,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
   
-  EPUB3Error error = _EPUB3ParseMetadataFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   
