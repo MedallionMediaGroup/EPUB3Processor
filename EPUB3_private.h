@@ -79,7 +79,7 @@ struct EPUB3Metadata {
 
 struct EPUB3ManifestItem {
   EPUB3Type _type;
-  char * id;
+  char * itemId;
   char * href;
   char * mediaType;
   char * properties;
@@ -110,8 +110,8 @@ EPUB3ManifestRef EPUB3ManifestCreate();
 void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest);
 EPUB3ManifestItemRef EPUB3ManifestItemCreate();
 void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item);
-EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * id);
-EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * id);
+EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * itemId);
+EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId);
 
 
 void EPUB3SetStringValue(char ** location, const char *value);

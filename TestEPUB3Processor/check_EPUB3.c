@@ -90,19 +90,19 @@ START_TEST(test_epub3_manifest_hash)
   EPUB3ManifestItemRef item = EPUB3ManifestItemCreate();
   ck_assert_int_eq(item->_type.refCount, 1);
   ck_assert_str_eq(item->_type.typeID, kEPUB3ManifestItemTypeID);
-  const char * id = "myid";
-  item->id = strdup(id);
+  const char * itemId = "myid";
+  item->itemId = strdup(itemId);
 
   EPUB3ManifestInsertItem(manifest, item);
   fail_unless(manifest->itemCount == 1, "Incorrect item count in item hash table");
 
-  EPUB3ManifestItemRef itemCopy = EPUB3ManifestCopyItemWithId(manifest, id);
+  EPUB3ManifestItemRef itemCopy = EPUB3ManifestCopyItemWithId(manifest, itemId);
   fail_if(itemCopy == NULL);
   fail_if(itemCopy == item);
-  ck_assert_str_eq(itemCopy->id, id);
-  fail_if(itemCopy->id == id);
-  ck_assert_str_eq(item->id, itemCopy->id);
-  fail_if(item->id == itemCopy->id);
+  ck_assert_str_eq(itemCopy->itemId, itemId);
+  fail_if(itemCopy->itemId == itemId);
+  ck_assert_str_eq(item->itemId, itemCopy->itemId);
+  fail_if(item->itemId == itemCopy->itemId);
   
   itemCopy = EPUB3ManifestCopyItemWithId(manifest, "doesnotexist");
   fail_unless(itemCopy == NULL, "Non existent items in the manifest should be NULL.");

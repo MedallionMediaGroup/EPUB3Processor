@@ -147,7 +147,7 @@
 		D05B96A71598FF7200C375CC /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
 		D05B96A81598FF7200C375CC /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		D05B96E91598FFAA00C375CC /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
-		D0A09A511599069600B90138 /* validators.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = validators.c; sourceTree = "<group>"; };
+		D0A09A511599069600B90138 /* validators.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = validators.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		D0A09A531599076300B90138 /* validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validators.h; sourceTree = "<group>"; };
 		D0A09A58159908AB00B90138 /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPUB3Processor.h; sourceTree = "<group>"; };
 		DF06B6D015DC33CC00675923 /* TestEPUB3Processor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestEPUB3Processor; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,7 +157,7 @@
 		DF06B71515DC34B300675923 /* libcompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libcompat.h; sourceTree = "<group>"; };
 		DF06B71615DC34B300675923 /* localtime_r.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = localtime_r.c; sourceTree = "<group>"; };
 		DF06B71715DC34B300675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B71815DC34B300675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		DF06B71815DC34B300675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = Makefile.in; sourceTree = "<group>"; };
 		DF06B71915DC34B300675923 /* malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = malloc.c; sourceTree = "<group>"; };
 		DF06B71A15DC34B300675923 /* pipe.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pipe.c; sourceTree = "<group>"; };
 		DF06B71B15DC34B300675923 /* putenv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = putenv.c; sourceTree = "<group>"; };
@@ -185,10 +185,10 @@
 		DF06B73F15DC34B400675923 /* check_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check_print.h; sourceTree = "<group>"; };
 		DF06B74015DC34B400675923 /* check_run.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_run.c; sourceTree = "<group>"; };
 		DF06B74115DC34B400675923 /* check_str.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_str.c; sourceTree = "<group>"; };
-		DF06B74215DC34B400675923 /* check_str.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = check_str.h; sourceTree = "<group>"; };
+		DF06B74215DC34B400675923 /* check_str.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = check_str.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DF06B74315DC34B400675923 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		DF06B74415DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		DF06B79615DC35E500675923 /* check_EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_EPUB3.c; sourceTree = "<group>"; };
+		DF06B74415DC34B400675923 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = Makefile.in; sourceTree = "<group>"; };
+		DF06B79615DC35E500675923 /* check_EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = check_EPUB3.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF06B79915DC39BE00675923 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		DF08369715DEE59F00E9CEC9 /* bad_metadata.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = bad_metadata.epub; sourceTree = "<group>"; };
 		DF204B6015E69BFC00F0AA4D /* pg_100_content.opf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pg_100_content.opf; sourceTree = "<group>"; };
@@ -196,11 +196,11 @@
 		DF4C2D1615E0209F00E7A8BD /* pg100_container.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pg100_container.xml; sourceTree = "<group>"; };
 		DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libz.1.dylib; sourceTree = DEVELOPER_DIR; };
 		DF59F19215DDA9E7004A37D5 /* pg100.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = pg100.epub; sourceTree = "<group>"; };
-		DF59F19815DDB19F004A37D5 /* EPUB3_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3_private.h; sourceTree = "<group>"; };
+		DF59F19815DDB19F004A37D5 /* EPUB3_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EPUB3_private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = EPUB3.c; sourceTree = "<group>"; };
+		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = EPUB3.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
-		DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = check_EPUB3_parsing.c; sourceTree = "<group>"; };
+		DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = check_EPUB3_parsing.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF8CE04115DEA71000F0857B /* test_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_common.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

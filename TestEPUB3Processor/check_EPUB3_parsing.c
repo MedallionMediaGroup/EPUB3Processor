@@ -282,15 +282,15 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   ck_assert_int_eq(blankManifest->itemCount, expectedManifestItemCount);
   
   EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(blankManifest, expItem1Id);
-  fail_if(item == NULL, "Could not fetch item with id %s from the manifest.", expItem1Id);
-  ck_assert_str_eq(item->id, expItem1Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  ck_assert_str_eq(item->itemId, expItem1Id);
   ck_assert_str_eq(item->href, expItem1Href);
   ck_assert_str_eq(item->mediaType, expItem1MediaType);
   EPUB3ManifestItemRelease(item);
 
   item = EPUB3ManifestCopyItemWithId(blankManifest, expItem2Id);
-  fail_if(item == NULL, "Could not fetch item with id %s from the manifest.", expItem2Id);
-  ck_assert_str_eq(item->id, expItem2Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  ck_assert_str_eq(item->itemId, expItem2Id);
   ck_assert_str_eq(item->href, expItem2Href);
   ck_assert_str_eq(item->mediaType, expItem2MediaType);
   EPUB3ManifestItemRelease(item);

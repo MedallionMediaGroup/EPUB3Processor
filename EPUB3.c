@@ -204,7 +204,7 @@ EXPORT void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
   if(item == NULL) return;
 
   if(item->_type.refCount == 1) {
-    free(item->id);
+    free(item->itemId);
     free(item->href);
     free(item->mediaType);
     free(item->properties);
@@ -242,10 +242,10 @@ EPUB3ManifestItemRef EPUB3ManifestItemCreate()
 {
   EPUB3ManifestItemRef memory = malloc(sizeof(struct EPUB3ManifestItem));
   memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestItemTypeID);
-  memory->id= NULL;
-  memory->href= NULL;
-  memory->mediaType= NULL;
-  memory->properties= NULL;
+  memory->itemId = NULL;
+  memory->href = NULL;
+  memory->mediaType = NULL;
+  memory->properties = NULL;
   return memory;
 }
 
@@ -253,13 +253,13 @@ void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef ite
 {
   assert(manifest != NULL);
   assert(item != NULL);
-  assert(item->id != NULL);
+  assert(item->itemId != NULL);
 
   EPUB3ManifestItemRetain(item);
-  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->id);
+  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->itemId);
   if(itemPtr == NULL) {
     itemPtr = (EPUB3ManifestItemListPtr) malloc(sizeof(struct EPUB3ManifestItemList));
-    int32_t bucket = SuperFastHash(item->id, (int32_t)strlen(item->id)) % MANIFEST_HASH_SIZE;
+    int32_t bucket = SuperFastHash(item->itemId, (int32_t)strlen(item->itemId)) % MANIFEST_HASH_SIZE;
     itemPtr->item = item;
     itemPtr->next = manifest->itemTable[bucket];
     manifest->itemTable[bucket] = itemPtr;
@@ -270,12 +270,12 @@ void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef ite
   }
 }
 
-EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * id)
+EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * itemId)
 {
   assert(manifest != NULL);
-  assert(id != NULL);
+  assert(itemId != NULL);
 
-  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, id);
+  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, itemId);
   
   if(itemPtr == NULL) {
     return NULL;
@@ -283,22 +283,22 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   
   EPUB3ManifestItemRef item = itemPtr->item;
   EPUB3ManifestItemRef copy = EPUB3ManifestItemCreate();
-  copy->id = item->id != NULL ? strdup(item->id) : NULL;
+  copy->itemId = item->itemId != NULL ? strdup(item->itemId) : NULL;
   copy->href = item->href != NULL ? strdup(item->href) : NULL;
   copy->mediaType = item->mediaType != NULL ? strdup(item->mediaType) : NULL;
   copy->properties = item->properties != NULL ? strdup(item->properties) : NULL;
   return copy;
 }
 
-EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * id)
+EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId)
 {
   assert(manifest != NULL);
-  assert(id != NULL);
+  assert(itemId != NULL);
 
-  int32_t bucket = SuperFastHash(id, (int32_t)strlen(id)) % MANIFEST_HASH_SIZE; 
+  int32_t bucket = SuperFastHash(itemId, (int32_t)strlen(itemId)) % MANIFEST_HASH_SIZE;
   EPUB3ManifestItemListPtr itemPtr = manifest->itemTable[bucket];
   while(itemPtr != NULL) {
-    if(strcmp(id, itemPtr->item->id) == 0) {
+    if(strcmp(itemId, itemPtr->item->itemId) == 0) {
       return itemPtr;
     }
     itemPtr = itemPtr->next;
@@ -441,13 +441,13 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextRead
         // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
         if(xmlStrcmp(name, BAD_CAST "identifier") == 0) {
           if(xmlTextReaderHasAttributes(reader)) {
-            xmlChar * id = xmlTextReaderGetAttribute(reader, BAD_CAST "id");
-            if(id == NULL) {
+            xmlChar * itemId = xmlTextReaderGetAttribute(reader, BAD_CAST "id");
+            if(itemId == NULL) {
               (*context)->shouldParseTextNode = kEPUB3_NO;
             }
-            else if(id != NULL && xmlStrcmp(id, BAD_CAST epub->metadata->_uniqueIdentifierID) != 0) {
+            else if(itemId != NULL && xmlStrcmp(itemId, BAD_CAST epub->metadata->_uniqueIdentifierID) != 0) {
               (*context)->shouldParseTextNode = kEPUB3_NO; 
-              free(id);
+              free(itemId);
             }
           }
         }
@@ -499,7 +499,7 @@ EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextRead
       } else {
         if(xmlStrcmp(name, BAD_CAST "item") == 0) {
           EPUB3ManifestItemRef newItem = EPUB3ManifestItemCreate();
-          newItem->id = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "id");
+          newItem->itemId = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "id");
           newItem->href = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "href");
           newItem->mediaType = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "media-type");
           EPUB3ManifestInsertItem(epub->manifest, newItem);
@@ -536,7 +536,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
     {
       case kEPUB3OPFStateRoot:
       {
-        fprintf(stdout, "ROOT: %s\n", name);
+//        fprintf(stdout, "ROOT: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_ELEMENT) {
           if(xmlStrcmp(name, BAD_CAST "package") == 0 && xmlTextReaderHasAttributes(reader)) {
             if(epub->metadata->_uniqueIdentifierID != NULL) {
@@ -558,7 +558,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       }
       case kEPUB3OPFStateMetadata:
       {
-        fprintf(stdout, "METADATA: %s\n", name);
+//        fprintf(stdout, "METADATA: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "metadata") == 0) {
           (void)_EPUB3PopAndFreeParseContext(currentContext);
         } else {
@@ -568,7 +568,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       }
       case kEPUB3OPFStateManifest:
       {
-        fprintf(stdout, "MANIFEST: %s\n", name);
+//        fprintf(stdout, "MANIFEST: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "manifest") == 0) {
           (void)_EPUB3PopAndFreeParseContext(currentContext);
         } else {
@@ -578,7 +578,7 @@ EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader
       }
       case kEPUB3OPFStateSpine:
       {
-        fprintf(stdout, "SPINE: %s\n", name);
+//        fprintf(stdout, "SPINE: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "spine") == 0) {
           (void)_EPUB3PopAndFreeParseContext(currentContext);
         } else {
