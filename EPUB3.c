@@ -164,21 +164,28 @@ EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
 {
   if(manifest == NULL) return;
 
-  for (int i = 0; i < manifest->itemCount; i++)
-  {
-    EPUB3ManifestItemRetain(manifest->items[i]);
+  for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
+    EPUB3ManifestItemListPtr itemPtr = manifest->itemTable[i];
+    while(itemPtr != NULL) {
+      EPUB3ManifestItemRetain(itemPtr->item);
+      itemPtr = itemPtr->next;
+    }
   }
-  
   _EPUB3ObjectRetain(manifest);
 }
 
 EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
 {
   if(manifest == NULL) return;
+  for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
 
-  for (int i = 0; i < manifest->itemCount; i++)
-  {
-    EPUB3ManifestItemRelease(manifest->items[i]);
+    EPUB3ManifestItemListPtr next = manifest->itemTable[i];
+    while(next != NULL) {
+      EPUB3ManifestItemRelease(next->item);
+      EPUB3ManifestItemListPtr tmp = next;
+      next = tmp->next;
+      free(tmp);
+    }
   }
   manifest->itemCount = 0;
   _EPUB3ObjectRelease(manifest);
@@ -210,7 +217,9 @@ EPUB3ManifestRef EPUB3ManifestCreate()
   EPUB3ManifestRef memory = malloc(sizeof(struct EPUB3Manifest));
   memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestTypeID);
   memory->itemCount = 0;
-  memory->items = NULL;
+  for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
+    memory->itemTable[i] = NULL;
+  }
   return memory;
 }
 
@@ -225,11 +234,59 @@ EPUB3ManifestItemRef EPUB3ManifestItemCreate()
   return memory;
 }
 
-void EPUB3ManifestAddItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item)
+void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item)
 {
+  assert(manifest != NULL);
+  assert(item != NULL);
+  assert(item->id != NULL);
+
   EPUB3ManifestItemRetain(item);
-  manifest->items[manifest->itemCount++] = item;
+  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->id);
+  if(itemPtr == NULL) {
+    itemPtr = (EPUB3ManifestItemListPtr) malloc(sizeof(struct EPUB3ManifestItemList));
+    int32_t bucket = SuperFastHash(item->id, (int32_t)strlen(item->id)) % MANIFEST_HASH_SIZE;
+    itemPtr->item = item;
+    itemPtr->next = manifest->itemTable[bucket];
+    manifest->itemTable[bucket] = itemPtr;
+    manifest->itemCount++;
+  } else {
+    EPUB3ManifestItemRelease(itemPtr->item);
+    itemPtr->item = item;
+  }
 }
+
+EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * id)
+{
+  assert(manifest != NULL);
+  assert(id != NULL);
+
+  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, id);
+
+  EPUB3ManifestItemRef item = itemPtr->item;
+  EPUB3ManifestItemRef copy = EPUB3ManifestItemCreate();
+  copy->id = item->id != NULL ? strdup(item->id) : NULL;
+  copy->href = item->href != NULL ? strdup(item->href) : NULL;
+  copy->mediaType = item->mediaType != NULL ? strdup(item->mediaType) : NULL;
+  copy->properties = item->properties != NULL ? strdup(item->properties) : NULL;
+  return copy;
+}
+
+EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * id)
+{
+  assert(manifest != NULL);
+  assert(id != NULL);
+
+  int32_t bucket = SuperFastHash(id, (int32_t)strlen(id)) % MANIFEST_HASH_SIZE; 
+  EPUB3ManifestItemListPtr itemPtr = manifest->itemTable[bucket];
+  while(itemPtr != NULL) {
+    if(strcmp(id, itemPtr->item->id) == 0) {
+      return itemPtr;
+    }
+    itemPtr = itemPtr->next;
+  }
+  return NULL;
+}
+
 
 #pragma mark - EPUB3Ref
 

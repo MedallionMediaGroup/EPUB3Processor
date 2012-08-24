@@ -80,6 +80,35 @@ START_TEST(test_metadata_object)
 }
 END_TEST
 
+START_TEST(test_epub3_manifest_hash)
+{
+  EPUB3ManifestRef manifest = EPUB3ManifestCreate();
+  ck_assert_int_eq(manifest->_type.refCount, 1);
+  ck_assert_str_eq(manifest->_type.typeID, kEPUB3ManifestTypeID);
+  fail_unless(manifest->itemCount == 0);
+
+  EPUB3ManifestItemRef item = EPUB3ManifestItemCreate();
+  ck_assert_int_eq(item->_type.refCount, 1);
+  ck_assert_str_eq(item->_type.typeID, kEPUB3ManifestItemTypeID);
+  const char * id = "myid";
+  item->id = strdup(id);
+
+  EPUB3ManifestInsertItem(manifest, item);
+  fail_unless(manifest->itemCount == 1, "Incorrect item count in item hash table");
+
+  EPUB3ManifestItemRef itemCopy = EPUB3ManifestCopyItemWithId(manifest, id);
+  fail_if(itemCopy == NULL);
+  fail_if(itemCopy == item);
+  ck_assert_str_eq(itemCopy->id, id);
+  fail_if(itemCopy->id == id);
+  ck_assert_str_eq(item->id, itemCopy->id);
+  fail_if(item->id == itemCopy->id);
+
+  EPUB3ManifestItemRelease(item);
+  EPUB3ManifestRelease(manifest);
+}
+END_TEST
+
 TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");
@@ -88,5 +117,6 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_object_ref_counting);
   tcase_add_test(test_case, test_epub3_object_metadata_property);
   tcase_add_test(test_case, test_metadata_object);
+  tcase_add_test(test_case, test_epub3_manifest_hash);
   return test_case;
 }
