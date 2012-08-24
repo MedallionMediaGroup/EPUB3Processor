@@ -107,6 +107,7 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 EPUB3Ref EPUB3Create();
 EPUB3MetadataRef EPUB3MetadataCreate();
 EPUB3ManifestRef EPUB3ManifestCreate();
+void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest);
 EPUB3ManifestItemRef EPUB3ManifestItemCreate();
 void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item);
 EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * id);
@@ -119,6 +120,7 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
 EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+EPUB3Error _EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename);
 
 void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
