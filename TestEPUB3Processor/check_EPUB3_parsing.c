@@ -237,6 +237,15 @@ START_TEST(test_epub3_parse_metadata_from_opf_using_real_epub)
   const char * expectedTitle = "The Complete Works of William Shakespeare";
   const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
   const char * expectedLanguage = "en";
+  
+  const char * expItem1Id = "id00000";
+  const char * expItem1Href = "@public@vhost@g@gutenberg@html@dirs@etext94@shaks12-0.txt.html";
+  const char * expItem1MediaType = "application/xhtml+xml";
+  
+  const char * expItem2Id = "id00720";
+  const char * expItem2Href = "@public@vhost@g@gutenberg@html@dirs@etext94@shaks12-10.txt.html";
+  const char * expItem2MediaType = "application/xhtml+xml";
+
 
   EPUB3Error error = EPUB3InitFromOPF(epub, "100/content.opf");
   fail_unless(error == kEPUB3Success);
@@ -250,6 +259,22 @@ START_TEST(test_epub3_parse_metadata_from_opf_using_real_epub)
 
   fail_if(epub->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
   ck_assert_str_eq(epub->metadata->language, expectedLanguage);
+  
+  EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(epub->manifest, expItem1Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem1Id);
+  ck_assert_str_eq(item->href, expItem1Href);
+  ck_assert_str_eq(item->mediaType, expItem1MediaType);
+  EPUB3ManifestItemRelease(item);
+  
+  item = EPUB3ManifestCopyItemWithId(epub->manifest, expItem2Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem2Id);
+  ck_assert_str_eq(item->href, expItem2Href);
+  ck_assert_str_eq(item->mediaType, expItem2MediaType);
+  EPUB3ManifestItemRelease(item);
 }
 END_TEST
 
