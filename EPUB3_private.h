@@ -24,6 +24,8 @@ const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;
 const char * kEPUB3ManifestTypeID;
 const char * kEPUB3ManifestItemTypeID;
+const char * kEPUB3SpineTypeID;
+const char * kEPUB3SpineItemTypeID;
 
 
 #pragma mark - Internal XML Parsing State
@@ -87,15 +89,34 @@ struct EPUB3ManifestItem {
 
 #define MANIFEST_HASH_SIZE 128
 
-typedef struct EPUB3ManifestItemList {
+typedef struct EPUB3ManifestItemListItem {
   EPUB3ManifestItemRef item;
-  struct EPUB3ManifestItemList * next;
-} * EPUB3ManifestItemListPtr;
+  struct EPUB3ManifestItemListItem * next;
+} * EPUB3ManifestItemListItemPtr;
 
 struct EPUB3Manifest {
   EPUB3Type _type;
-  EPUB3ManifestItemListPtr itemTable[MANIFEST_HASH_SIZE];
+  EPUB3ManifestItemListItemPtr itemTable[MANIFEST_HASH_SIZE];
   int32_t itemCount;
+};
+
+typedef struct EPUB3SpineItemListItem {
+  EPUB3SpineItemRef item;
+  struct EPUB3SpineItemListItem * prev;
+  struct EPUB3SpineItemListItem * next;
+} * EPUB3SpineItemListItemPtr;
+
+struct EPUB3Spine {
+  EPUB3Type _type;
+  int32_t itemCount;
+  EPUB3SpineItemListItemPtr head;
+  EPUB3SpineItemListItemPtr tail;
+};
+
+struct EPUB3SpineItem {
+  EPUB3Type _type;
+  EPUB3Bool isLinear;
+  EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
 #pragma mark - Function Declarations
@@ -111,8 +132,12 @@ void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest);
 EPUB3ManifestItemRef EPUB3ManifestItemCreate();
 void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item);
 EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * itemId);
-EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId);
+EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId);
 
+EPUB3SpineRef EPUB3SpineCreate();
+EPUB3SpineItemRef EPUB3SpineItemCreate();
+void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item);
+void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem);
 
 void EPUB3SetStringValue(char ** location, const char *value);
 char * EPUB3CopyStringValue(char ** location);

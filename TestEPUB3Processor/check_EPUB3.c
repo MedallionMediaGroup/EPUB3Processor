@@ -112,6 +112,61 @@ START_TEST(test_epub3_manifest_hash)
 }
 END_TEST
 
+START_TEST(test_epub3_spine)
+{
+  EPUB3SpineRef spine = EPUB3SpineCreate();
+  ck_assert_int_eq(spine->_type.refCount, 1);
+  ck_assert_str_eq(spine->_type.typeID, kEPUB3SpineTypeID);
+  fail_unless(spine->itemCount == 0);
+  
+  EPUB3SpineItemRef item = EPUB3SpineItemCreate();
+  ck_assert_int_eq(item->_type.refCount, 1);
+  ck_assert_str_eq(item->_type.typeID, kEPUB3SpineItemTypeID);
+  
+  EPUB3ManifestItemRef manifestItem = EPUB3ManifestItemCreate();
+  const char * itemId = "myid";
+  manifestItem->itemId = strdup(itemId);
+  EPUB3SpineItemSetManifestItem(item, manifestItem);
+  ck_assert_int_eq(manifestItem->_type.refCount, 2);
+  EPUB3SpineItemRelease(item);
+  ck_assert_int_eq(manifestItem->_type.refCount, 1);
+  EPUB3ManifestItemRelease(manifestItem);
+}
+END_TEST
+
+START_TEST(test_epub3_spine_list)
+{
+  EPUB3SpineRef spine = EPUB3SpineCreate();
+  fail_unless(spine->itemCount == 0);
+
+  EPUB3SpineItemRef item = EPUB3SpineItemCreate();
+
+  int itemCount = 20;
+
+  item = EPUB3SpineItemCreate();
+  EPUB3SpineAppendItem(spine, item);
+  ck_assert_int_eq(item->_type.refCount, 2);
+  EPUB3SpineItemRelease(item);
+  ck_assert_int_eq(item->_type.refCount, 1);
+  fail_if(spine->head != spine->tail);
+  
+  for(int i = 1; i < itemCount; i++) {
+    item = EPUB3SpineItemCreate();
+    item->isLinear = i % 2;
+    EPUB3SpineAppendItem(spine, item);
+    EPUB3SpineItemRelease(item);
+  }
+  
+  ck_assert_int_eq(spine->itemCount, itemCount);
+  fail_if(spine->head == spine->tail);
+  fail_unless(spine->tail->item->isLinear);
+  fail_if(spine->tail->prev->item->isLinear);
+  
+  EPUB3SpineRelease(spine);
+}
+END_TEST
+
+
 TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");
@@ -121,5 +176,7 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_object_metadata_property);
   tcase_add_test(test_case, test_metadata_object);
   tcase_add_test(test_case, test_epub3_manifest_hash);
+  tcase_add_test(test_case, test_epub3_spine);
+  tcase_add_test(test_case, test_epub3_spine_list);
   return test_case;
 }

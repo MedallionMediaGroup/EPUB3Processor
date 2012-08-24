@@ -5,6 +5,9 @@ const char * kEPUB3TypeID = "_EPUB3_t";
 const char * kEPUB3MetadataTypeID = "_EPUB3Metadata_t";
 const char * kEPUB3ManifestTypeID = "_EPUB3Manifest_t";
 const char * kEPUB3ManifestItemTypeID = "_EPUB3ManifestItem_t";
+const char * kEPUB3SpineTypeID = "_EPUB3Spine_t";
+const char * kEPUB3SpineItemTypeID = "_EPUB3SpineItem_t";
+
 
 #ifndef PARSE_CONTEXT_STACK_DEPTH
 #define PARSE_CONTEXT_STACK_DEPTH 64
@@ -165,7 +168,7 @@ EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
   if(manifest == NULL) return;
 
   for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
-    EPUB3ManifestItemListPtr itemPtr = manifest->itemTable[i];
+    EPUB3ManifestItemListItemPtr itemPtr = manifest->itemTable[i];
     while(itemPtr != NULL) {
       EPUB3ManifestItemRetain(itemPtr->item);
       itemPtr = itemPtr->next;
@@ -179,10 +182,10 @@ EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
   if(manifest == NULL) return;
   for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
 
-    EPUB3ManifestItemListPtr next = manifest->itemTable[i];
+    EPUB3ManifestItemListItemPtr next = manifest->itemTable[i];
     while(next != NULL) {
       EPUB3ManifestItemRelease(next->item);
-      EPUB3ManifestItemListPtr tmp = next;
+      EPUB3ManifestItemListItemPtr tmp = next;
       next = tmp->next;
       free(tmp);
     }
@@ -256,9 +259,9 @@ void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef ite
   assert(item->itemId != NULL);
 
   EPUB3ManifestItemRetain(item);
-  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->itemId);
+  EPUB3ManifestItemListItemPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, item->itemId);
   if(itemPtr == NULL) {
-    itemPtr = (EPUB3ManifestItemListPtr) malloc(sizeof(struct EPUB3ManifestItemList));
+    itemPtr = (EPUB3ManifestItemListItemPtr) malloc(sizeof(struct EPUB3ManifestItemListItem));
     int32_t bucket = SuperFastHash(item->itemId, (int32_t)strlen(item->itemId)) % MANIFEST_HASH_SIZE;
     itemPtr->item = item;
     itemPtr->next = manifest->itemTable[bucket];
@@ -275,7 +278,7 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   assert(manifest != NULL);
   assert(itemId != NULL);
 
-  EPUB3ManifestItemListPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, itemId);
+  EPUB3ManifestItemListItemPtr itemPtr = _EPUB3ManifestFindItemWithId(manifest, itemId);
   
   if(itemPtr == NULL) {
     return NULL;
@@ -290,13 +293,13 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   return copy;
 }
 
-EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId)
+EPUB3ManifestItemListItemPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId)
 {
   assert(manifest != NULL);
   assert(itemId != NULL);
 
   int32_t bucket = SuperFastHash(itemId, (int32_t)strlen(itemId)) % MANIFEST_HASH_SIZE;
-  EPUB3ManifestItemListPtr itemPtr = manifest->itemTable[bucket];
+  EPUB3ManifestItemListItemPtr itemPtr = manifest->itemTable[bucket];
   while(itemPtr != NULL) {
     if(strcmp(itemId, itemPtr->item->itemId) == 0) {
       return itemPtr;
@@ -306,6 +309,99 @@ EPUB3ManifestItemListPtr _EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest,
   return NULL;
 }
 
+#pragma mark - Spine
+
+EPUB3SpineRef EPUB3SpineCreate()
+{
+  EPUB3SpineRef memory = malloc(sizeof(struct EPUB3Spine));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineTypeID);
+  memory->itemCount = 0;
+  memory->head = NULL;
+  memory->tail = NULL;
+  return memory;
+}
+
+EXPORT void EPUB3SpineRetain(EPUB3SpineRef spine)
+{
+  if(spine == NULL) return;
+
+  EPUB3SpineItemListItemPtr itemPtr;
+  for(itemPtr = spine->head; itemPtr != NULL; itemPtr = itemPtr->next) {
+    EPUB3SpineItemRetain(itemPtr->item);
+  }
+  _EPUB3ObjectRetain(spine);
+}
+
+EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
+{
+  if(spine == NULL) return;
+  EPUB3SpineItemListItemPtr itemPtr = spine->head;
+  while(itemPtr != NULL) {
+    EPUB3SpineItemRelease(itemPtr->item);
+    EPUB3SpineItemListItemPtr tmp = itemPtr;
+    itemPtr = tmp->next;
+    free(tmp);
+  }
+  spine->itemCount = 0;
+  _EPUB3ObjectRelease(spine);
+}
+
+EPUB3SpineItemRef EPUB3SpineItemCreate()
+{
+  EPUB3SpineItemRef memory = malloc(sizeof(struct EPUB3SpineItem));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineItemTypeID);
+  memory->isLinear = kEPUB3_NO;
+  memory->manifestItem = NULL;
+  return memory;
+}
+
+EXPORT void EPUB3SpineItemRetain(EPUB3SpineItemRef item)
+{
+  if(item == NULL) return;
+  EPUB3ManifestItemRetain(item->manifestItem);
+  _EPUB3ObjectRetain(item);
+}
+
+EXPORT void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
+{
+  if(item == NULL) return;
+  EPUB3ManifestItemRelease(item->manifestItem);
+  _EPUB3ObjectRelease(item);
+}
+
+void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem)
+{
+  assert(spineItem != NULL);
+
+  if(spineItem->manifestItem != NULL) {
+    EPUB3ManifestItemRelease(spineItem->manifestItem);
+  }
+  if(manifestItem != NULL) {
+    EPUB3ManifestItemRetain(manifestItem);
+  }
+  spineItem->manifestItem = manifestItem;
+}
+
+void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
+{
+  assert(spine != NULL);
+  assert(item != NULL);
+  
+  EPUB3SpineItemRetain(item);
+  EPUB3SpineItemListItemPtr itemPtr = (EPUB3SpineItemListItemPtr) malloc(sizeof(struct EPUB3SpineItemListItem));
+  itemPtr->item = item;
+  
+  if(spine->head == NULL) {
+    // First item
+    spine->head = itemPtr;
+    spine->tail = itemPtr;
+  } else {
+    itemPtr->prev = spine->tail;
+    spine->tail->next = itemPtr;
+    spine->tail = itemPtr;
+  }
+  spine->itemCount++;
+}
 
 #pragma mark - EPUB3Ref
 
