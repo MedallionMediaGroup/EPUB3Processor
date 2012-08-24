@@ -58,6 +58,7 @@ typedef struct EPUB3Object *EPUB3ObjectRef;
 struct EPUB3 {
   EPUB3Type _type;
   EPUB3MetadataRef metadata;
+  EPUB3ManifestRef manifest;
   char * archivePath;
   unzFile archive;
   uint32_t archiveFileCount;
@@ -73,6 +74,20 @@ struct EPUB3Metadata {
   // char * modified;
 };
 
+struct EPUB3ManifestItem {
+  EPUB3Type _type;
+  char * id;
+  char * href;
+  char * mediaType;
+  char * properties;
+};
+
+struct EPUB3Manifest {
+  EPUB3Type _type;
+  int32_t itemCount;
+  struct EPUB3ManifestItem **items;
+};
+
 #pragma mark - Function Declarations
 
 void _EPUB3ObjectRelease(void *object);
@@ -81,6 +96,9 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 
 EPUB3Ref EPUB3Create();
 EPUB3MetadataRef EPUB3MetadataCreate();
+EPUB3ManifestRef EPUB3ManifestCreate();
+EPUB3ManifestItemRef EPUB3ManifestItemCreate();
+
 void EPUB3SetStringValue(char ** location, const char *value);
 char * EPUB3CopyStringValue(char ** location);
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);

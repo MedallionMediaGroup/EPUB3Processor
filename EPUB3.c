@@ -3,12 +3,14 @@
 
 const char * kEPUB3TypeID = "_EPUB3_t";
 const char * kEPUB3MetadataTypeID = "_EPUB3Metadata_t";
+const char * kEPUB3ManifestTypeID = "_EPUB3Manifest_t";
+const char * kEPUB3ManifestItemTypeID = "_EPUB3ManifestItem_t";
 
 #ifndef PARSE_CONTEXT_STACK_DEPTH
 #define PARSE_CONTEXT_STACK_DEPTH 64
 #endif
 
-#pragma mark - Memory Management (Reference Counting)
+#pragma mark - Base Object
 
 void _EPUB3ObjectRelease(void *object)
 {
@@ -38,6 +40,8 @@ void * _EPUB3ObjectInitWithTypeID(void *object, const char *typeID)
   return obj;
 }
 
+#pragma mark - Main EPUB3 Object
+
 EXPORT void EPUB3Retain(EPUB3Ref epub)
 {
   if(epub == NULL) return;
@@ -49,16 +53,43 @@ EXPORT void EPUB3Retain(EPUB3Ref epub)
 EXPORT void EPUB3Release(EPUB3Ref epub)
 {
   if(epub == NULL) return;
+  
+  if(epub->_type.refCount == 1) {
+    if(epub->archive != NULL) {
+      unzClose(epub->archive);
+      epub->archive = NULL;
+    }
+    free(epub->archivePath);
+    xmlCleanupParser();
+  }
 
   EPUB3MetadataRelease(epub->metadata);
-  if(epub->archive != NULL) {
-    unzClose(epub->archive);
-    epub->archive = NULL;
-  }
-  free(epub->archivePath);
+  EPUB3ManifestRelease(epub->manifest);
   _EPUB3ObjectRelease(epub);
-  xmlCleanupParser();
 }
+
+void EPUB3SetStringValue(char ** location, const char *value)
+{
+  if(*location != NULL) {
+    free(*location);
+  }
+  if(value == NULL) {
+    *location = NULL;
+    return;
+  }
+  char * valueCopy = strdup(value);
+  *location = valueCopy;
+}
+
+char * EPUB3CopyStringValue(char ** location)
+{
+  if(*location == NULL) return NULL;
+
+  char * copy = strdup(*location);
+  return copy;
+}
+
+#pragma mark - Metadata
 
 EXPORT void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
 {
@@ -71,45 +102,14 @@ EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
 {
   if(metadata == NULL) return;
 
-  free(metadata->title);
-  free(metadata->_uniqueIdentifierID);
-  free(metadata->identifier);
-  free(metadata->language);
-
+  if(metadata->_type.refCount == 1) {
+    free(metadata->title);
+    free(metadata->_uniqueIdentifierID);
+    free(metadata->identifier);
+    free(metadata->language);
+  }
   _EPUB3ObjectRelease(metadata);
 }
-
-#pragma mark - EPUB3Ref
-
-EPUB3Ref EPUB3Create()
-{
-  EPUB3Ref memory = malloc(sizeof(struct EPUB3));
-  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
-  memory->metadata = NULL;
-  memory->archive = NULL;
-  memory->archivePath = NULL;
-  memory->archiveFileCount = 0;
-  //TODO: find a better place for the xmlInitParser() call
-  xmlInitParser();
-  return memory;
-}
-
-EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
-{
-  assert(path != NULL);
-  
-  EPUB3Ref epub = EPUB3Create();
-  unzFile archive = unzOpen(path);
-  epub->archive = archive;
-  epub->archiveFileCount = _GetFileCountInZipFile(archive);
-  epub->archivePath = strdup(path);
-  epub->metadata = NULL;
-  //TODO: parse and load metadata here?
-  return epub;
-}
-
-
-#pragma mark - EPUB3MetadataRef
 
 EPUB3MetadataRef EPUB3MetadataCreate()
 {
@@ -120,20 +120,6 @@ EPUB3MetadataRef EPUB3MetadataCreate()
   memory->identifier = NULL;
   memory->language = NULL;
   return memory;
-}
-
-EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
-{
-  assert(epub != NULL);
-  
-  if(epub->metadata == NULL) {
-    return NULL;
-  }
-  EPUB3MetadataRef copy = EPUB3MetadataCreate();
-  (void)EPUB3MetadataSetTitle(copy, epub->metadata->title);
-  (void)EPUB3MetadataSetIdentifier(copy, epub->metadata->identifier);
-  (void)EPUB3MetadataSetLanguage(copy, epub->metadata->language);
-  return copy;
 }
 
 EXPORT void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title)
@@ -172,24 +158,120 @@ EXPORT char * EPUB3CopyMetadataLanguage(EPUB3MetadataRef metadata)
   return EPUB3CopyStringValue(&(metadata->language));
 }
 
-void EPUB3SetStringValue(char ** location, const char *value)
+#pragma mark - Manifest
+
+EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
 {
-  if(*location != NULL) {
-    free(*location);
+  if(manifest == NULL) return;
+
+  for (int i = 0; i < manifest->itemCount; i++)
+  {
+    EPUB3ManifestItemRetain(manifest->items[i]);
   }
-  if(value == NULL) {
-    *location = NULL;
-    return;
-  }
-  char * valueCopy = strdup(value);
-  *location = valueCopy;
+  
+  _EPUB3ObjectRetain(manifest);
 }
 
-char * EPUB3CopyStringValue(char ** location)
+EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
 {
-  if(*location == NULL) return NULL;
+  if(manifest == NULL) return;
 
-  char * copy = strdup(*location);
+  for (int i = 0; i < manifest->itemCount; i++)
+  {
+    EPUB3ManifestItemRelease(manifest->items[i]);
+  }
+  manifest->itemCount = 0;
+  _EPUB3ObjectRelease(manifest);
+}
+
+EXPORT void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item)
+{
+  if(item == NULL) return;
+  
+  _EPUB3ObjectRetain(item);
+}
+
+EXPORT void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
+{
+  if(item == NULL) return;
+
+  if(item->_type.refCount == 1) {
+    free(item->id);
+    free(item->href);
+    free(item->mediaType);
+    free(item->properties);
+  }
+  
+  _EPUB3ObjectRelease(item);
+}
+
+EPUB3ManifestRef EPUB3ManifestCreate()
+{
+  EPUB3ManifestRef memory = malloc(sizeof(struct EPUB3Manifest));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestTypeID);
+  memory->itemCount = 0;
+  memory->items = NULL;
+  return memory;
+}
+
+EPUB3ManifestItemRef EPUB3ManifestItemCreate()
+{
+  EPUB3ManifestItemRef memory = malloc(sizeof(struct EPUB3ManifestItem));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3ManifestItemTypeID);
+  memory->id= NULL;
+  memory->href= NULL;
+  memory->mediaType= NULL;
+  memory->properties= NULL;
+  return memory;
+}
+
+void EPUB3ManifestAddItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item)
+{
+  EPUB3ManifestItemRetain(item);
+  manifest->items[manifest->itemCount++] = item;
+}
+
+#pragma mark - EPUB3Ref
+
+EPUB3Ref EPUB3Create()
+{
+  EPUB3Ref memory = malloc(sizeof(struct EPUB3));
+  memory = _EPUB3ObjectInitWithTypeID(memory, kEPUB3TypeID);
+  memory->metadata = NULL;
+  memory->manifest = NULL;
+  memory->archive = NULL;
+  memory->archivePath = NULL;
+  memory->archiveFileCount = 0;
+  //TODO: find a better place for the xmlInitParser() call
+  xmlInitParser();
+  return memory;
+}
+
+EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
+{
+  assert(path != NULL);
+  
+  EPUB3Ref epub = EPUB3Create();
+  unzFile archive = unzOpen(path);
+  epub->archive = archive;
+  epub->archiveFileCount = _GetFileCountInZipFile(archive);
+  epub->archivePath = strdup(path);
+  epub->metadata = NULL;
+  //TODO: parse and load metadata here?
+  return epub;
+}
+
+EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  
+  if(epub->metadata == NULL) {
+    return NULL;
+  }
+  EPUB3MetadataRef copy = EPUB3MetadataCreate();
+  (void)EPUB3MetadataSetTitle(copy, epub->metadata->title);
+  (void)EPUB3MetadataSetIdentifier(copy, epub->metadata->identifier);
+  (void)EPUB3MetadataSetLanguage(copy, epub->metadata->language);
   return copy;
 }
 
@@ -205,6 +287,8 @@ void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata)
   }
   epub->metadata = metadata;
 }
+
+#pragma mark - XML Parsing Utilities
 
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
 {

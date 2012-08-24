@@ -23,6 +23,9 @@ typedef enum _EPUB3Error {
 
 typedef struct EPUB3 * EPUB3Ref;
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
+typedef struct EPUB3Manifest * EPUB3ManifestRef;
+typedef struct EPUB3ManifestItem * EPUB3ManifestItemRef;
+
 typedef enum {
   kEPUB3Version_201 = 201,
   kEPUB3Version_3   = 300,
@@ -32,6 +35,10 @@ void EPUB3Retain(EPUB3Ref epub);
 void EPUB3Release(EPUB3Ref epub);
 void EPUB3MetadataRetain(EPUB3MetadataRef metadata);
 void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
+void EPUB3ManifestRetain(EPUB3ManifestRef manifest);
+void EPUB3ManifestRelease(EPUB3ManifestRef manifest);
+void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item);
+void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item);
 
 EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
