@@ -98,6 +98,7 @@ START_TEST(test_epub3_manifest_hash)
 
   EPUB3ManifestItemRef itemCopy = EPUB3ManifestCopyItemWithId(manifest, itemId);
   fail_if(itemCopy == NULL);
+  assert(itemCopy != NULL);
   fail_if(itemCopy == item);
   ck_assert_str_eq(itemCopy->itemId, itemId);
   fail_if(itemCopy->itemId == itemId);
@@ -139,11 +140,9 @@ START_TEST(test_epub3_spine_list)
   EPUB3SpineRef spine = EPUB3SpineCreate();
   fail_unless(spine->itemCount == 0);
 
-  EPUB3SpineItemRef item = EPUB3SpineItemCreate();
-
   int itemCount = 20;
 
-  item = EPUB3SpineItemCreate();
+  EPUB3SpineItemRef item = EPUB3SpineItemCreate();
   EPUB3SpineAppendItem(spine, item);
   ck_assert_int_eq(item->_type.refCount, 2);
   EPUB3SpineItemRelease(item);

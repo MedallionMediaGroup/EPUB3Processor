@@ -163,14 +163,18 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
+  assert(blankEPUB->metadata != NULL);
   
   fail_if(blankEPUB->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->title != NULL);
   ck_assert_str_eq(blankEPUB->metadata->title, expectedTitle);
 
   fail_if(blankEPUB->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->identifier != NULL);
   ck_assert_str_eq(blankEPUB->metadata->identifier, expectedIdentifier);
 
   fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->language != NULL);
   ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
 
   free(newBuf);
@@ -206,14 +210,18 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   EPUB3Error error = _EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
+  assert(blankEPUB->metadata != NULL);
   
   fail_if(blankEPUB->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->title != NULL);
   ck_assert_str_eq(blankEPUB->metadata->title, expectedTitle);
 
   fail_if(blankEPUB->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->identifier != NULL);
   ck_assert_str_eq(blankEPUB->metadata->identifier, expectedIdentifier);
 
   fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  assert(blankEPUB->metadata->language != NULL);
   ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
 
   free(newBuf);
@@ -283,6 +291,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   
   EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(blankManifest, expItem1Id);
   fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  assert(item != NULL);
   ck_assert_str_eq(item->itemId, expItem1Id);
   ck_assert_str_eq(item->href, expItem1Href);
   ck_assert_str_eq(item->mediaType, expItem1MediaType);
@@ -290,6 +299,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
 
   item = EPUB3ManifestCopyItemWithId(blankManifest, expItem2Id);
   fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  assert(item != NULL);
   ck_assert_str_eq(item->itemId, expItem2Id);
   ck_assert_str_eq(item->href, expItem2Href);
   ck_assert_str_eq(item->mediaType, expItem2MediaType);
@@ -340,6 +350,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   
   EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(blankManifest, expItem1Id);
   fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  assert(item != NULL);
   ck_assert_str_eq(item->itemId, expItem1Id);
   ck_assert_str_eq(item->href, expItem1Href);
   ck_assert_str_eq(item->mediaType, expItem1MediaType);
@@ -347,6 +358,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   
   item = EPUB3ManifestCopyItemWithId(blankManifest, expItem2Id);
   fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  assert(item != NULL);
   ck_assert_str_eq(item->itemId, expItem2Id);
   ck_assert_str_eq(item->href, expItem2Href);
   ck_assert_str_eq(item->mediaType, expItem2MediaType);
