@@ -47,11 +47,8 @@ void EPUB3SpineItemRetain(EPUB3SpineItemRef item);
 void EPUB3SpineItemRelease(EPUB3SpineItemRef item);
 
 EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
-void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
 char * EPUB3CopyMetadataTitle(EPUB3MetadataRef metadata);
-void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
 char * EPUB3CopyMetadataIdentifier(EPUB3MetadataRef metadata);
-void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
 char * EPUB3CopyMetadataLanguage(EPUB3MetadataRef metadata);
 
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path);

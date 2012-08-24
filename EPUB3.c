@@ -127,7 +127,7 @@ EPUB3MetadataRef EPUB3MetadataCreate()
   return memory;
 }
 
-EXPORT void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title)
+void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title)
 {
   assert(metadata != NULL);
   (void)EPUB3SetStringValue(&(metadata->title), title);
@@ -139,7 +139,7 @@ EXPORT char * EPUB3CopyMetadataTitle(EPUB3MetadataRef metadata)
   return EPUB3CopyStringValue(&(metadata->title));
 }
 
-EXPORT void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier)
+void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier)
 {
   assert(metadata != NULL);
   (void)EPUB3SetStringValue(&(metadata->identifier), identifier);
@@ -151,7 +151,7 @@ EXPORT char * EPUB3CopyMetadataIdentifier(EPUB3MetadataRef metadata)
   return EPUB3CopyStringValue(&(metadata->identifier));
 }
 
-EXPORT void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language)
+void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language)
 {
   assert(metadata != NULL);
   (void)EPUB3SetStringValue(&(metadata->language), language);
