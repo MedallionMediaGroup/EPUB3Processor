@@ -35,6 +35,8 @@ typedef enum {
 typedef struct _EPUB3OPFParseContext {
   EPUB3OPFParseState state;
   const xmlChar *tagName;
+  int32_t attributeCount;
+  char ** attributes;
   EPUB3Bool shouldParseTextNode;
 } EPUB3OPFParseContext;
 
@@ -86,6 +88,8 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
 EPUB3Error _EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
 EPUB3Error _EPUB3ParseMetadataFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 EPUB3Error EPUB3InitMetadataFromOPF(EPUB3Ref epub, const char * opfFilename);
+
+void _EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
 
 #pragma mark - Validation
 EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub);
