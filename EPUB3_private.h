@@ -103,13 +103,13 @@ struct EPUB3Manifest {
 
 typedef struct EPUB3SpineItemListItem {
   EPUB3SpineItemRef item;
-  struct EPUB3SpineItemListItem * prev;
   struct EPUB3SpineItemListItem * next;
 } * EPUB3SpineItemListItemPtr;
 
 struct EPUB3Spine {
   EPUB3Type _type;
   int32_t itemCount;
+  int32_t linearItemCount;
   EPUB3SpineItemListItemPtr head;
   EPUB3SpineItemListItemPtr tail;
 };

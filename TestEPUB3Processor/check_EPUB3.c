@@ -1,5 +1,6 @@
 #include <config.h>
 #include <check.h>
+#include <string.h>
 #include "test_common.h"
 #include "EPUB3.h"
 #include "EPUB3_private.h"
@@ -42,10 +43,6 @@ END_TEST
 
 START_TEST(test_epub3_object_metadata_property)
 {
-  fail_unless(epub->metadata == NULL);
-  EPUB3MetadataRef nullMeta = EPUB3CopyMetadata(epub);
-  fail_unless(nullMeta == NULL);
-  
   const char * title = "A book";
   EPUB3MetadataRef meta = EPUB3MetadataCreate();
   EPUB3MetadataSetTitle(meta, title);
@@ -128,7 +125,7 @@ START_TEST(test_epub3_spine)
   const char * itemId = "myid";
   manifestItem->itemId = strdup(itemId);
   EPUB3SpineItemSetManifestItem(item, manifestItem);
-  ck_assert_int_eq(manifestItem->_type.refCount, 2);
+  ck_assert_int_eq(manifestItem->_type.refCount, 1);
   EPUB3SpineItemRelease(item);
   ck_assert_int_eq(manifestItem->_type.refCount, 1);
   EPUB3ManifestItemRelease(manifestItem);
@@ -142,26 +139,57 @@ START_TEST(test_epub3_spine_list)
 
   int itemCount = 20;
 
-  EPUB3SpineItemRef item = EPUB3SpineItemCreate();
-  EPUB3SpineAppendItem(spine, item);
-  ck_assert_int_eq(item->_type.refCount, 2);
-  EPUB3SpineItemRelease(item);
-  ck_assert_int_eq(item->_type.refCount, 1);
+  EPUB3SpineItemRef firstItem = EPUB3SpineItemCreate();
+  
+  fail_unless(spine->head == NULL);
+  fail_unless(spine->tail == NULL);
+  EPUB3SpineAppendItem(spine, firstItem);
+  ck_assert_int_eq(firstItem->_type.refCount, 2);
+  EPUB3SpineItemRelease(firstItem);
+  ck_assert_int_eq(firstItem->_type.refCount, 1);
   fail_if(spine->head != spine->tail);
+  fail_unless(spine->head->item == firstItem);
+  fail_unless(spine->tail->item == firstItem);
+
+  EPUB3SpineItemListItemPtr prev = spine->tail;
   
   for(int i = 1; i < itemCount; i++) {
-    item = EPUB3SpineItemCreate();
+    EPUB3SpineItemRef item = EPUB3SpineItemCreate();
     item->isLinear = i % 2;
     EPUB3SpineAppendItem(spine, item);
+    
+    fail_unless(spine->tail->item == item);
+    prev = spine->tail;
+
     EPUB3SpineItemRelease(item);
   }
   
   ck_assert_int_eq(spine->itemCount, itemCount);
+  fail_unless(spine->head->item == firstItem);
+  fail_unless(spine->tail == prev);
   fail_if(spine->head == spine->tail);
   fail_unless(spine->tail->item->isLinear);
-  fail_if(spine->tail->prev->item->isLinear);
-  
   EPUB3SpineRelease(spine);
+}
+END_TEST
+
+START_TEST(test_epub3_get_sequential_resource_paths)
+{
+  int32_t expectedCount = 108;
+  int32_t count = EPUB3CountOfSequentialResources(epub);
+  ck_assert_int_eq(count, expectedCount);
+  
+  const char *resources[count];
+  EPUB3Error error = EPUB3GetPathsOfSequentialResources(epub, resources);
+  fail_unless(error == kEPUB3Success);
+  
+  for (int i = 0; i < count; i++) {
+    int maxPathlen = 65;
+    char * expectedResourcePath = malloc(maxPathlen);
+    snprintf(expectedResourcePath, maxPathlen, "@public@vhost@g@gutenberg@html@dirs@etext94@shaks12-%d.txt.html", i);
+    ck_assert_str_eq(resources[i], expectedResourcePath);
+    free(expectedResourcePath);
+  }
 }
 END_TEST
 
@@ -177,5 +205,6 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_manifest_hash);
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
+  tcase_add_test(test_case, test_epub3_get_sequential_resource_paths);
   return test_case;
 }

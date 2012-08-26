@@ -50,6 +50,9 @@ EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
 char * EPUB3CopyMetadataTitle(EPUB3MetadataRef metadata);
 char * EPUB3CopyMetadataIdentifier(EPUB3MetadataRef metadata);
 char * EPUB3CopyMetadataLanguage(EPUB3MetadataRef metadata);
+  
+int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
+EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);
 
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path);
 

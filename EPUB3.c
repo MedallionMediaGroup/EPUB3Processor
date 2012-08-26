@@ -13,6 +13,38 @@ const char * kEPUB3SpineItemTypeID = "_EPUB3SpineItem_t";
 #define PARSE_CONTEXT_STACK_DEPTH 64
 #endif
 
+#pragma mark - Public Query API
+
+EXPORT int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  assert(epub->spine != NULL);
+  return epub->spine->linearItemCount;
+}
+
+EXPORT EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources)
+{
+  assert(epub != NULL);
+  assert(epub->spine != NULL);
+  
+  EPUB3Error error = kEPUB3Success;
+  
+  if(epub->spine->linearItemCount > 0) {
+    int32_t count = 0;
+    EPUB3SpineItemListItemPtr itemPtr = epub->spine->head;
+    while(itemPtr != NULL) {
+      if(itemPtr->item->isLinear) {
+        resources[count] = itemPtr->item->manifestItem->href;
+        count++;
+      }
+      itemPtr = itemPtr->next;
+    }
+    
+  }
+  
+  return error;
+}
+
 #pragma mark - Base Object
 
 void EPUB3ObjectRelease(void *object)
@@ -23,6 +55,7 @@ void EPUB3ObjectRelease(void *object)
   obj->_type.refCount--;
   if(obj->_type.refCount == 0) {
     free(obj);
+    obj = NULL;
   }
 }
 
@@ -67,7 +100,11 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   epub->archive = archive;
   epub->archiveFileCount = EPUB3GetFileCountInZipFile(archive);
   epub->archivePath = strdup(path);
-  //TODO: parse and load metadata here?
+  
+  // TODO: Should this be done here or as a separate step for the caller?
+  char * opfPath;
+  (void)EPUB3CopyRootFilePathFromContainer(epub, &opfPath);
+  (void)EPUB3InitFromOPF(epub, opfPath);
   return epub;
 }
 
@@ -390,6 +427,7 @@ EPUB3SpineRef EPUB3SpineCreate()
   EPUB3SpineRef memory = malloc(sizeof(struct EPUB3Spine));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3SpineTypeID);
   memory->itemCount = 0;
+  memory->linearItemCount = 0;
   memory->head = NULL;
   memory->tail = NULL;
   return memory;
@@ -411,13 +449,18 @@ EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
   if(spine == NULL) return;
   if(spine->_type.refCount == 1) {
     EPUB3SpineItemListItemPtr itemPtr = spine->head;
+    int totalItemsToFree = spine->itemCount;
     while(itemPtr != NULL) {
+      assert(--totalItemsToFree >= 0);
       EPUB3SpineItemRelease(itemPtr->item);
       EPUB3SpineItemListItemPtr tmp = itemPtr;
-      itemPtr = tmp->next;
+      itemPtr = itemPtr->next;
+      spine->head = itemPtr;
       free(tmp);
+      tmp = NULL;
     }
     spine->itemCount = 0;
+    spine->linearItemCount = 0;
   }
   EPUB3ObjectRelease(spine);
 }
@@ -435,33 +478,28 @@ EPUB3SpineItemRef EPUB3SpineItemCreate()
 EXPORT void EPUB3SpineItemRetain(EPUB3SpineItemRef item)
 {
   if(item == NULL) return;
-  EPUB3ManifestItemRetain(item->manifestItem);
   EPUB3ObjectRetain(item);
 }
 
 EXPORT void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
 {
   if(item == NULL) return;
-  EPUB3ManifestItemRelease(item->manifestItem);
+  
   if(item->_type.refCount == 1) {
+    item->manifestItem = NULL; // zero weak ref
     if(item->idref != NULL) {
       free(item->idref);
     }
   }
+  
   EPUB3ObjectRelease(item);
 }
 
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem)
 {
   assert(spineItem != NULL);
-
-  if(spineItem->manifestItem != NULL) {
-    EPUB3ManifestItemRelease(spineItem->manifestItem);
-  }
-  if(manifestItem != NULL) {
-    EPUB3ManifestItemRetain(manifestItem);
-  }
   spineItem->manifestItem = manifestItem;
+  spineItem->idref = strdup(manifestItem->itemId);
 }
 
 void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
@@ -470,7 +508,7 @@ void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
   assert(item != NULL);
   
   EPUB3SpineItemRetain(item);
-  EPUB3SpineItemListItemPtr itemPtr = (EPUB3SpineItemListItemPtr) malloc(sizeof(struct EPUB3SpineItemListItem));
+  EPUB3SpineItemListItemPtr itemPtr = (EPUB3SpineItemListItemPtr) calloc(1, sizeof(struct EPUB3SpineItemListItem));
   itemPtr->item = item;
   
   if(spine->head == NULL) {
@@ -478,14 +516,13 @@ void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
     spine->head = itemPtr;
     spine->tail = itemPtr;
   } else {
-    itemPtr->prev = spine->tail;
     spine->tail->next = itemPtr;
     spine->tail = itemPtr;
   }
   spine->itemCount++;
 }
 
-#pragma mark - XML Parsing Utilities
+#pragma mark - XML Parsing
 
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
 {
@@ -664,6 +701,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPt
           
           if(linear == NULL || xmlStrcmp(linear, BAD_CAST "yes") == 0) {
             newItem->isLinear = kEPUB3_YES;
+            epub->spine->linearItemCount++;
           }
           free(linear);
           newItem->idref = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "idref");
