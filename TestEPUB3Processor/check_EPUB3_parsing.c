@@ -18,23 +18,23 @@ static void teardown()
   EPUB3Release(epub);
 }
 
-START_TEST(test_epub3_get_file_count_in_zip)
+START_TEST(test_epub3_get_file_count_in_archive)
 {
   u_long expectedCount = 115U;
-  u_long count = EPUB3GetFileCountInZipFile(epub->archive);
+  u_long count = EPUB3GetFileCountInArchive(epub);
   fail_unless(count == expectedCount, "Expected %u files, but found %u in %s.", expectedCount, count, epub->archivePath);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
   
   EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
-  count = EPUB3GetFileCountInZipFile(badMetadataEpub->archive);
+  count = EPUB3GetFileCountInArchive(badMetadataEpub);
   fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
   EPUB3Release(badMetadataEpub);
 }
 END_TEST
 
-START_TEST(test_epub3_get_file_size_in_zip)
+START_TEST(test_epub3_get_file_size_in_archive)
 {
   const char * filename = "META-INF/container.xml";
   uint32_t expectedSize = 250U;
@@ -450,8 +450,8 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");
   tcase_add_checked_fixture(test_case, setup, teardown);
-  tcase_add_test(test_case, test_epub3_get_file_count_in_zip);
-  tcase_add_test(test_case, test_epub3_get_file_size_in_zip);
+  tcase_add_test(test_case, test_epub3_get_file_count_in_archive);
+  tcase_add_test(test_case, test_epub3_get_file_size_in_archive);
   tcase_add_test(test_case, test_epub3_validate_file_exists_in_zip);
   tcase_add_test(test_case, test_epub3_copy_file_into_buffer);
   tcase_add_test(test_case, test_epub3_parse_metadata_from_shakespeare_opf_data);

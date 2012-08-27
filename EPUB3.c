@@ -98,7 +98,7 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   EPUB3Ref epub = EPUB3Create();
   unzFile archive = unzOpen(path);
   epub->archive = archive;
-  epub->archiveFileCount = EPUB3GetFileCountInZipFile(archive);
+  epub->archiveFileCount = EPUB3GetFileCountInArchive(archive);
   epub->archivePath = strdup(path);
   
   return epub;
@@ -1004,10 +1004,10 @@ EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *unco
   return error;
 }
 
-uint32_t EPUB3GetFileCountInZipFile(unzFile file)
+uint32_t EPUB3GetFileCountInArchive(EPUB3Ref epub)
 {
   unz_global_info gi;
-	int err = unzGetGlobalInfo(file, &gi);
+	int err = unzGetGlobalInfo(epub->archive, &gi);
 	if (err != UNZ_OK)
     return err;
 	
