@@ -20,6 +20,14 @@
 
 typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
 
+#pragma mark - Object Pointer Types
+
+typedef struct EPUB3Metadata * EPUB3MetadataRef;
+typedef struct EPUB3ManifestItem * EPUB3ManifestItemRef;
+typedef struct EPUB3Manifest * EPUB3ManifestRef;
+typedef struct EPUB3Spine * EPUB3SpineRef;
+typedef struct EPUB3SpineItem * EPUB3SpineItemRef;
+
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;
 const char * kEPUB3ManifestTypeID;
@@ -132,6 +140,7 @@ void * EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 EPUB3Ref EPUB3Create();
 void EPUB3SetStringValue(char ** location, const char *value);
 char * EPUB3CopyStringValue(char ** location);
+EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
 void EPUB3SetMetadata(EPUB3Ref epub, EPUB3MetadataRef metadata);
 void EPUB3SetManifest(EPUB3Ref epub, EPUB3ManifestRef manifest);
 void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
@@ -139,6 +148,8 @@ void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
 #pragma mark - Metadata
 
 EPUB3MetadataRef EPUB3MetadataCreate();
+void EPUB3MetadataRetain(EPUB3MetadataRef metadata);
+void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
 void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
 void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
@@ -147,6 +158,10 @@ void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
 
 EPUB3ManifestRef EPUB3ManifestCreate();
 EPUB3ManifestItemRef EPUB3ManifestItemCreate();
+void EPUB3ManifestRetain(EPUB3ManifestRef manifest);
+void EPUB3ManifestRelease(EPUB3ManifestRef manifest);
+void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item);
+void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item);
 void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef item);
 EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, const char * itemId);
 EPUB3ManifestItemListItemPtr EPUB3ManifestFindItemWithId(EPUB3ManifestRef manifest, const char * itemId);
@@ -155,6 +170,10 @@ EPUB3ManifestItemListItemPtr EPUB3ManifestFindItemWithId(EPUB3ManifestRef manife
 
 EPUB3SpineRef EPUB3SpineCreate();
 EPUB3SpineItemRef EPUB3SpineItemCreate();
+void EPUB3SpineRetain(EPUB3SpineRef spine);
+void EPUB3SpineRelease(EPUB3SpineRef spine);
+void EPUB3SpineItemRetain(EPUB3SpineItemRef item);
+void EPUB3SpineItemRelease(EPUB3SpineItemRef item);
 void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item);
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem);
 

@@ -22,11 +22,6 @@ typedef enum _EPUB3Error {
 } EPUB3Error;
 
 typedef struct EPUB3 * EPUB3Ref;
-typedef struct EPUB3Metadata * EPUB3MetadataRef;
-typedef struct EPUB3Manifest * EPUB3ManifestRef;
-typedef struct EPUB3ManifestItem * EPUB3ManifestItemRef;
-typedef struct EPUB3Spine * EPUB3SpineRef;
-typedef struct EPUB3SpineItem * EPUB3SpineItemRef;
 
 typedef enum {
   kEPUB3Version_201 = 201,
@@ -35,21 +30,10 @@ typedef enum {
 
 void EPUB3Retain(EPUB3Ref epub);
 void EPUB3Release(EPUB3Ref epub);
-void EPUB3MetadataRetain(EPUB3MetadataRef metadata);
-void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
-void EPUB3ManifestRetain(EPUB3ManifestRef manifest);
-void EPUB3ManifestRelease(EPUB3ManifestRef manifest);
-void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item);
-void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item);
-void EPUB3SpineRetain(EPUB3SpineRef spine);
-void EPUB3SpineRelease(EPUB3SpineRef spine);
-void EPUB3SpineItemRetain(EPUB3SpineItemRef item);
-void EPUB3SpineItemRelease(EPUB3SpineItemRef item);
 
-EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);
-char * EPUB3CopyMetadataTitle(EPUB3MetadataRef metadata);
-char * EPUB3CopyMetadataIdentifier(EPUB3MetadataRef metadata);
-char * EPUB3CopyMetadataLanguage(EPUB3MetadataRef metadata);
+char * EPUB3CopyTitle(EPUB3Ref epub);
+char * EPUB3CopyIdentifier(EPUB3Ref epub);
+char * EPUB3CopyLanguage(EPUB3Ref epub);
   
 int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
 EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);

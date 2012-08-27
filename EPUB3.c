@@ -224,6 +224,28 @@ char * EPUB3CopyStringValue(char ** location)
   return copy;
 }
 
+EXPORT char * EPUB3CopyTitle(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  assert(epub->metadata != NULL);
+  return EPUB3CopyStringValue(&(epub->metadata->title));
+}
+
+EXPORT char * EPUB3CopyIdentifier(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  assert(epub->metadata != NULL);
+  return EPUB3CopyStringValue(&(epub->metadata->identifier));
+}
+
+EXPORT char * EPUB3CopyLanguage(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  assert(epub->metadata != NULL);
+  return EPUB3CopyStringValue(&(epub->metadata->language));
+}
+
+
 #pragma mark - Metadata
 
 EXPORT void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
@@ -263,34 +285,16 @@ void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title)
   (void)EPUB3SetStringValue(&(metadata->title), title);
 }
 
-EXPORT char * EPUB3CopyMetadataTitle(EPUB3MetadataRef metadata)
-{
-  assert(metadata != NULL);
-  return EPUB3CopyStringValue(&(metadata->title));
-}
-
 void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier)
 {
   assert(metadata != NULL);
   (void)EPUB3SetStringValue(&(metadata->identifier), identifier);
 }
 
-EXPORT char * EPUB3CopyMetadataIdentifier(EPUB3MetadataRef metadata)
-{
-  assert(metadata != NULL);
-  return EPUB3CopyStringValue(&(metadata->identifier));
-}
-
 void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language)
 {
   assert(metadata != NULL);
   (void)EPUB3SetStringValue(&(metadata->language), language);
-}
-
-EXPORT char * EPUB3CopyMetadataLanguage(EPUB3MetadataRef metadata)
-{
-  assert(metadata != NULL);
-  return EPUB3CopyStringValue(&(metadata->language));
 }
 
 #pragma mark - Manifest

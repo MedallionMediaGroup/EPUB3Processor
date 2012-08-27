@@ -67,15 +67,36 @@ START_TEST(test_metadata_object)
   ck_assert_str_eq(meta->_type.typeID, kEPUB3MetadataTypeID);
   fail_unless(meta->title == NULL);
   
+  EPUB3SetMetadata(epub, meta);
+  
   // Title attribute
   const char * title = "A book";
+  const char * identifier = "myid";
+  const char * language = "en";
+  
   EPUB3MetadataSetTitle(meta, title);
   ck_assert_str_eq(title, meta->title);
   fail_if(title == meta->title);
-  char * titleCopy = EPUB3CopyMetadataTitle(meta);
+  char * titleCopy = EPUB3CopyTitle(epub);
   ck_assert_str_eq(title, titleCopy);
   fail_if(title == titleCopy);
   free(titleCopy);
+
+  EPUB3MetadataSetLanguage(meta, language);
+  ck_assert_str_eq(language, meta->language);
+  fail_if(language == meta->language);
+  char * languageCopy = EPUB3CopyLanguage(epub);
+  ck_assert_str_eq(language, languageCopy);
+  fail_if(language == languageCopy);
+  free(languageCopy);
+
+  EPUB3MetadataSetIdentifier(meta, identifier);
+  ck_assert_str_eq(identifier, meta->identifier);
+  fail_if(identifier == meta->identifier);
+  char * identifierCopy = EPUB3CopyIdentifier(epub);
+  ck_assert_str_eq(identifier, identifierCopy);
+  fail_if(identifier == identifierCopy);
+  free(identifierCopy);
 }
 END_TEST
 
