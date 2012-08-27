@@ -6,6 +6,7 @@
 #include "EPUB3_private.h"
 
 static EPUB3Ref epub;
+static char tmpDirname[22];
 
 static void setup()
 {
@@ -13,11 +14,14 @@ static void setup()
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
   epub = EPUB3Create();
   (void)EPUB3PrepareArchiveAtPath(epub, path);
+  strcpy(tmpDirname, "/tmp/epub3test-XXXXXX");
+  fail_if(mkdtemp(tmpDirname) == NULL, "Unable to get a name for temp dir (%s) for test. (ERRNO %d)", tmpDirname, errno);
 }
 
 static void teardown()
 {
   EPUB3Release(epub);
+  fail_if(EPUB3RemoveDirectoryNamed(tmpDirname) < 0, "Problem removing %s after test. (ERRNO %d)", tmpDirname, errno);
 }
 
 START_TEST(test_epub3_object_creation)
@@ -219,6 +223,91 @@ START_TEST(test_epub3_get_sequential_resource_paths)
 }
 END_TEST
 
+START_TEST(test_epub3_create_nested_directories)
+{
+  const char * filename = "a/lot/of/directories";
+  uLong pathlen = strlen(tmpDirname) + 1U + strlen(filename) + 1U;
+  char fullpath[pathlen];
+  (void)strcpy(fullpath, tmpDirname);
+  (void)strncat(fullpath, "/", 1U);
+  (void)strncat(fullpath, filename, strlen(filename));
+  
+  EPUB3Error error = EPUB3CreateNestedDirectoriesForFileAtPath(fullpath);
+  fail_unless(error == kEPUB3Success, "Could not create directory structure %s", fullpath);
+
+  const char * dirname = "a/lot/of/";
+  uLong dirlen = strlen(tmpDirname) + 1U + strlen(dirname) + 1U;
+  char dirpath[dirlen];
+  (void)strcpy(dirpath, tmpDirname);
+  (void)strncat(dirpath, "/", 1U);
+  (void)strncat(dirpath, dirname, strlen(dirname));
+
+  struct stat st;
+  fail_if(stat(dirpath, &st) < 0, "Directory (%s) was not created. (ERRNO %d)", dirpath, errno);
+}
+END_TEST
+
+START_TEST(test_epub3_write_current_archive_file_to_path)
+{
+  fail_unless(unzGoToFirstFile(epub->archive) == UNZ_OK, "Problem with zip file at path: %s", epub->archivePath);
+  unz_file_info fileInfo;
+  char filename[MAXNAMLEN];
+  int err = unzGetCurrentFileInfo(epub->archive, &fileInfo, filename, MAXNAMLEN, NULL, 0, NULL, 0);
+  fail_if(filename == NULL, "Unable to get name of current file in %s", epub->archivePath);
+  fail_unless(err == UNZ_OK, "Problem reading info for file %s in %s", filename, epub->archivePath);
+  
+  (void)unzGoToFirstFile(epub->archive);
+  EPUB3Error error = EPUB3WriteCurrentArchiveFileToPath(epub, tmpDirname);
+  fail_unless(error == kEPUB3Success, "Couldn't write %s to %s.", filename, tmpDirname);
+  
+  uLong pathlen = strlen(tmpDirname) + 1U + strlen(filename) + 1U;
+  char fullpath[pathlen];
+  (void)strcpy(fullpath, tmpDirname);
+  (void)strncat(fullpath, "/", 1U);
+  (void)strncat(fullpath, filename, strlen(filename));
+  
+  struct stat st;
+  err = stat(fullpath, &st);
+  fail_if(err < 0, "File %s was not created.", filename);
+  fail_unless(st.st_size == fileInfo.uncompressed_size);
+}
+END_TEST
+
+START_TEST(test_epub3_extract_archive)
+{
+  char cwd[MAXNAMLEN];
+  (void)getcwd(cwd, MAXNAMLEN);
+
+  EPUB3Error error = EPUB3ExtractArchiveToPath(epub, tmpDirname);
+  fail_unless(error == kEPUB3Success, "Unable to extract epub");
+
+  const char * filename = "mimetype";
+  uLong pathlen = strlen(tmpDirname) + 1U + strlen(filename) + 1U;
+  char fullpath[pathlen];
+  (void)strcpy(fullpath, tmpDirname);
+  (void)strncat(fullpath, "/", 1U);
+  (void)strncat(fullpath, filename, strlen(filename));
+  
+  struct stat st;
+  int err = stat(fullpath, &st);
+  fail_if(err < 0, "File %s was not extracted.", filename);
+
+  const char * opffilename = "100/content.opf";
+  uLong opfpathlen = strlen(tmpDirname) + 1U + strlen(opffilename) + 1U;
+  char opfpath[opfpathlen];
+  (void)strcpy(opfpath, tmpDirname);
+  (void)strncat(opfpath, "/", 1U);
+  (void)strncat(opfpath, opffilename, strlen(opffilename));
+  
+  err = stat(opfpath, &st);
+  fail_if(err < 0, "File %s was not extracted.", opfpath);
+  
+  char cwd2[MAXNAMLEN];
+  (void)getcwd(cwd2, MAXNAMLEN);
+  ck_assert_str_eq(cwd, cwd2);
+}
+END_TEST
+
 
 TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
 {
@@ -232,5 +321,8 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
   tcase_add_test(test_case, test_epub3_get_sequential_resource_paths);
+  tcase_add_test(test_case, test_epub3_write_current_archive_file_to_path);
+  tcase_add_test(test_case, test_epub3_create_nested_directories);
+  tcase_add_test(test_case, test_epub3_extract_archive);
   return test_case;
 }

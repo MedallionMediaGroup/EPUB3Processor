@@ -453,7 +453,7 @@ END_TEST
 
 TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
 {
-  TCase *test_case = tcase_create("EPUB3");
+  TCase *test_case = tcase_create("EPUB3 Parsing");
   tcase_add_checked_fixture(test_case, setup, teardown);
   tcase_add_test(test_case, test_epub3_get_file_count_in_archive);
   tcase_add_test(test_case, test_epub3_get_file_size_in_archive);

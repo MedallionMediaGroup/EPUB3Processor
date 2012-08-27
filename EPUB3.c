@@ -975,6 +975,154 @@ EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * f
 
 #pragma mark - Utility functions
 
+// This buffer size was chosen because it matches UNZ_BUFSIZE in unzip.c
+#define FILE_EXTRACT_BUFFER_SIZE (16384)
+
+EXPORT EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path)
+{
+  assert(epub != NULL);
+  assert(path != NULL);
+
+  EPUB3Error error = kEPUB3UnknownError;
+
+  char cwd[MAXNAMLEN];
+  (void)getcwd(cwd, MAXNAMLEN);
+  
+  EPUB3Bool directoryReady = (chdir(path) >= 0);
+  
+  if(!directoryReady) {
+    if(errno == ENOENT) {
+      if(mkdir(path, 0755) < 0) {
+        fprintf(stderr, "Error [%d] creating directory %s\n", errno, path);
+        error = kEPUB3UnknownError;
+      } else {
+        if(chdir(path) < 0) {
+          fprintf(stderr, "Error [%d] changing to newly created dir %s\n", errno, path);
+        } else {
+          directoryReady = kEPUB3_YES;
+        }
+      }
+    } else {
+      fprintf(stderr, "Error [%d] opening %s\n", errno, path);
+      error = kEPUB3UnknownError;
+    }
+  }
+  
+  if(directoryReady) {
+    if(unzGoToFirstFile(epub->archive) == UNZ_OK) {
+      int fileCount = 0;
+      do {
+        error = EPUB3WriteCurrentArchiveFileToPath(epub, path);
+        if(error == kEPUB3Success) {
+          fileCount++;
+        }
+      } while(unzGoToNextFile(epub->archive) == UNZ_OK);
+      if(fileCount == EPUB3GetFileCountInArchive(epub)) {
+        error = kEPUB3Success;
+      }
+    }
+  }
+  
+  if(chdir(cwd) < 0) {
+    fprintf(stderr, "Error [%d] changing back to starting dir %s\n", errno, cwd);
+  }
+  return error;
+}
+
+EPUB3Error EPUB3CreateNestedDirectoriesForFileAtPath(const char * path)
+{
+  EPUB3Error error = kEPUB3Success;
+  char * pathCopy = strdup(path);
+  char pathBuildup[strlen(path) + 1];
+  pathBuildup[0] = '\0';
+  char * pathseg;
+  char * pathseg2;
+  char * loc;
+  
+  pathseg = strtok_r(pathCopy, "/", &loc);
+  
+  while(pathseg != NULL) {
+    pathseg2 = strtok_r(NULL, "/", &loc);
+    if(pathseg2 != NULL) {
+      strncat(pathBuildup, "/", 1U);
+      strncat(pathBuildup, pathseg, strlen(pathseg));
+      struct stat st;
+      if(stat(pathBuildup, &st) < 0) {
+        if(errno == ENOENT) {
+          //Directory doesn't exist
+          if(mkdir(pathBuildup, 0755) >= 0) {
+            error = kEPUB3Success;
+          } else {
+            // Couldn't create dir
+            error = kEPUB3UnknownError;
+            break;
+          }
+        } else {
+          // Weird stat error
+          error = kEPUB3UnknownError;
+          break;
+        }
+      } else {
+        // Already exists
+        error = kEPUB3Success;
+      }
+    }
+    pathseg = pathseg2;
+  }
+  free(pathCopy);
+  return error;
+}
+
+EPUB3Error EPUB3WriteCurrentArchiveFileToPath(EPUB3Ref epub, const char * path)
+{
+  EPUB3Error error = kEPUB3Success;
+  unz_file_info fileInfo;
+  char filename[MAXNAMLEN];
+  if(unzGetCurrentFileInfo(epub->archive, &fileInfo, filename, MAXNAMLEN, NULL, 0, NULL, 0) == UNZ_OK) {
+    uLong pathlen = strlen(path) + 1U + strlen(filename) + 1U;
+    char fullpath[pathlen];
+    (void)strcpy(fullpath, path);
+    (void)strncat(fullpath, "/", 1U);
+    (void)strncat(fullpath, filename, strlen(filename));
+    
+    FILE *destination = fopen(fullpath, "wb");
+    if(destination == NULL) {
+      if(errno == ENOENT) {
+        //We need to create intermediate directories
+        error = EPUB3CreateNestedDirectoriesForFileAtPath(fullpath);
+        if(error == kEPUB3Success) {
+          //Try again
+          if((destination = fopen(fullpath, "wb")) == NULL) {
+            //Failed again can't continue
+            error = kEPUB3UnknownError;
+          }
+        }
+      } else {
+        error = kEPUB3UnknownError;
+      }
+    }
+    if(destination != NULL) {
+      void *buffer = malloc(FILE_EXTRACT_BUFFER_SIZE);
+      if(unzOpenCurrentFile(epub->archive) == UNZ_OK) {
+        int bytesRead;
+        do {
+          bytesRead = unzReadCurrentFile(epub->archive, buffer, FILE_EXTRACT_BUFFER_SIZE);
+          if(bytesRead < 0) {
+            error = kEPUB3FileReadFromArchiveError;
+            break;
+          } else {
+            fwrite(buffer, 1, bytesRead, destination);
+          }
+        } while(bytesRead > 0);
+        unzCloseCurrentFile(epub->archive);
+      }
+      fclose(destination);
+      free(buffer);
+    }
+  }
+  return error;
+}
+
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename)
 {
   assert(epub != NULL);

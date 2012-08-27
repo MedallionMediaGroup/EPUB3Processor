@@ -4,7 +4,11 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <sys/stat.h>
+#include <sys/dir.h>
+#include <sys/dirent.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
@@ -25,14 +29,53 @@
 } while(0);
 
 
-static uint64_t EPUB3TestPathLengthForFileNamed(const char * name) {
+static inline uint64_t EPUB3TestPathLengthForFileNamed(const char * name) {
   return strlen(TEST_DATA_PATH) + strlen(name) + 1;
 }
 
-static void EPUB3GetTestPathForFileNamed(char *dest, const char *name)
+static inline void EPUB3GetTestPathForFileNamed(char *dest, const char *name)
 {
   (void)strcpy(dest, TEST_DATA_PATH);
   (void)strncat(dest, name, strlen(name));
 }
+
+static inline int EPUB3RemoveDirectoryNamed(const char *name)
+{
+  DIR *tmpdir = opendir(name);
+  if(tmpdir == NULL) {
+    return -1;
+  }
+  struct dirent *dir;
+  while((dir = readdir(tmpdir)) != NULL) {
+    if(dir->d_type == DT_DIR && strcmp(".", dir->d_name) != 0 && strcmp("..", dir->d_name) != 0) {
+      unsigned long subdirlen = strlen(name) + 1U + strlen(dir->d_name) + 1U;
+      char subdir[subdirlen];
+      (void)strcpy(subdir, name);
+      strncat(subdir, "/", 1U);
+      strncat(subdir, dir->d_name, strlen(dir->d_name));
+      int error = EPUB3RemoveDirectoryNamed(subdir);
+      if(error < 0) {
+        closedir(tmpdir);
+        return error;
+      }
+    }
+    else if(dir->d_type != DT_DIR) {
+      unsigned long filepathlen = strlen(name) + 1U + strlen(dir->d_name) + 1U;
+      char filepath[filepathlen];
+      (void)strcpy(filepath, name);
+      strncat(filepath, "/", 1U);
+      strncat(filepath, dir->d_name, strlen(dir->d_name));
+      
+      int error = remove(filepath);
+      if(error < 0) {
+        closedir(tmpdir);
+        return error;
+      }
+    }
+  }
+  (void)closedir(tmpdir);
+  return rmdir(name);
+}
+
 
 #endif

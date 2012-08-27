@@ -30,6 +30,7 @@ char * EPUB3CopyIdentifier(EPUB3Ref epub);
 char * EPUB3CopyLanguage(EPUB3Ref epub);
 int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
 EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);
+EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path);
 
 #if defined(__cplusplus)
 } //EXTERN "C"

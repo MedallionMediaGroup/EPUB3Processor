@@ -5,6 +5,9 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/dir.h>
+#include <sys/dirent.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
@@ -207,6 +210,8 @@ EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 uint32_t EPUB3GetFileCountInArchive(EPUB3Ref epub);
 EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename);
+EPUB3Error EPUB3WriteCurrentArchiveFileToPath(EPUB3Ref epub, const char * path);
+EPUB3Error EPUB3CreateNestedDirectoriesForFileAtPath(const char * path);
 
 
 #pragma mark - Hash function
