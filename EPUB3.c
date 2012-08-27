@@ -91,20 +91,40 @@ EPUB3Ref EPUB3Create()
   return memory;
 }
 
-EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
+EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path, EPUB3Error *error)
 {
   assert(path != NULL);
   
   EPUB3Ref epub = EPUB3Create();
+  *error = EPUB3PrepareArchiveAtPath(epub, path);
+  if(*error != kEPUB3Success) {
+    EPUB3Release(epub);
+    return NULL;
+  }
+
+  *error = EPUB3InitAndValidate(epub);
+  if(*error != kEPUB3Success) {
+    EPUB3Release(epub);
+    return NULL;
+  }
+
+  return epub;
+}
+
+EPUB3Error EPUB3PrepareArchiveAtPath(EPUB3Ref epub, const char * path)
+{
+  assert(epub != NULL);
+  assert(path != NULL);
+  
+  EPUB3Error error = kEPUB3Success;
   unzFile archive = unzOpen(path);
   epub->archive = archive;
   epub->archiveFileCount = EPUB3GetFileCountInArchive(archive);
   epub->archivePath = strdup(path);
-  
-  return epub;
+  return error;
 }
 
-EXPORT EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub)
+EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub)
 {
   assert(epub != NULL);
   char * opfPath = NULL;
@@ -119,7 +139,7 @@ EXPORT EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub)
   return error;
 }
 
-EXPORT void EPUB3Retain(EPUB3Ref epub)
+void EPUB3Retain(EPUB3Ref epub)
 {
   if(epub == NULL) return;
   
@@ -150,7 +170,7 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
   EPUB3ObjectRelease(epub);
 }
 
-EXPORT EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
+EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
 {
   assert(epub != NULL);
   
@@ -248,14 +268,14 @@ EXPORT char * EPUB3CopyLanguage(EPUB3Ref epub)
 
 #pragma mark - Metadata
 
-EXPORT void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
+void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
 {
   if(metadata == NULL) return;
   
   EPUB3ObjectRetain(metadata);
 }
 
-EXPORT void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
+void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
 {
   if(metadata == NULL) return;
 
@@ -299,7 +319,7 @@ void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language)
 
 #pragma mark - Manifest
 
-EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
+void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
 {
   if(manifest == NULL) return;
 
@@ -313,7 +333,7 @@ EXPORT void EPUB3ManifestRetain(EPUB3ManifestRef manifest)
   EPUB3ObjectRetain(manifest);
 }
 
-EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
+void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
 {
   if(manifest == NULL) return;
   for(int i = 0; i < MANIFEST_HASH_SIZE; i++) {
@@ -338,14 +358,14 @@ EXPORT void EPUB3ManifestRelease(EPUB3ManifestRef manifest)
   EPUB3ObjectRelease(manifest);
 }
 
-EXPORT void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item)
+void EPUB3ManifestItemRetain(EPUB3ManifestItemRef item)
 {
   if(item == NULL) return;
   
   EPUB3ObjectRetain(item);
 }
 
-EXPORT void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
+void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
 {
   if(item == NULL) return;
 
@@ -451,7 +471,7 @@ EPUB3SpineRef EPUB3SpineCreate()
   return memory;
 }
 
-EXPORT void EPUB3SpineRetain(EPUB3SpineRef spine)
+void EPUB3SpineRetain(EPUB3SpineRef spine)
 {
   if(spine == NULL) return;
 
@@ -462,7 +482,7 @@ EXPORT void EPUB3SpineRetain(EPUB3SpineRef spine)
   EPUB3ObjectRetain(spine);
 }
 
-EXPORT void EPUB3SpineRelease(EPUB3SpineRef spine)
+void EPUB3SpineRelease(EPUB3SpineRef spine)
 {
   if(spine == NULL) return;
   if(spine->_type.refCount == 1) {
@@ -493,13 +513,13 @@ EPUB3SpineItemRef EPUB3SpineItemCreate()
   return memory;
 }
 
-EXPORT void EPUB3SpineItemRetain(EPUB3SpineItemRef item)
+void EPUB3SpineItemRetain(EPUB3SpineItemRef item)
 {
   if(item == NULL) return;
   EPUB3ObjectRetain(item);
 }
 
-EXPORT void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
+void EPUB3SpineItemRelease(EPUB3SpineItemRef item)
 {
   if(item == NULL) return;
   

@@ -68,6 +68,11 @@ struct EPUB3Object {
 
 typedef struct EPUB3Object *EPUB3ObjectRef;
 
+typedef enum {
+  kEPUB3Version_201 = 201,
+  kEPUB3Version_3   = 300,
+} EPUB3Version;
+
 struct EPUB3 {
   EPUB3Type _type;
   EPUB3MetadataRef metadata;
@@ -138,6 +143,9 @@ void * EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 #pragma mark - Main EPUB3 Object
 
 EPUB3Ref EPUB3Create();
+void EPUB3Retain(EPUB3Ref epub);
+EPUB3Error EPUB3PrepareArchiveAtPath(EPUB3Ref epub, const char * path);
+EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub);
 void EPUB3SetStringValue(char ** location, const char *value);
 char * EPUB3CopyStringValue(char ** location);
 EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub);

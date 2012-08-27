@@ -10,7 +10,8 @@ static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
-  epub = EPUB3CreateWithArchiveAtPath(path);
+  epub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(epub, path);
 }
 
 static void teardown()
@@ -27,7 +28,8 @@ START_TEST(test_epub3_get_file_count_in_archive)
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
   
-  EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
+  EPUB3Ref badMetadataEpub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(badMetadataEpub, path);
   count = EPUB3GetFileCountInArchive(badMetadataEpub);
   fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
   EPUB3Release(badMetadataEpub);
@@ -46,7 +48,8 @@ START_TEST(test_epub3_get_file_size_in_archive)
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
-  EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
+  EPUB3Ref badMetadataEpub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(badMetadataEpub, path);
   
   filename = "mimetype";
   expectedSize = 16U;
@@ -77,7 +80,8 @@ START_TEST(test_epub3_validate_file_exists_in_zip)
 
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
-  EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
+  EPUB3Ref badEpub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(badEpub, path);
   error = EPUB3ValidateFileExistsAndSeekInArchive(badEpub, filename);
   fail_if(error == kEPUB3FileNotFoundInArchiveError, "File %s not found in %s.", filename, badEpub->archivePath);
   fail_unless(error == kEPUB3Success, "Had a problem looking for %s in %s.", filename, badEpub->archivePath);
@@ -433,7 +437,8 @@ START_TEST(test_epub3_validate_mimetype)
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
-  EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
+  EPUB3Ref badEpub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(badEpub, path);
   error = EPUB3ValidateMimetype(badEpub);
   fail_if(error == kEPUB3Success);
   EPUB3Release(badEpub);

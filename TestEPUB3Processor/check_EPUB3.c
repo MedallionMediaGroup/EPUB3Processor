@@ -11,7 +11,8 @@ static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
-  epub = EPUB3CreateWithArchiveAtPath(path);
+  epub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(epub, path);
 }
 
 static void teardown()
