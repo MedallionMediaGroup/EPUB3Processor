@@ -101,11 +101,22 @@ EXPORT EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path)
   epub->archiveFileCount = EPUB3GetFileCountInZipFile(archive);
   epub->archivePath = strdup(path);
   
-  // TODO: Should this be done here or as a separate step for the caller?
-  char * opfPath;
-  (void)EPUB3CopyRootFilePathFromContainer(epub, &opfPath);
-  (void)EPUB3InitFromOPF(epub, opfPath);
   return epub;
+}
+
+EXPORT EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  char * opfPath = NULL;
+  EPUB3Error error = EPUB3CopyRootFilePathFromContainer(epub, &opfPath);
+  if(error != kEPUB3Success) {
+    fprintf(stderr, "Error (%d[%d]) opening and validating epub file at %s.\n", error, __LINE__, epub->archivePath);
+  }
+  error = EPUB3InitFromOPF(epub, opfPath);
+  if(error != kEPUB3Success) {
+    fprintf(stderr, "Error (%d[%d]) parsing epub file at %s.\n", error, __LINE__, epub->archivePath);
+  }
+  return error;
 }
 
 EXPORT void EPUB3Retain(EPUB3Ref epub)
@@ -127,7 +138,10 @@ EXPORT void EPUB3Release(EPUB3Ref epub)
       unzClose(epub->archive);
       epub->archive = NULL;
     }
-    free(epub->archivePath);
+    if(epub->archivePath != NULL) {
+      free(epub->archivePath);
+      epub->archivePath = NULL;
+    }
   }
 
   EPUB3MetadataRelease(epub->metadata);
@@ -707,7 +721,11 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPt
           newItem->idref = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "idref");
           if(newItem->idref != NULL) {
             EPUB3ManifestItemListItemPtr manifestPtr = EPUB3ManifestFindItemWithId(epub->manifest, newItem->idref);
-            newItem->manifestItem = manifestPtr->item;
+            if(manifestPtr == NULL) {
+              newItem->manifestItem = NULL;
+            } else {
+              newItem->manifestItem = manifestPtr->item;
+            }
           }
           EPUB3SpineAppendItem(epub->spine, newItem);
         }

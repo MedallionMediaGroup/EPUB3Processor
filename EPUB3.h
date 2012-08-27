@@ -55,7 +55,7 @@ int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
 EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);
 
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path);
-
+EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub);
 
 #if defined(__cplusplus)
 } //EXTERN "C"

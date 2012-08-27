@@ -10,6 +10,7 @@ static EPUB3Ref epub;
 static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
   epub = EPUB3CreateWithArchiveAtPath(path);
 }
 
@@ -24,6 +25,7 @@ START_TEST(test_epub3_object_creation)
   fail_unless(epub->archiveFileCount > 0);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
   ck_assert_str_eq(epub->archivePath, path);
   fail_if(epub->archivePath == path);
 }
@@ -175,12 +177,14 @@ END_TEST
 
 START_TEST(test_epub3_get_sequential_resource_paths)
 {
+  EPUB3Error error = EPUB3InitAndValidate(epub);
+  fail_unless(error == kEPUB3Success);
   int32_t expectedCount = 108;
   int32_t count = EPUB3CountOfSequentialResources(epub);
   ck_assert_int_eq(count, expectedCount);
   
   const char *resources[count];
-  EPUB3Error error = EPUB3GetPathsOfSequentialResources(epub, resources);
+  error = EPUB3GetPathsOfSequentialResources(epub, resources);
   fail_unless(error == kEPUB3Success);
   
   for (int i = 0; i < count; i++) {

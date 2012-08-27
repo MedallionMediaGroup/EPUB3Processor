@@ -1,6 +1,5 @@
 #include <config.h>
 #include <check.h>
-#include <sys/stat.h>
 #include "test_common.h"
 #include "EPUB3.h"
 #include "EPUB3_private.h"
@@ -10,6 +9,7 @@ static EPUB3Ref epub;
 static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
   epub = EPUB3CreateWithArchiveAtPath(path);
 }
 
@@ -25,6 +25,8 @@ START_TEST(test_epub3_get_file_count_in_zip)
   fail_unless(count == expectedCount, "Expected %u files, but found %u in %s.", expectedCount, count, epub->archivePath);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
+  
   EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
   count = EPUB3GetFileCountInZipFile(badMetadataEpub->archive);
   fail_unless(count == 1,  "Expected %u files, but found %u in %s.", 1, count, badMetadataEpub->archivePath);
@@ -43,6 +45,7 @@ START_TEST(test_epub3_get_file_size_in_zip)
   fail_unless(size == expectedSize, "Expected size of %u, but got %u for %s.", expectedSize, size, filename);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
   EPUB3Ref badMetadataEpub = EPUB3CreateWithArchiveAtPath(path);
   
   filename = "mimetype";
@@ -73,6 +76,7 @@ START_TEST(test_epub3_validate_file_exists_in_zip)
   fail_unless(error == kEPUB3Success, "Had a problem looking for %s in %s.", filename, epub->archivePath);
 
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
   EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
   error = EPUB3ValidateFileExistsAndSeekInArchive(badEpub, filename);
   fail_if(error == kEPUB3FileNotFoundInArchiveError, "File %s not found in %s.", filename, badEpub->archivePath);
@@ -100,6 +104,7 @@ START_TEST(test_epub3_copy_file_into_buffer)
   fail_unless(bytesCopied == bufferSize, "Expected %s to be %u bytes but was %u bytes.", filename, expectedSize, bufferSize);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100_container.xml");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 250);
   FILE *containerFP = fopen(path, "r");
   char *newBuf = (char *)calloc(bufferSize, sizeof(char));
   size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, containerFP);
@@ -142,6 +147,7 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   const char * expectedLanguage = "en";
 
   TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24804);
   EPUB3Ref blankEPUB = EPUB3Create();
 
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
@@ -195,6 +201,7 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   const char * expectedLanguage = "en-US";
 
   TEST_PATH_VAR_FOR_FILENAME(path, "moby_dick_package.opf");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 23250);
   EPUB3Ref blankEPUB = EPUB3Create();
 
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
@@ -300,6 +307,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   const char * expItem2MediaType = "application/xhtml+xml";
   
   TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24804);
   EPUB3Ref blankEPUB = EPUB3Create();
   
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
@@ -364,6 +372,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   const char * expItem2MediaType = "application/xhtml+xml";
   
   TEST_PATH_VAR_FOR_FILENAME(path, "moby_dick_package.opf");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 23250);
   EPUB3Ref blankEPUB = EPUB3Create();
   
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
@@ -423,6 +432,7 @@ START_TEST(test_epub3_validate_mimetype)
   fail_unless(error == kEPUB3Success);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "bad_metadata.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 182);
   EPUB3Ref badEpub = EPUB3CreateWithArchiveAtPath(path);
   error = EPUB3ValidateMimetype(badEpub);
   fail_if(error == kEPUB3Success);
