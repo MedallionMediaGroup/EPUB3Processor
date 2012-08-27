@@ -60,35 +60,6 @@
 /* Begin PBXFileReference section */
 		D01877E015B4A05F009F21AC /* LICENSE-MIT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "LICENSE-MIT"; sourceTree = SOURCE_ROOT; };
 		D01877E115B4A07B009F21AC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		D0359606159E091600E87091 /* arraylist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = arraylist.c; sourceTree = "<group>"; };
-		D0359607159E091600E87091 /* arraylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arraylist.h; sourceTree = "<group>"; };
-		D0359608159E091600E87091 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
-		D0359609159E091600E87091 /* bits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bits.h; sourceTree = "<group>"; };
-		D035960B159E091600E87091 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		D035960C159E091600E87091 /* config.h.win32 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.win32; sourceTree = "<group>"; };
-		D035960E159E091600E87091 /* debug.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
-		D035960F159E091600E87091 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
-		D0359610159E091600E87091 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
-		D0359611159E091600E87091 /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
-		D0359612159E091600E87091 /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
-		D0359613159E091600E87091 /* json_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_config.h; sourceTree = "<group>"; };
-		D0359614159E091600E87091 /* json_inttypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_inttypes.h; sourceTree = "<group>"; };
-		D0359615159E091600E87091 /* json_object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json_object.c; sourceTree = "<group>"; };
-		D0359616159E091600E87091 /* json_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_object.h; sourceTree = "<group>"; };
-		D0359617159E091600E87091 /* json_object_iterator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json_object_iterator.c; sourceTree = "<group>"; };
-		D0359618159E091600E87091 /* json_object_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_object_iterator.h; sourceTree = "<group>"; };
-		D0359619159E091600E87091 /* json_object_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_object_private.h; sourceTree = "<group>"; };
-		D035961A159E091600E87091 /* json_tokener.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json_tokener.c; sourceTree = "<group>"; };
-		D035961B159E091600E87091 /* json_tokener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_tokener.h; sourceTree = "<group>"; };
-		D035961C159E091600E87091 /* json_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = json_util.c; sourceTree = "<group>"; };
-		D035961D159E091600E87091 /* json_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_util.h; sourceTree = "<group>"; };
-		D035961E159E091600E87091 /* linkhash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linkhash.c; sourceTree = "<group>"; };
-		D035961F159E091600E87091 /* linkhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkhash.h; sourceTree = "<group>"; };
-		D0359620159E091600E87091 /* printbuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = printbuf.c; sourceTree = "<group>"; };
-		D0359621159E091600E87091 /* printbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = printbuf.h; sourceTree = "<group>"; };
-		D0521A9F15B3B8D900B5075E /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
-		D0521AA015B3B8D900B5075E /* README-WIN32.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "README-WIN32.html"; sourceTree = "<group>"; };
-		D0521AA115B3B8D900B5075E /* README.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
 		D0521AA315B3B8D900B5075E /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		D05B96971598DC4C00C375CC /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05B96A01598FF7200C375CC /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
@@ -101,9 +72,6 @@
 		D05B96A71598FF7200C375CC /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
 		D05B96A81598FF7200C375CC /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		D05B96E91598FFAA00C375CC /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
-		D0A09A511599069600B90138 /* validators.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = validators.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
-		D0A09A531599076300B90138 /* validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validators.h; sourceTree = "<group>"; };
-		D0A09A58159908AB00B90138 /* EPUB3Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPUB3Processor.h; sourceTree = "<group>"; };
 		DF06B6D015DC33CC00675923 /* TestEPUB3Processor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestEPUB3Processor; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF06B6D315DC33CC00675923 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		DF06B71315DC34B300675923 /* fileno.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fileno.c; sourceTree = "<group>"; };
@@ -189,57 +157,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D0359605159E091600E87091 /* json-c */ = {
-			isa = PBXGroup;
-			children = (
-				D0359606159E091600E87091 /* arraylist.c */,
-				D0359607159E091600E87091 /* arraylist.h */,
-				D0359608159E091600E87091 /* AUTHORS */,
-				D0359609159E091600E87091 /* bits.h */,
-				D035960B159E091600E87091 /* config.h */,
-				D035960C159E091600E87091 /* config.h.win32 */,
-				D035960E159E091600E87091 /* debug.c */,
-				D035960F159E091600E87091 /* debug.h */,
-				D0359610159E091600E87091 /* Doxyfile */,
-				D0359611159E091600E87091 /* INSTALL */,
-				D0359612159E091600E87091 /* json.h */,
-				D0359613159E091600E87091 /* json_config.h */,
-				D0359614159E091600E87091 /* json_inttypes.h */,
-				D0359615159E091600E87091 /* json_object.c */,
-				D0359616159E091600E87091 /* json_object.h */,
-				D0359617159E091600E87091 /* json_object_iterator.c */,
-				D0359618159E091600E87091 /* json_object_iterator.h */,
-				D0359619159E091600E87091 /* json_object_private.h */,
-				D035961A159E091600E87091 /* json_tokener.c */,
-				D035961B159E091600E87091 /* json_tokener.h */,
-				D035961C159E091600E87091 /* json_util.c */,
-				D035961D159E091600E87091 /* json_util.h */,
-				D035961E159E091600E87091 /* linkhash.c */,
-				D035961F159E091600E87091 /* linkhash.h */,
-				D0359620159E091600E87091 /* printbuf.c */,
-				D0359621159E091600E87091 /* printbuf.h */,
-			);
-			path = "json-c";
-			sourceTree = "<group>";
-		};
 		D0521A9D15B3B8D900B5075E /* license */ = {
 			isa = PBXGroup;
 			children = (
 				D01877E015B4A05F009F21AC /* LICENSE-MIT */,
-				D0521A9E15B3B8D900B5075E /* json-c */,
 				D0521AA215B3B8D900B5075E /* zlib */,
 			);
 			path = license;
-			sourceTree = "<group>";
-		};
-		D0521A9E15B3B8D900B5075E /* json-c */ = {
-			isa = PBXGroup;
-			children = (
-				D0521A9F15B3B8D900B5075E /* COPYING */,
-				D0521AA015B3B8D900B5075E /* README-WIN32.html */,
-				D0521AA115B3B8D900B5075E /* README.html */,
-			);
-			path = "json-c";
 			sourceTree = "<group>";
 		};
 		D0521AA215B3B8D900B5075E /* zlib */ = {
@@ -258,9 +182,6 @@
 				DF819DF415D4240D0074F9C2 /* EPUB3.c */,
 				D01877E115B4A07B009F21AC /* README.md */,
 				D0521A9D15B3B8D900B5075E /* license */,
-				D0A09A58159908AB00B90138 /* EPUB3Processor.h */,
-				D0A09A511599069600B90138 /* validators.c */,
-				D0A09A531599076300B90138 /* validators.h */,
 				D05B969E1598FF7200C375CC /* support_libs */,
 				DF06B6D215DC33CC00675923 /* Tests */,
 				D05B96981598DC4C00C375CC /* Products */,
@@ -282,7 +203,6 @@
 			children = (
 				D05B96E91598FFAA00C375CC /* libxml2.dylib */,
 				DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */,
-				D0359605159E091600E87091 /* json-c */,
 				D05B969F1598FF7200C375CC /* MiniZip */,
 			);
 			path = support_libs;
