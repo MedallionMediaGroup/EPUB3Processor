@@ -201,7 +201,7 @@ if __name__ == '__main__':
     input_path, output_path = _parse_commandline_args(sys.argv[1:])
     check_etree = ET.ElementTree(file=input_path)
     junit_tree = junit_etree_from_check_etree(check_etree)
-    junit_tree.write(output_path, encoding='utf8', xml_declaration=True)
+    junit_tree.write(output_path, encoding='UTF-8', xml_declaration=True)
     if(junit_tree.find('.//failure') is not None or junit_tree.find('.//error') is not None):
         sys.exit(1)
     sys.exit(0)
