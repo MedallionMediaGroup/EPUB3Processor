@@ -69,18 +69,18 @@ def junit_case_from_check_case(check_case):
     ... </test>''')
     >>> s = junit_case_from_check_case(success)
     >>> s.attrib
-    {'classname': 'ex_xml_output.c:8', 'name': 'test_pass'}
+    {'classname': 'ex_xml_output.c:8', 'name': 'test_pass', 'time': '0.0'}
     >>> len(s)
     0
     >>> f = junit_case_from_check_case(failure)
     >>> f.attrib
-    {'classname': 'ex_xml_output.c:14', 'name': 'test_fail'}
+    {'classname': 'ex_xml_output.c:14', 'name': 'test_fail', 'time': '0.0'}
     >>> len(f)
     1
     >>> f[0].attrib['message'] = 'Failure'
     >>> e = junit_case_from_check_case(error)
     >>> e.attrib
-    {'classname': 'ex_xml_output.c:18', 'name': 'test_exit'}
+    {'classname': 'ex_xml_output.c:18', 'name': 'test_exit', 'time': '0.0'}
     >>> len(e)
     1
     >>> e[0].attrib['message'] = 'Early exit with return value 1'
@@ -90,7 +90,7 @@ def junit_case_from_check_case(check_case):
     name = check_case.find(".//{%s}id" % ns)
     classname = check_case.find(".//{%s}fn" % ns)
     message = check_case.find(".//{%s}message" % ns)
-    case = ET.Element('testcase', {'name': name.text, 'classname': classname.text})
+    case = ET.Element('testcase', {'name': name.text, 'classname': classname.text, 'time':'0.0'})
     if(result == "failure"):
         case.append(ET.Element('failure', {'message': message.text or ''}))
     if(result == "error"):
@@ -138,7 +138,7 @@ def junit_etree_from_check_etree(check_etree):
     >>> root.tag
     'testsuite'
     >>> root.attrib
-    {'timestamp': '2004-08-20T12:53:32', 'tests': '4', 'name': 'S1,S2'}
+    {'tests': '4', 'errors': '1', 'name': 'S1,S2', 'timestamp': '2004-08-20T12:53:32', 'time': '0.304875', 'failures': '1'}
     >>> len(root)
     4
     >>> expected = ET.XML(__junit_test_string)
@@ -153,6 +153,7 @@ def junit_etree_from_check_etree(check_etree):
     check_root = check_etree.getroot()
     ns, tag = split_ns_from_tag(check_root.tag)
     time = check_root.find('{%s}datetime' % ns)
+    duration = check_root.find('{%s}duration' % ns)
 
     root = ET.Element('testsuite')
 
@@ -169,6 +170,9 @@ def junit_etree_from_check_etree(check_etree):
 
     root.attrib['tests'] = str(test_count)
     root.attrib['name'] = ','.join(names)
+    root.attrib['time'] = duration.text or ''
+    root.attrib['failures'] = str(len(root.findall('.//failure')))
+    root.attrib['errors'] = str(len(root.findall('.//error')))
     return ET.ElementTree(root)
 
 
@@ -244,13 +248,13 @@ __check_test_string = u'''<?xml version="1.0"?>
 </testsuites>'''
 
 __junit_test_string = u'''<?xml version="1.0"?>
-<testsuite name="S1,S2" timestamp="2004-08-20T12:53:32" tests="4">
-  <testcase name="test_pass" classname="ex_xml_output.c:8" />
-  <testcase name="test_fail" classname="ex_xml_output.c:14">
+<testsuite errors="1" failures="1" name="S1,S2" tests="4" time="0.304875" timestamp="2004-08-20T12:53:32">
+  <testcase name="test_pass" classname="ex_xml_output.c:8" time="0.0" />
+  <testcase name="test_fail" classname="ex_xml_output.c:14" time="0.0" >
     <failure message="Failure" />
   </testcase>
-  <testcase name="test_exit" classname="ex_xml_output.c:18">
+  <testcase name="test_exit" classname="ex_xml_output.c:18" time="0.0" >
     <error message="Early exit with return value 1" />
   </testcase>
-  <testcase name="test_pass2" classname="ex_xml_output.c:26" />
+  <testcase name="test_pass2" classname="ex_xml_output.c:26" time="0.0" />
 </testsuite>'''
