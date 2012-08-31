@@ -24,6 +24,7 @@ typedef enum _EPUB3Error {
 typedef struct EPUB3 * EPUB3Ref;
 
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path, EPUB3Error *error);
+void EPUB3Retain(EPUB3Ref epub);
 void EPUB3Release(EPUB3Ref epub);
 char * EPUB3CopyTitle(EPUB3Ref epub);
 char * EPUB3CopyIdentifier(EPUB3Ref epub);
@@ -31,6 +32,7 @@ char * EPUB3CopyLanguage(EPUB3Ref epub);
 int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
 EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);
 EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path);
+EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 
 #if defined(__cplusplus)
 } //EXTERN "C"

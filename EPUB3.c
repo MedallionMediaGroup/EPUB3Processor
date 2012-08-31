@@ -139,7 +139,7 @@ EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub)
   return error;
 }
 
-void EPUB3Retain(EPUB3Ref epub)
+EXPORT void EPUB3Retain(EPUB3Ref epub)
 {
   if(epub == NULL) return;
   
@@ -903,7 +903,7 @@ EPUB3Error EPUB3ValidateMimetype(EPUB3Ref epub)
   return status;
 }
 
-EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
+EXPORT EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
 {
   assert(epub != NULL);
   
@@ -936,7 +936,7 @@ EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath)
             // TODD: validate that the full-path attribute is of the form path-rootless
             //       see http://idpf.org/epub/30/spec/epub30-ocf.html#sec-container-metainf-container.xml
             foundPath = kEPUB3_YES;
-            *rootPath = (char *)fullPath;
+            *rootPath = strdup((char *)fullPath);
           } else {
             // The spec requires the full-path attribute
             error = kEPUB3XMLXDocumentInvalidError;

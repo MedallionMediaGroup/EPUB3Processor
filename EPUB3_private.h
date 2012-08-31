@@ -146,7 +146,6 @@ void * EPUB3ObjectInitWithTypeID(void *object, const char *typeID);
 #pragma mark - Main EPUB3 Object
 
 EPUB3Ref EPUB3Create();
-void EPUB3Retain(EPUB3Ref epub);
 EPUB3Error EPUB3PrepareArchiveAtPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3InitAndValidate(EPUB3Ref epub);
 void EPUB3SetStringValue(char ** location, const char *value);
@@ -206,7 +205,6 @@ EPUB3Error EPUB3ValidateFileExistsAndSeekInArchive(EPUB3Ref epub, const char * f
 
 #pragma mark - File and Zip Functions
 
-EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *bufferSize, uint32_t *bytesCopied, const char * filename);
 uint32_t EPUB3GetFileCountInArchive(EPUB3Ref epub);
 EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename);
