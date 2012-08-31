@@ -6,7 +6,6 @@
 #include <libxml/xpathInternals.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/dir.h>
 #include <sys/dirent.h>
 #include <string.h>
 #include <assert.h>
