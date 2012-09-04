@@ -232,7 +232,7 @@
     <!--Chunk: size=49503-->
     <item href="@public@vhost@g@gutenberg@html@dirs@etext94@shaks12-107.txt.html" id="id06571" media-type="application/xhtml+xml"/>
     <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
-    <item href="cover.jpg" id="item2" media-type="image/jpeg"/>
+    <item href="cover.jpg" id="item2" properties="cover-image" media-type="image/jpeg"/>
     <item href="wrap0000.html" id="coverpage-wrapper" media-type="application/xhtml+xml"/>
   </manifest>
   <spine toc="ncx">

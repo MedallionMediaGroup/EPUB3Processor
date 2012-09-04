@@ -92,6 +92,7 @@ struct EPUB3Metadata {
   char * _uniqueIdentifierID;
   char * identifier;
   char * language;
+  char * coverImageId;
   // char * modified;
 };
 
@@ -162,6 +163,7 @@ void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
 void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
 void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
+void EPUB3MetadataSetCoverImageId(EPUB3MetadataRef metadata, const char * coverImgId);
 
 #pragma mark - Manifest
 
@@ -210,6 +212,13 @@ EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *unco
 EPUB3Error EPUB3WriteCurrentArchiveFileToPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3CreateNestedDirectoriesForFileAtPath(const char * path);
 
+
+#define EPUB3SafeFreeAndNULL(__epub3_ptr_to_null) do { \
+  if(__epub3_ptr_to_null != NULL) { \
+    free(__epub3_ptr_to_null); \
+    __epub3_ptr_to_null = NULL; \
+  } \
+} while(0);
 
 #pragma mark - Hash function
 // via: http://www.azillionmonkeys.com/qed/hash.html

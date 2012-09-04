@@ -11,7 +11,7 @@ static char tmpDirname[22];
 static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
-  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2376236);
   epub = EPUB3Create();
   (void)EPUB3PrepareArchiveAtPath(epub, path);
   strcpy(tmpDirname, "/tmp/epub3test-XXXXXX");
@@ -30,7 +30,7 @@ START_TEST(test_epub3_object_creation)
   fail_unless(epub->archiveFileCount > 0);
   
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
-  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2376236);
   ck_assert_str_eq(epub->archivePath, path);
   fail_if(epub->archivePath == path);
 }

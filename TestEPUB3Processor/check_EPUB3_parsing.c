@@ -9,7 +9,7 @@ static EPUB3Ref epub;
 static void setup()
 {
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
-  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2387538);
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2376236);
   epub = EPUB3Create();
   (void)EPUB3PrepareArchiveAtPath(epub, path);
 }
@@ -21,7 +21,7 @@ static void teardown()
 
 START_TEST(test_epub3_get_file_count_in_archive)
 {
-  u_long expectedCount = 115U;
+  u_long expectedCount = 117U;
   u_long count = EPUB3GetFileCountInArchive(epub);
   fail_unless(count == expectedCount, "Expected %u files, but found %u in %s.", expectedCount, count, epub->archivePath);
   
@@ -149,9 +149,11 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   const char * expectedTitle = "The Complete Works of William Shakespeare";
   const char * expectedIdentifier = "http://www.gutenberg.org/ebooks/100";
   const char * expectedLanguage = "en";
+  const char * expectedCoverImgId = "item2";
+  const char * expectedCoverImgPath = "cover.jpg";
 
   TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
-  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24804);
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24829);
   EPUB3Ref blankEPUB = EPUB3Create();
 
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
@@ -189,6 +191,14 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
   assert(blankEPUB->metadata->language != NULL);
   ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
+  
+  fail_if(blankEPUB->metadata->coverImageId == NULL, "Cover image was not found.");
+  assert(blankEPUB->metadata->coverImageId != NULL);
+  ck_assert_str_eq(blankEPUB->metadata->coverImageId, expectedCoverImgId);
+  
+  char * coverPath = EPUB3CopyCoverImagePath(blankEPUB);
+  ck_assert_str_eq(coverPath, expectedCoverImgPath);
+  free(coverPath);
 
   free(newBuf);
   EPUB3MetadataRelease(blankMetadata);
@@ -311,7 +321,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   const char * expItem2MediaType = "application/xhtml+xml";
   
   TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
-  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24804);
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24829);
   EPUB3Ref blankEPUB = EPUB3Create();
   
   EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
