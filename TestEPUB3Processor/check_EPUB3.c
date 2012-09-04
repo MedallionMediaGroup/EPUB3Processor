@@ -74,7 +74,6 @@ START_TEST(test_metadata_object)
   
   EPUB3SetMetadata(epub, meta);
   
-  // Title attribute
   const char * title = "A book";
   const char * identifier = "myid";
   const char * language = "en";

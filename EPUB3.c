@@ -265,6 +265,8 @@ EXPORT char * EPUB3CopyCoverImagePath(EPUB3Ref epub)
   assert(epub->metadata != NULL);
   assert(epub->manifest != NULL);
   
+  if(epub->metadata->coverImageId == NULL) return NULL;
+ 
   EPUB3ManifestItemListItemPtr coverItemPtr = EPUB3ManifestFindItemWithId(epub->manifest, epub->metadata->coverImageId);
   return EPUB3CopyStringValue(&(coverItemPtr->item->href));
 }
