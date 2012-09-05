@@ -24,6 +24,8 @@ static void teardown()
   fail_if(EPUB3RemoveDirectoryNamed(tmpDirname) < 0, "Problem removing %s after test. (ERRNO %d)", tmpDirname, errno);
 }
 
+#pragma mark -
+#pragma mark test_epub3_object_creation
 START_TEST(test_epub3_object_creation)
 {
   fail_if(epub->archive == NULL);
@@ -36,6 +38,7 @@ START_TEST(test_epub3_object_creation)
 }
 END_TEST
 
+#pragma mark test_epub3_object_ref_counting
 START_TEST(test_epub3_object_ref_counting)
 {
   EPUB3Ref anEpub = EPUB3Create();
@@ -48,6 +51,7 @@ START_TEST(test_epub3_object_ref_counting)
 }
 END_TEST
 
+#pragma mark test_epub3_object_metadata_property
 START_TEST(test_epub3_object_metadata_property)
 {
   const char * title = "A book";
@@ -64,6 +68,7 @@ START_TEST(test_epub3_object_metadata_property)
 }
 END_TEST
 
+#pragma mark test_metadata_object
 START_TEST(test_metadata_object)
 {
   // Creation
@@ -104,6 +109,7 @@ START_TEST(test_metadata_object)
 }
 END_TEST
 
+#pragma mark test_epub3_manifest_hash
 START_TEST(test_epub3_manifest_hash)
 {
   EPUB3ManifestRef manifest = EPUB3ManifestCreate();
@@ -137,6 +143,7 @@ START_TEST(test_epub3_manifest_hash)
 }
 END_TEST
 
+#pragma mark test_epub3_spine
 START_TEST(test_epub3_spine)
 {
   EPUB3SpineRef spine = EPUB3SpineCreate();
@@ -159,6 +166,7 @@ START_TEST(test_epub3_spine)
 }
 END_TEST
 
+#pragma mark test_epub3_spine_list
 START_TEST(test_epub3_spine_list)
 {
   EPUB3SpineRef spine = EPUB3SpineCreate();
@@ -200,6 +208,20 @@ START_TEST(test_epub3_spine_list)
 }
 END_TEST
 
+#pragma mark test_epub3_copy_cover_image
+START_TEST(test_epub3_copy_cover_image)
+{
+    void * bytes = NULL;
+    int32_t byteCount;
+    
+    EPUB3Error error = EPUB3CopyCoverImage(epub, bytes, &byteCount);
+    fail_unless(error == kEPUB3Success);
+    ck_assert_int_eq(byteCount, 8227);
+    free(bytes);
+}
+END_TEST
+
+#pragma mark test_epub3_get_sequential_resource_paths
 START_TEST(test_epub3_get_sequential_resource_paths)
 {
   EPUB3Error error = EPUB3InitAndValidate(epub);
@@ -222,6 +244,7 @@ START_TEST(test_epub3_get_sequential_resource_paths)
 }
 END_TEST
 
+#pragma mark test_epub3_create_nested_directories
 START_TEST(test_epub3_create_nested_directories)
 {
   const char * filename = "a/lot/of/directories";
@@ -246,6 +269,7 @@ START_TEST(test_epub3_create_nested_directories)
 }
 END_TEST
 
+#pragma mark test_epub3_write_current_archive_file_to_path
 START_TEST(test_epub3_write_current_archive_file_to_path)
 {
   fail_unless(unzGoToFirstFile(epub->archive) == UNZ_OK, "Problem with zip file at path: %s", epub->archivePath);
@@ -272,6 +296,7 @@ START_TEST(test_epub3_write_current_archive_file_to_path)
 }
 END_TEST
 
+#pragma mark test_epub3_extract_archive
 START_TEST(test_epub3_extract_archive)
 {
   char cwd[MAXNAMLEN];
@@ -307,7 +332,7 @@ START_TEST(test_epub3_extract_archive)
 }
 END_TEST
 
-
+#pragma mark -
 TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
 {
   TCase *test_case = tcase_create("EPUB3");

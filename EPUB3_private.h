@@ -213,7 +213,7 @@ EPUB3Error EPUB3WriteCurrentArchiveFileToPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3CreateNestedDirectoriesForFileAtPath(const char * path);
 
 
-#define EPUB3SafeFreeAndNULL(__epub3_ptr_to_null) do { \
+#define EPUB3_FREE_AND_NULL(__epub3_ptr_to_null) do { \
   if(__epub3_ptr_to_null != NULL) { \
     free(__epub3_ptr_to_null); \
     __epub3_ptr_to_null = NULL; \

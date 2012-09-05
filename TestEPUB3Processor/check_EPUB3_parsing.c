@@ -19,6 +19,8 @@ static void teardown()
   EPUB3Release(epub);
 }
 
+#pragma mark -
+#pragma mark test_epub3_get_file_count_in_archive
 START_TEST(test_epub3_get_file_count_in_archive)
 {
   u_long expectedCount = 117U;
@@ -36,6 +38,7 @@ START_TEST(test_epub3_get_file_count_in_archive)
 }
 END_TEST
 
+#pragma mark test_epub3_get_file_size_in_archive
 START_TEST(test_epub3_get_file_size_in_archive)
 {
   const char * filename = "META-INF/container.xml";
@@ -66,6 +69,7 @@ START_TEST(test_epub3_get_file_size_in_archive)
 }
 END_TEST
 
+#pragma mark test_epub3_validate_file_exists_in_zip
 START_TEST(test_epub3_validate_file_exists_in_zip)
 {
   const char * filename = "META-INF/container.xml";
@@ -94,6 +98,7 @@ START_TEST(test_epub3_validate_file_exists_in_zip)
 }
 END_TEST
 
+#pragma mark test_epub3_copy_file_into_buffer
 START_TEST(test_epub3_copy_file_into_buffer)
 {
   void *buffer = NULL;
@@ -128,6 +133,7 @@ START_TEST(test_epub3_copy_file_into_buffer)
 }
 END_TEST
 
+#pragma mark test_epub3_copy_root_file_path_from_container
 START_TEST(test_epub3_copy_root_file_path_from_container)
 {
   char *rootPath = NULL;
@@ -144,6 +150,7 @@ START_TEST(test_epub3_copy_root_file_path_from_container)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_metadata_from_shakespeare_opf_data
 START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
 {
   const char * expectedTitle = "The Complete Works of William Shakespeare";
@@ -208,6 +215,7 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_metadata_from_moby_dick_opf_data
 START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
 {
   const char * expectedTitle = "Moby-Dick";
@@ -262,6 +270,7 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_data_from_opf_using_real_epub
 START_TEST(test_epub3_parse_data_from_opf_using_real_epub)
 {
   const char * expectedTitle = "The Complete Works of William Shakespeare";
@@ -308,6 +317,7 @@ START_TEST(test_epub3_parse_data_from_opf_using_real_epub)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_manifest_from_shakespeare_opf_data
 START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
 {
   int32_t expectedManifestItemCount = 112;
@@ -373,6 +383,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_manifest_from_moby_dick_opf_data
 START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
 {
   int32_t expectedManifestItemCount = 155;
@@ -438,8 +449,8 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
 }
 END_TEST
 
-// Validation tests
-
+#pragma mark - Validation tests
+#pragma mark test_epub3_validate_mimetype
 START_TEST(test_epub3_validate_mimetype)
 {
   EPUB3Error error = EPUB3ValidateMimetype(epub);
