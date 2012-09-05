@@ -543,7 +543,7 @@ extern int ZEXPORT unzGetGlobalInfo (file,pglobal_info)
     if (file==NULL)
         return UNZ_PARAMERROR;
     s=(unz_s*)file;
-    *pglobal_info=s->gi;
+    memcpy(pglobal_info, &(s->gi), sizeof(unz_global_info));
     return UNZ_OK;
 }
 
