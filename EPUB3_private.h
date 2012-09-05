@@ -211,6 +211,8 @@ uint32_t EPUB3GetFileCountInArchive(EPUB3Ref epub);
 EPUB3Error EPUB3GetUncompressedSizeOfFileInArchive(EPUB3Ref epub, uint32_t *uncompressedSize, const char *filename);
 EPUB3Error EPUB3WriteCurrentArchiveFileToPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3CreateNestedDirectoriesForFileAtPath(const char * path);
+char * EPUB3CopyOfPathByAppendingPathComponent(const char * path, const char * componentToAppend);
+char * EPUB3CopyOfPathByDeletingLastPathComponent(const char * path);
 
 
 #define EPUB3_FREE_AND_NULL(__epub3_ptr_to_null) do { \

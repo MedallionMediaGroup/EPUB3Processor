@@ -271,11 +271,24 @@ EXPORT char * EPUB3CopyCoverImagePath(EPUB3Ref epub)
   return EPUB3CopyStringValue(&(coverItemPtr->item->href));
 }
 
-EXPORT EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void * bytes, int32_t * byteCount)
+EXPORT EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * byteCount)
 {
-    EPUB3Error error = kEPUB3Success;
-    
-    return error;
+  assert(epub != NULL);
+  
+  *byteCount = 0U;
+  char * path = EPUB3CopyCoverImagePath(epub);
+  char * rootFilePath = NULL;
+  EPUB3Error error = EPUB3CopyRootFilePathFromContainer(epub, &rootFilePath);
+  if(error == kEPUB3Success) {
+    char * rootPath = EPUB3CopyOfPathByDeletingLastPathComponent(rootFilePath);
+    char * fullPath = EPUB3CopyOfPathByAppendingPathComponent(rootPath, path);
+    error = EPUB3CopyFileIntoBuffer(epub, bytes, NULL, byteCount, fullPath);
+    EPUB3_FREE_AND_NULL(rootPath);
+    EPUB3_FREE_AND_NULL(fullPath);
+  }
+  EPUB3_FREE_AND_NULL(path);
+  EPUB3_FREE_AND_NULL(rootFilePath);
+  return error;
 }
 
 
@@ -1213,3 +1226,54 @@ uint32_t EPUB3GetFileCountInArchive(EPUB3Ref epub)
 	
 	return (uint32_t)gi.number_entry;
 }
+
+char * EPUB3CopyOfPathByDeletingLastPathComponent(const char * path)
+{
+  assert(path != NULL);
+  
+  char * pathCopy = strdup(path);
+  char pathBuildup[strlen(path) + 1];
+  pathBuildup[0] = '\0';
+  char * pathseg;
+  char * pathseg2;
+  char * loc;
+  
+  pathseg = strtok_r(pathCopy, "/", &loc);
+  
+  while(pathseg != NULL) {
+    pathseg2 = strtok_r(NULL, "/", &loc);
+    if(pathseg2 != NULL) {
+      strncat(pathBuildup, pathseg, strlen(pathseg));
+      strncat(pathBuildup, "/", 1U);
+    }
+    pathseg = pathseg2;
+  }
+  EPUB3_FREE_AND_NULL(pathCopy);
+  
+  return strdup(pathBuildup);
+}
+
+char * EPUB3CopyOfPathByAppendingPathComponent(const char * path, const char * componentToAppend)
+{
+  assert(path != NULL);
+  assert(componentToAppend != NULL);
+  
+  uLong basePathLen = strlen(path);
+  
+  EPUB3Bool shouldAddSeparator = kEPUB3_NO;
+  
+  if(path[basePathLen - 1] != '/') {
+    shouldAddSeparator = kEPUB3_YES;
+    basePathLen++;
+  }
+  
+  uLong pathlen = basePathLen + strlen(componentToAppend) + 1U;
+  char fullpath[pathlen];
+  (void)strcpy(fullpath, path);
+  if(shouldAddSeparator) {
+    (void)strncat(fullpath, "/", 1U);
+  }
+  (void)strncat(fullpath, componentToAppend, strlen(componentToAppend));
+  return strdup(fullpath);
+}
+

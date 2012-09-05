@@ -211,13 +211,32 @@ END_TEST
 #pragma mark test_epub3_copy_cover_image
 START_TEST(test_epub3_copy_cover_image)
 {
-    void * bytes = NULL;
-    int32_t byteCount;
-    
-    EPUB3Error error = EPUB3CopyCoverImage(epub, bytes, &byteCount);
-    fail_unless(error == kEPUB3Success);
-    ck_assert_int_eq(byteCount, 8227);
-    free(bytes);
+  fail_unless(EPUB3InitAndValidate(epub) == kEPUB3Success, "Unable to initialize and parse EPUB for testing.");
+  TEST_PATH_VAR_FOR_FILENAME(testImagePath, "pg100_cover.jpg");
+  struct stat st;
+  int err = stat(testImagePath, &st);
+  fail_unless(err == 0, "Error stat'ing the image at %s", testImagePath);
+  int32_t testImageByteCount = (int32_t)st.st_size;
+
+  void *testImageBytes = calloc(testImageByteCount, sizeof(char));
+  FILE *testFile = fopen(testImagePath, "rb");
+  size_t bytesRead = fread(testImageBytes, sizeof(char), testImageByteCount, testFile);
+  fclose(testFile);
+  ck_assert_int_eq(bytesRead, testImageByteCount);
+  
+  uint32_t testImageHash = SuperFastHash(testImageBytes, testImageByteCount);
+  free(testImageBytes);
+  
+  void *bytes = NULL;
+  uint32_t byteCount = 0;
+  
+  EPUB3Error error = EPUB3CopyCoverImage(epub, &bytes, &byteCount);
+  fail_unless(error == kEPUB3Success);
+  ck_assert_int_eq(byteCount, testImageByteCount);
+  uint32_t actualImageHash = SuperFastHash(bytes, byteCount);
+  ck_assert_int_eq(testImageHash, actualImageHash);
+  
+  free(bytes);
 }
 END_TEST
 
@@ -344,6 +363,7 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_manifest_hash);
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
+  tcase_add_test(test_case, test_epub3_copy_cover_image);
   tcase_add_test(test_case, test_epub3_get_sequential_resource_paths);
   tcase_add_test(test_case, test_epub3_write_current_archive_file_to_path);
   tcase_add_test(test_case, test_epub3_create_nested_directories);
