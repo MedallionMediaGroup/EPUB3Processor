@@ -237,6 +237,10 @@ START_TEST(test_epub3_copy_cover_image)
   ck_assert_int_eq(testImageHash, actualImageHash);
   
   free(bytes);
+    
+  EPUB3_FREE_AND_NULL(epub->metadata->coverImageId);
+  error = EPUB3CopyCoverImage(epub, &bytes, &byteCount);
+  fail_unless(error == kEPUB3FileNotFoundInArchiveError, "Should fail gracefully where there is no cover image.");
 }
 END_TEST
 

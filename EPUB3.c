@@ -277,6 +277,10 @@ EXPORT EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * b
   
   *byteCount = 0U;
   char * path = EPUB3CopyCoverImagePath(epub);
+  if(path == NULL)
+  {
+      return kEPUB3FileNotFoundInArchiveError;
+  }
   char * rootFilePath = NULL;
   EPUB3Error error = EPUB3CopyRootFilePathFromContainer(epub, &rootFilePath);
   if(error == kEPUB3Success) {
