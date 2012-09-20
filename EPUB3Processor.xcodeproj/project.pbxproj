@@ -641,6 +641,7 @@
 				COPY_PHASE_STRIP = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
@@ -655,10 +656,12 @@
 				COPY_PHASE_STRIP = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = EPUB3Processor;
 			};
 			name = Release;
