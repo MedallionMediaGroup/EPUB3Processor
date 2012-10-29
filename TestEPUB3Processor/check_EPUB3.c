@@ -30,7 +30,7 @@ START_TEST(test_epub3_object_creation)
 {
   fail_if(epub->archive == NULL);
   fail_unless(epub->archiveFileCount > 0);
-  
+
   TEST_PATH_VAR_FOR_FILENAME(path, "pg100.epub");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2376236);
   ck_assert_str_eq(epub->archivePath, path);
@@ -59,11 +59,11 @@ START_TEST(test_epub3_object_metadata_property)
   EPUB3MetadataSetTitle(meta, title);
   EPUB3SetMetadata(epub, meta);
   fail_unless(epub->metadata == meta);
-  
+
   EPUB3MetadataRef metaCopy = EPUB3CopyMetadata(epub);
   ck_assert_str_eq(metaCopy->title, title);
   fail_if(metaCopy == meta);
-  
+
   EPUB3MetadataRelease(metaCopy);
 }
 END_TEST
@@ -76,13 +76,13 @@ START_TEST(test_metadata_object)
   ck_assert_int_eq(meta->_type.refCount, 1);
   ck_assert_str_eq(meta->_type.typeID, kEPUB3MetadataTypeID);
   fail_unless(meta->title == NULL);
-  
+
   EPUB3SetMetadata(epub, meta);
-  
+
   const char * title = "A book";
   const char * identifier = "myid";
   const char * language = "en";
-  
+
   EPUB3MetadataSetTitle(meta, title);
   ck_assert_str_eq(title, meta->title);
   fail_if(title == meta->title);
@@ -134,7 +134,7 @@ START_TEST(test_epub3_manifest_hash)
   fail_if(itemCopy->itemId == itemId);
   ck_assert_str_eq(item->itemId, itemCopy->itemId);
   fail_if(item->itemId == itemCopy->itemId);
-  
+
   itemCopy = EPUB3ManifestCopyItemWithId(manifest, "doesnotexist");
   fail_unless(itemCopy == NULL, "Non existent items in the manifest should be NULL.");
 
@@ -150,11 +150,11 @@ START_TEST(test_epub3_spine)
   ck_assert_int_eq(spine->_type.refCount, 1);
   ck_assert_str_eq(spine->_type.typeID, kEPUB3SpineTypeID);
   fail_unless(spine->itemCount == 0);
-  
+
   EPUB3SpineItemRef item = EPUB3SpineItemCreate();
   ck_assert_int_eq(item->_type.refCount, 1);
   ck_assert_str_eq(item->_type.typeID, kEPUB3SpineItemTypeID);
-  
+
   EPUB3ManifestItemRef manifestItem = EPUB3ManifestItemCreate();
   const char * itemId = "myid";
   manifestItem->itemId = strdup(itemId);
@@ -175,7 +175,7 @@ START_TEST(test_epub3_spine_list)
   int itemCount = 20;
 
   EPUB3SpineItemRef firstItem = EPUB3SpineItemCreate();
-  
+
   fail_unless(spine->head == NULL);
   fail_unless(spine->tail == NULL);
   EPUB3SpineAppendItem(spine, firstItem);
@@ -187,18 +187,18 @@ START_TEST(test_epub3_spine_list)
   fail_unless(spine->tail->item == firstItem);
 
   EPUB3SpineItemListItemPtr prev = spine->tail;
-  
+
   for(int i = 1; i < itemCount; i++) {
     EPUB3SpineItemRef item = EPUB3SpineItemCreate();
     item->isLinear = i % 2;
     EPUB3SpineAppendItem(spine, item);
-    
+
     fail_unless(spine->tail->item == item);
     prev = spine->tail;
 
     EPUB3SpineItemRelease(item);
   }
-  
+
   ck_assert_int_eq(spine->itemCount, itemCount);
   fail_unless(spine->head->item == firstItem);
   fail_unless(spine->tail == prev);
@@ -223,21 +223,21 @@ START_TEST(test_epub3_copy_cover_image)
   size_t bytesRead = fread(testImageBytes, sizeof(char), testImageByteCount, testFile);
   fclose(testFile);
   ck_assert_int_eq(bytesRead, testImageByteCount);
-  
+
   uint32_t testImageHash = SuperFastHash(testImageBytes, testImageByteCount);
   free(testImageBytes);
-  
+
   void *bytes = NULL;
   uint32_t byteCount = 0;
-  
+
   EPUB3Error error = EPUB3CopyCoverImage(epub, &bytes, &byteCount);
   fail_unless(error == kEPUB3Success);
   ck_assert_int_eq(byteCount, testImageByteCount);
   uint32_t actualImageHash = SuperFastHash(bytes, byteCount);
   ck_assert_int_eq(testImageHash, actualImageHash);
-  
+
   free(bytes);
-    
+
   EPUB3_FREE_AND_NULL(epub->metadata->coverImageId);
   error = EPUB3CopyCoverImage(epub, &bytes, &byteCount);
   fail_unless(error == kEPUB3FileNotFoundInArchiveError, "Should fail gracefully where there is no cover image.");
@@ -252,11 +252,11 @@ START_TEST(test_epub3_get_sequential_resource_paths)
   int32_t expectedCount = 108;
   int32_t count = EPUB3CountOfSequentialResources(epub);
   ck_assert_int_eq(count, expectedCount);
-  
+
   const char *resources[count];
   error = EPUB3GetPathsOfSequentialResources(epub, resources);
   fail_unless(error == kEPUB3Success);
-  
+
   for (int i = 0; i < count; i++) {
     int maxPathlen = 65;
     char * expectedResourcePath = malloc(maxPathlen);
@@ -276,7 +276,7 @@ START_TEST(test_epub3_create_nested_directories)
   (void)strcpy(fullpath, tmpDirname);
   (void)strncat(fullpath, "/", 1U);
   (void)strncat(fullpath, filename, strlen(filename));
-  
+
   EPUB3Error error = EPUB3CreateNestedDirectoriesForFileAtPath(fullpath);
   fail_unless(error == kEPUB3Success, "Could not create directory structure %s", fullpath);
 
@@ -301,17 +301,17 @@ START_TEST(test_epub3_write_current_archive_file_to_path)
   int err = unzGetCurrentFileInfo(epub->archive, &fileInfo, filename, MAXNAMLEN, NULL, 0, NULL, 0);
   fail_if(filename == NULL, "Unable to get name of current file in %s", epub->archivePath);
   fail_unless(err == UNZ_OK, "Problem reading info for file %s in %s", filename, epub->archivePath);
-  
+
   (void)unzGoToFirstFile(epub->archive);
   EPUB3Error error = EPUB3WriteCurrentArchiveFileToPath(epub, tmpDirname);
   fail_unless(error == kEPUB3Success, "Couldn't write %s to %s.", filename, tmpDirname);
-  
+
   uLong pathlen = strlen(tmpDirname) + 1U + strlen(filename) + 1U;
   char fullpath[pathlen];
   (void)strcpy(fullpath, tmpDirname);
   (void)strncat(fullpath, "/", 1U);
   (void)strncat(fullpath, filename, strlen(filename));
-  
+
   struct stat st;
   err = stat(fullpath, &st);
   fail_if(err < 0, "File %s was not created.", filename);
@@ -334,7 +334,7 @@ START_TEST(test_epub3_extract_archive)
   (void)strcpy(fullpath, tmpDirname);
   (void)strncat(fullpath, "/", 1U);
   (void)strncat(fullpath, filename, strlen(filename));
-  
+
   struct stat st;
   int err = stat(fullpath, &st);
   fail_if(err < 0, "File %s was not extracted.", filename);
@@ -345,10 +345,10 @@ START_TEST(test_epub3_extract_archive)
   (void)strcpy(opfpath, tmpDirname);
   (void)strncat(opfpath, "/", 1U);
   (void)strncat(opfpath, opffilename, strlen(opffilename));
-  
+
   err = stat(opfpath, &st);
   fail_if(err < 0, "File %s was not extracted.", opfpath);
-  
+
   char cwd2[MAXNAMLEN];
   (void)getcwd(cwd2, MAXNAMLEN);
   ck_assert_str_eq(cwd, cwd2);

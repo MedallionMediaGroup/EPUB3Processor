@@ -4,9 +4,9 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-  
+
 #include <stdint.h>
-  
+
 typedef enum _EPUB3Error {
   kEPUB3Success = 0,
   kEPUB3UnknownError = 1001,
