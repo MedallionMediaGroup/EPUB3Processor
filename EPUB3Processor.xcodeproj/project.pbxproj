@@ -113,6 +113,8 @@
 		DF06B79615DC35E500675923 /* check_EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = check_EPUB3.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF06B79915DC39BE00675923 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		DF08369715DEE59F00E9CEC9 /* bad_metadata.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = bad_metadata.epub; sourceTree = "<group>"; };
+		DF1AD1701641944600690341 /* broken_medallion_1.ncx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = broken_medallion_1.ncx; sourceTree = "<group>"; };
+		DF1AD1711641944600690341 /* broken_medallion_1.opf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = broken_medallion_1.opf; sourceTree = "<group>"; };
 		DF204B6015E69BFC00F0AA4D /* pg_100_content.opf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pg_100_content.opf; sourceTree = "<group>"; };
 		DF204B6215E69C1C00F0AA4D /* moby_dick_package.opf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = moby_dick_package.opf; sourceTree = "<group>"; };
 		DF4C2D1615E0209F00E7A8BD /* pg100_container.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = pg100_container.xml; sourceTree = "<group>"; };
@@ -310,6 +312,8 @@
 		DF59F19015DDA9E7004A37D5 /* TestData */ = {
 			isa = PBXGroup;
 			children = (
+				DF1AD1701641944600690341 /* broken_medallion_1.ncx */,
+				DF1AD1711641944600690341 /* broken_medallion_1.opf */,
 				DFFEB7E715F7E5BA0037977A /* pg100_cover.jpg */,
 				DF204B6015E69BFC00F0AA4D /* pg_100_content.opf */,
 				DF204B6215E69C1C00F0AA4D /* moby_dick_package.opf */,

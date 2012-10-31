@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+<ncx version="2005-1" xml:lang="en-US" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+	<head>
+		<meta name="dtb:PrimaryID" content="978-1-60542-149-0"/>
+		<meta name="dtb:depth" content="2"/>
+		<meta name="dtb:totalPageCount" content="0"/>
+		<meta name="dtb:maxPageNumber" content="0"/>
+	</head>
+	<docTitle><text>Desperate Souls: The Jake Helman Files</text></docTitle>
+	<docAuthor><text>Gergory Lamberson</text></docAuthor>
+	<navMap>
+		<navPoint class="cover" id="cvi" playOrder="1">
+			<navLabel><text>Cover</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_cvi_r1.htm"/>
+		</navPoint>
+		<navPoint class="titlepage" id="tp" playOrder="2">
+			<navLabel><text>Title Page</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_tp_r1.htm"/>
+		</navPoint>
+		<navPoint class="other" id="ded" playOrder="3">
+			<navLabel><text>Dedication</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_ded_r1.htm"/>
+		</navPoint>
+		<navPoint class="copyright" id="cop" playOrder="4">
+			<navLabel><text>Copyright</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_cop_r1.htm"/>
+		</navPoint>
+		<navPoint class="other" id="ack" playOrder="5">
+			<navLabel><text>Acknowledgments</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_ack_r1.htm"/>
+		</navPoint>
+		<navPoint class="other" id="toc" playOrder="6">
+			<navLabel><text>Table of Contents</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_toc_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c01" playOrder="7">
+			<navLabel><text>Chapter 1</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c01_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c02" playOrder="8">
+			<navLabel><text>Chapter 2</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c02_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c03" playOrder="9">
+			<navLabel><text>Chapter 3</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c03_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c04" playOrder="10">
+			<navLabel><text>Chapter 4</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c04_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c05" playOrder="11">
+			<navLabel><text>Chapter 5</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c05_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c06" playOrder="12">
+			<navLabel><text>Chapter 6</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c06_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c07" playOrder="13">
+			<navLabel><text>Chapter 7</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c07_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c08" playOrder="14">
+			<navLabel><text>Chapter 8</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c08_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c09" playOrder="15">
+			<navLabel><text>Chapter 9</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c09_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c10" playOrder="16">
+			<navLabel><text>Chapter 10</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c10_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c11" playOrder="17">
+			<navLabel><text>Chapter 11</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c11_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c12" playOrder="18">
+			<navLabel><text>Chapter 12</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c12_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c13" playOrder="19">
+			<navLabel><text>Chapter 13</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c13_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c14" playOrder="20">
+			<navLabel><text>Chapter 14</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c14_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c15" playOrder="21">
+			<navLabel><text>Chapter 15</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c15_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c16" playOrder="22">
+			<navLabel><text>Chapter 16</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c16_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c17" playOrder="23">
+			<navLabel><text>Chapter 17</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c17_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c18" playOrder="24">
+			<navLabel><text>Chapter 18</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c18_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c19" playOrder="25">
+			<navLabel><text>Chapter 19</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c19_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c20" playOrder="26">
+			<navLabel><text>Chapter 20</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c20_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c21" playOrder="27">
+			<navLabel><text>Chapter 21</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c21_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c22" playOrder="28">
+			<navLabel><text>Chapter 22</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c22_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c23" playOrder="29">
+			<navLabel><text>Chapter 23</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c23_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c24" playOrder="30">
+			<navLabel><text>Chapter 24</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c24_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c25" playOrder="31">
+			<navLabel><text>Chapter 25</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c25_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c26" playOrder="32">
+			<navLabel><text>Chapter 26</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c26_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c27" playOrder="33">
+			<navLabel><text>Chapter 27</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c27_r1.htm"/>
+		</navPoint>
+		<navPoint class="chapter" id="c28" playOrder="34">
+			<navLabel><text>Chapter 28</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_c28_r1.htm"/>
+		</navPoint>
+		<navPoint class="other" id="epi" playOrder="35">
+			<navLabel><text>Epilogue</text></navLabel>
+			<content src="OEBPS/9781605421490_epub_epi_r1.htm"/>
+		</navPoint>
+	</navMap>
+</ncx>

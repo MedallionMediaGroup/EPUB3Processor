@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package version="2.0" unique-identifier="PrimaryID" xmlns="http://www.idpf.org/2007/opf">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+		<dc:title>Desperate Souls: The Jake Helman Files</dc:title>
+		<dc:language>en-US</dc:language>
+		<dc:identifier id="PrimaryID" opf:scheme="ISBN">978-1-60542-149-0</dc:identifier>
+		<dc:creator opf:role="aut" opf:file-as="Lamberson, Gergory">Gergory Lamberson</dc:creator>
+		<dc:publisher>Medallion Press</dc:publisher>
+		<dc:date opf:event="publication">2007</dc:date>
+		<dc:rights>Copyright &#x00A9; 2007 by Gergory Lamberson</dc:rights>
+		<meta name="cover" content="my_cover_image"/>
+	</metadata>
+	<manifest>
+		<item id="ncx" href="broken_medallion_1.ncx" media-type="application/x-dtbncx+xml"/>
+		<item id="cvi" href="OEBPS/9781605421490_epub_cvi_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="tp" href="OEBPS/9781605421490_epub_tp_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="col1" href="OEBPS/9781605421490_epub_col1_r1.htm" media-type="application/xhtml+xml"/>		
+		<item id="ded" href="OEBPS/9781605421490_epub_ded_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="cop" href="OEBPS/9781605421490_epub_cop_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="ack" href="OEBPS/9781605421490_epub_ack_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="toc" href="OEBPS/9781605421490_epub_toc_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="col2" href="OEBPS/9781605421490_epub_col2_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c01" href="OEBPS/9781605421490_epub_c01_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c02" href="OEBPS/9781605421490_epub_c02_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c03" href="OEBPS/9781605421490_epub_c03_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c04" href="OEBPS/9781605421490_epub_c04_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c05" href="OEBPS/9781605421490_epub_c05_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c06" href="OEBPS/9781605421490_epub_c06_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c07" href="OEBPS/9781605421490_epub_c07_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c08" href="OEBPS/9781605421490_epub_c08_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c09" href="OEBPS/9781605421490_epub_c09_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c10" href="OEBPS/9781605421490_epub_c10_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c11" href="OEBPS/9781605421490_epub_c11_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c12" href="OEBPS/9781605421490_epub_c12_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c13" href="OEBPS/9781605421490_epub_c13_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c14" href="OEBPS/9781605421490_epub_c14_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c15" href="OEBPS/9781605421490_epub_c15_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c16" href="OEBPS/9781605421490_epub_c16_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c17" href="OEBPS/9781605421490_epub_c17_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c18" href="OEBPS/9781605421490_epub_c18_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c19" href="OEBPS/9781605421490_epub_c19_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c20" href="OEBPS/9781605421490_epub_c20_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c21" href="OEBPS/9781605421490_epub_c21_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c22" href="OEBPS/9781605421490_epub_c22_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c23" href="OEBPS/9781605421490_epub_c23_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c24" href="OEBPS/9781605421490_epub_c24_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c25" href="OEBPS/9781605421490_epub_c25_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c26" href="OEBPS/9781605421490_epub_c26_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c27" href="OEBPS/9781605421490_epub_c27_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="c28" href="OEBPS/9781605421490_epub_c28_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="epi" href="OEBPS/9781605421490_epub_epi_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm1" href="OEBPS/9781605421490_epub_bm1_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm2" href="OEBPS/9781605421490_epub_bm2_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm3" href="OEBPS/9781605421490_epub_bm3_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm4" href="OEBPS/9781605421490_epub_bm4_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm5" href="OEBPS/9781605421490_epub_bm5_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm6" href="OEBPS/9781605421490_epub_bm6_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="bm7" href="OEBPS/9781605421490_epub_bm7_r1.htm" media-type="application/xhtml+xml"/>
+		<item id="css" href="OEBPS/9781605421490_epub_css_r1.css" media-type="text/css"/>
+ 	<item id="f001" href="OEBPS/images/9781605421490_001.jpg" media-type="image/jpeg"/>
+	<item id="f002" href="OEBPS/images/9781605421490_002.jpg" media-type="image/jpeg"/>
+	<item id="f003" href="OEBPS/images/9781605421490_003.jpg" media-type="image/jpeg"/>
+	<item id="f004" href="OEBPS/images/9781605421490_004.jpg" media-type="image/jpeg"/>
+	<item id="f005" href="OEBPS/images/9781605421490_005.jpg" media-type="image/jpeg"/>
+	<item id="f006" href="OEBPS/images/9781605421490_006.jpg" media-type="image/jpeg"/>
+	<item id="f007" href="OEBPS/images/9781605421490_007.jpg" media-type="image/jpeg"/>
+	<item id="f008" href="OEBPS/images/9781605421490_008.jpg" media-type="image/jpeg"/>
+	<item id="f009" href="OEBPS/images/9781605421490_009.jpg" media-type="image/jpeg"/>
+	<item id="f010" href="OEBPS/images/9781605421490_010.jpg" media-type="image/jpeg"/>
+	<item id="f011" href="OEBPS/images/9781605421490_011.jpg" media-type="image/jpeg"/>
+	<item id="f012" href="OEBPS/images/9781605421490_012.jpg" media-type="image/jpeg"/>
+	<item id="f013" href="OEBPS/images/9781605421490_013.jpg" media-type="image/jpeg"/>
+	<item id="f014" href="OEBPS/images/9781605421490_014.jpg" media-type="image/jpeg"/>
+	<item id="f015" href="OEBPS/images/9781605421490_L01.jpg" media-type="image/jpeg"/>
+	<item id="f016" href="OEBPS/images/9781605421490_tp.jpg" media-type="image/jpeg"/>
+	<item id="my_cover_image" href="OEBPS/images/9781605421490_cvi.jpg" media-type="image/jpeg"/>
+		<item id="page" href="OEBPS/page-template.xpgt" media-type="application/vnd.adobe-page-template+xml"/>
+		<item id="font1" href="OEBPS/fonts/CharisSILB.ttf" media-type="application/x-font-ttf"/>
+		<item id="font2" href="OEBPS/fonts/CharisSILBI.ttf" media-type="application/x-font-ttf"/>
+		<item id="font3" href="OEBPS/fonts/CharisSILI.ttf" media-type="application/x-font-ttf"/>
+		<item id="font4" href="OEBPS/fonts/CharisSILR.ttf" media-type="application/x-font-ttf"/>
+	</manifest>
+	<spine toc="ncx">
+		<itemref idref="cvi" linear="no"/>
+		<itemref idref="tp" linear="yes"/>
+		<itemref idref="col1" linear="yes"/>
+		<itemref idref="ded" linear="yes"/>
+		<itemref idref="cop" linear="yes"/>
+		<itemref idref="ack" linear="yes"/>
+		<itemref idref="toc" linear="yes"/>
+		<itemref idref="col2" linear="yes"/>
+		<itemref idref="c01" linear="yes"/>
+		<itemref idref="c02" linear="yes"/>
+		<itemref idref="c03" linear="yes"/>
+		<itemref idref="c04" linear="yes"/>
+		<itemref idref="c05" linear="yes"/>
+		<itemref idref="c06" linear="yes"/>
+		<itemref idref="c07" linear="yes"/>
+		<itemref idref="c08" linear="yes"/>
+		<itemref idref="c09" linear="yes"/>
+		<itemref idref="c10" linear="yes"/>
+		<itemref idref="c11" linear="yes"/>
+		<itemref idref="c12" linear="yes"/>
+		<itemref idref="c13" linear="yes"/>
+		<itemref idref="c14" linear="yes"/>
+		<itemref idref="c15" linear="yes"/>
+		<itemref idref="c16" linear="yes"/>
+		<itemref idref="c17" linear="yes"/>
+		<itemref idref="c18" linear="yes"/>
+		<itemref idref="c19" linear="yes"/>
+		<itemref idref="c20" linear="yes"/>
+		<itemref idref="c21" linear="yes"/>
+		<itemref idref="c22" linear="yes"/>
+		<itemref idref="c23" linear="yes"/>
+		<itemref idref="c24" linear="yes"/>
+		<itemref idref="c25" linear="yes"/>
+		<itemref idref="c26" linear="yes"/>
+		<itemref idref="c27" linear="yes"/>
+		<itemref idref="c28" linear="yes"/>
+		<itemref idref="epi" linear="yes"/>
+		<itemref idref="bm1" linear="yes"/>
+		<itemref idref="bm2" linear="yes"/>
+		<itemref idref="bm3" linear="yes"/>
+		<itemref idref="bm4" linear="yes"/>
+		<itemref idref="bm5" linear="yes"/>
+		<itemref idref="bm6" linear="yes"/>
+		<itemref idref="bm7" linear="yes"/>
+	</spine>
+	<guide>
+		<reference type="toc" title="Table of Contents" href="OEBPS/9781605421490_epub_toc_r1.htm"/>
+		<reference type="cover" title="Cover" href="OEBPS/9781605421490_epub_cvi_r1.htm"/>
+		<reference type="copyright-page" title="Copyright" href="OEBPS/9781605421490_epub_cop_r1.htm"/>
+	</guide>
+</package>
