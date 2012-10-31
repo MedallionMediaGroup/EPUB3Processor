@@ -211,6 +211,17 @@ void EPUB3SpineItemRelease(EPUB3SpineItemRef item);
 void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item);
 void EPUB3SpineItemSetManifestItem(EPUB3SpineItemRef spineItem, EPUB3ManifestItemRef manifestItem);
 
+#pragma mark - Table of Contents
+
+EPUB3TocRef EPUB3TocCreate();
+EPUB3TocItemRef EPUB3TocItemCreate();
+void EPUB3TocRetain(EPUB3TocRef toc);
+void EPUB3TocRelease(EPUB3TocRef toc);
+void EPUB3TocItemRetain(EPUB3TocItemRef item);
+void EPUB3TocItemRelease(EPUB3TocItemRef item);
+void EPUB3TocAppendItem(EPUB3TocRef toc, EPUB3TocItemRef item);
+void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef manifestItem);
+
 #pragma mark - XML Parsing
 
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);

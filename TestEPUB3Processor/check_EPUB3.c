@@ -143,6 +143,69 @@ START_TEST(test_epub3_manifest_hash)
 }
 END_TEST
 
+#pragma mark test_epub3_toc
+START_TEST(test_epub3_toc)
+{
+  EPUB3TocRef toc = EPUB3TocCreate();
+  ck_assert_int_eq(toc->_type.refCount, 1);
+  ck_assert_str_eq(toc->_type.typeID, kEPUB3TocTypeID);
+  fail_unless(toc->itemCount == 0);
+
+  EPUB3TocItemRef item = EPUB3TocItemCreate();
+  ck_assert_int_eq(item->_type.refCount, 1);
+  ck_assert_str_eq(item->_type.typeID, kEPUB3TocItemTypeID);
+
+  EPUB3ManifestItemRef manifestItem = EPUB3ManifestItemCreate();
+  const char * itemId = "myid";
+  manifestItem->itemId = strdup(itemId);
+  EPUB3TocItemSetManifestItem(item, manifestItem);
+  ck_assert_int_eq(manifestItem->_type.refCount, 1);
+  EPUB3TocItemRelease(item);
+  ck_assert_int_eq(manifestItem->_type.refCount, 1);
+  EPUB3ManifestItemRelease(manifestItem);
+}
+END_TEST
+
+#pragma mark test_epub3_toc_list
+START_TEST(test_epub3_toc_list)
+{
+  EPUB3TocRef toc = EPUB3TocCreate();
+  fail_unless(toc->itemCount == 0);
+
+  int itemCount = 20;
+
+  EPUB3TocItemRef firstItem = EPUB3TocItemCreate();
+
+  fail_unless(toc->head == NULL);
+  fail_unless(toc->tail == NULL);
+  EPUB3TocAppendItem(toc, firstItem);
+  ck_assert_int_eq(firstItem->_type.refCount, 2);
+  EPUB3TocItemRelease(firstItem);
+  ck_assert_int_eq(firstItem->_type.refCount, 1);
+  fail_if(toc->head != toc->tail);
+  fail_unless(toc->head->item == firstItem);
+  fail_unless(toc->tail->item == firstItem);
+
+  EPUB3TocItemListItemPtr prev = toc->tail;
+
+  for(int i = 1; i < itemCount; i++) {
+    EPUB3TocItemRef item = EPUB3TocItemCreate();
+    EPUB3TocAppendItem(toc, item);
+
+    fail_unless(toc->tail->item == item);
+    prev = toc->tail;
+
+    EPUB3TocItemRelease(item);
+  }
+
+  ck_assert_int_eq(toc->itemCount, itemCount);
+  fail_unless(toc->head->item == firstItem);
+  fail_unless(toc->tail == prev);
+  fail_if(toc->head == toc->tail);
+  EPUB3TocRelease(toc);
+}
+END_TEST
+
 #pragma mark test_epub3_spine
 START_TEST(test_epub3_spine)
 {
@@ -365,6 +428,8 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_epub3_object_metadata_property);
   tcase_add_test(test_case, test_metadata_object);
   tcase_add_test(test_case, test_epub3_manifest_hash);
+  tcase_add_test(test_case, test_epub3_toc);
+  tcase_add_test(test_case, test_epub3_toc_list);
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
   tcase_add_test(test_case, test_epub3_copy_cover_image);
