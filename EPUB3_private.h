@@ -29,6 +29,8 @@ typedef struct EPUB3ManifestItem * EPUB3ManifestItemRef;
 typedef struct EPUB3Manifest * EPUB3ManifestRef;
 typedef struct EPUB3Spine * EPUB3SpineRef;
 typedef struct EPUB3SpineItem * EPUB3SpineItemRef;
+typedef struct EPUB3Toc * EPUB3TocRef;
+typedef struct EPUB3TocItem * EPUB3TocItemRef;
 
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;
@@ -36,6 +38,8 @@ const char * kEPUB3ManifestTypeID;
 const char * kEPUB3ManifestItemTypeID;
 const char * kEPUB3SpineTypeID;
 const char * kEPUB3SpineItemTypeID;
+const char * kEPUB3TocTypeID;
+const char * kEPUB3TocItemTypeID;
 
 
 #pragma mark - Internal XML Parsing State
@@ -80,6 +84,7 @@ struct EPUB3 {
   EPUB3MetadataRef metadata;
   EPUB3ManifestRef manifest;
   EPUB3SpineRef spine;
+  EPUB3TocRef toc;
   char * archivePath;
   unzFile archive;
   uint32_t archiveFileCount;
@@ -133,6 +138,24 @@ struct EPUB3Spine {
 struct EPUB3SpineItem {
   EPUB3Type _type;
   EPUB3Bool isLinear;
+  char * idref;
+  EPUB3ManifestItemRef manifestItem; //weak ref
+};
+
+typedef struct EPUB3TocItemListItem {
+  EPUB3TocItemRef item;
+  struct EPUB3TocItemListItem * next;
+} * EPUB3TocItemListItemPtr;
+
+struct EPUB3Toc {
+  EPUB3Type _type;
+  int32_t itemCount;
+  EPUB3TocItemListItemPtr head;
+  EPUB3TocItemListItemPtr tail;
+};
+
+struct EPUB3TocItem {
+  EPUB3Type _type;
   char * idref;
   EPUB3ManifestItemRef manifestItem; //weak ref
 };
