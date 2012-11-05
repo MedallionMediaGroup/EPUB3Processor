@@ -708,7 +708,7 @@ void EPUB3SpineAppendItem(EPUB3SpineRef spine, EPUB3SpineItemRef item)
   spine->itemCount++;
 }
 
-#pragma mark - XML Parsing
+#pragma mark - OPF XML Parsing
 
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
 {
@@ -742,14 +742,27 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
   }
   if(error == kEPUB3Success && epub->metadata->version == kEPUB3Version_2) {
     // Parse NCX only if this is a v2 epub (per the EPUB 3 spec)
-//    error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, ncxFilename);
-//    error = EPUB3ParseNCXFromData(epub, &buffer, &bufferSize, &bytesCopied, ncxFilename);
-    EPUB3_FREE_AND_NULL(buffer);
+    if(epub->metadata->ncxItem != NULL) {
+      char * ncxPath = strdup(epub->metadata->ncxItem->href);
+      if(*ncxPath != '/') {
+        char * opfRoot = EPUB3CopyOfPathByDeletingLastPathComponent(opfFilename);
+        char * fullPath = EPUB3CopyOfPathByAppendingPathComponent(opfRoot, ncxPath);
+        free(ncxPath);
+        free(opfRoot);
+        ncxPath = fullPath;
+      }
+      error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, ncxPath);
+      if(error == kEPUB3Success) {
+        error = EPUB3ParseNCXFromData(epub, buffer, bufferSize);
+      }
+      free(ncxPath);
+      EPUB3_FREE_AND_NULL(buffer);
+    }
   }
   return error;
 }
 
-void EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode)
+void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode)
 {
   (*ctxPtr)++;
   (*ctxPtr)->state = state;
@@ -759,9 +772,9 @@ void EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState s
   (*ctxPtr)->shouldParseTextNode = shouldParseTextNode;
 }
 
-void EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr)
+void EPUB3PopAndFreeParseContext(EPUB3XMLParseContextPtr *contextPtr)
 {
-  EPUB3OPFParseContextPtr ctx = (*contextPtr);
+  EPUB3XMLParseContextPtr ctx = (*contextPtr);
   (*contextPtr)--;
   for (int i = 0; i < ctx->attributeCount; i++) {
     char * key = ctx->attributes[i * 2];
@@ -771,7 +784,7 @@ void EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr)
   }
 }
 
-EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -831,7 +844,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReade
   return error;
 }
 
-EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -890,7 +903,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
   return error;
 }
 
-EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context)
+EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -943,7 +956,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPt
   return error;
 }
 
-EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext)
+EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *currentContext)
 {
   assert(epub != NULL);
   assert(reader != NULL);
@@ -1031,10 +1044,9 @@ EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
   xmlInitParser();
   xmlTextReaderPtr reader = NULL;
   reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
-  // (void)xmlTextReaderSetParserProp(reader, XML_PARSER_VALIDATE, 1);
   if(reader != NULL) {
-    EPUB3OPFParseContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
-    EPUB3OPFParseContextPtr currentContext = &contextStack[0];
+    EPUB3XMLParseContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
+    EPUB3XMLParseContextPtr currentContext = &contextStack[0];
 
     int retVal = xmlTextReaderRead(reader);
     currentContext->state = kEPUB3OPFStateRoot;
@@ -1042,6 +1054,42 @@ EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
     while(retVal == 1)
     {
       error = EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
+      retVal = xmlTextReaderRead(reader);
+    }
+    if(retVal < 0) {
+      error = kEPUB3XMLParseError;
+    }
+  } else {
+    error = kEPUB3XMLReadFromBufferError;
+  }
+  xmlFreeTextReader(reader);
+  xmlCleanupParser();
+  return error;
+}
+
+#pragma mark - NCX XML Parsing
+
+// TODO: Refactor: This function differs from EPUB3ParseOPFFromData by 1 line.
+EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
+{
+  assert(epub != NULL);
+  assert(buffer != NULL);
+  assert(bufferSize > 0);
+
+  EPUB3Error error = kEPUB3Success;
+  xmlInitParser();
+  xmlTextReaderPtr reader = NULL;
+  reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
+  if(reader != NULL) {
+    EPUB3XMLParseContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
+    EPUB3XMLParseContextPtr currentContext = &contextStack[0];
+
+    int retVal = xmlTextReaderRead(reader);
+    currentContext->state = kEPUB3OPFStateRoot;
+    currentContext->tagName = xmlTextReaderConstName(reader);
+    while(retVal == 1)
+    {
+//      error = EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
       retVal = xmlTextReaderRead(reader);
     }
     if(retVal < 0) {

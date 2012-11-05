@@ -49,17 +49,17 @@ typedef enum {
   kEPUB3OPFStateMetadata,
   kEPUB3OPFStateManifest,
   kEPUB3OPFStateSpine
-} EPUB3OPFParseState;
+} EPUB3XMLParseState;
 
 typedef struct _EPUB3OPFParseContext {
-  EPUB3OPFParseState state;
+  EPUB3XMLParseState state;
   const xmlChar *tagName;
   int32_t attributeCount;
   char ** attributes;
   EPUB3Bool shouldParseTextNode;
-} EPUB3OPFParseContext;
+} EPUB3XMLParseContext;
 
-typedef EPUB3OPFParseContext * EPUB3OPFParseContextPtr;
+typedef EPUB3XMLParseContext * EPUB3XMLParseContextPtr;
 
 #pragma mark - Type definitions
 
@@ -227,13 +227,17 @@ void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef m
 #pragma mark - XML Parsing
 
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
-void EPUB3SaveParseContext(EPUB3OPFParseContextPtr *ctxPtr, EPUB3OPFParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
-void EPUB3PopAndFreeParseContext(EPUB3OPFParseContextPtr *contextPtr);
-EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
-EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
-EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
-EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
+void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
+void EPUB3PopAndFreeParseContext(EPUB3XMLParseContextPtr *contextPtr);
+EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
+EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
+EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
+EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *currentContext);
 EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+
+#pragma mark - NCX XML Parsing
+
+EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 
 #pragma mark - Validation
 
