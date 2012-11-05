@@ -934,6 +934,15 @@ EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader,
           if(xmlStrcmp(name, BAD_CAST "package") == 0 && xmlTextReaderHasAttributes(reader)) {
             EPUB3_FREE_AND_NULL(epub->metadata->_uniqueIdentifierID);
             epub->metadata->_uniqueIdentifierID = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "unique-identifier");
+            xmlChar *versionString = xmlTextReaderGetAttribute(reader, BAD_CAST "version");
+            if(versionString != NULL) {
+              if(*versionString == '2') {
+                epub->metadata->version = kEPUB3Version_2;
+              } else if(*versionString == '3') {
+                epub->metadata->version = kEPUB3Version_3;
+              }
+              EPUB3_FREE_AND_NULL(versionString);
+            }
           }
           else if(xmlStrcmp(name, BAD_CAST "metadata") == 0) {
             (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);

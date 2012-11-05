@@ -289,6 +289,7 @@ START_TEST(test_epub3_parse_data_from_opf_using_real_epub)
   EPUB3Error error = EPUB3InitFromOPF(epub, "100/content.opf");
   fail_unless(error == kEPUB3Success);
   fail_if(epub->metadata == NULL);
+  fail_unless(epub->metadata->version == kEPUB3Version_2);
 
   fail_if(epub->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
   ck_assert_str_eq(epub->metadata->title, expectedTitle);
@@ -356,6 +357,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
+  fail_unless(blankMetadata->version == kEPUB3Version_2);
 
   ck_assert_int_eq(blankManifest->itemCount, expectedManifestItemCount);
 
@@ -380,6 +382,101 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   EPUB3ManifestRelease(blankManifest);
   EPUB3SpineRelease(blankSpine);
   EPUB3Release(blankEPUB);
+}
+END_TEST
+
+#pragma mark test_epub3_parse_manifest_from_medallion_opf_data
+START_TEST(test_epub3_parse_manifest_from_medallion_opf_data)
+{
+  int32_t expectedManifestItemCount = 68;
+
+  const char * expItem1Id = "c15";
+  const char * expItem1Href = "OEBPS/9781605421490_epub_c15_r1.htm";
+  const char * expItem1MediaType = "application/xhtml+xml";
+
+  const char * expItem2Id = "ncx";
+  const char * expItem2Href = "broken_medallion_1.ncx";
+  const char * expItem2MediaType = "application/x-dtbncx+xml";
+
+  TEST_PATH_VAR_FOR_FILENAME(path, "broken_medallion_1.opf");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 9265);
+  EPUB3Ref blankEPUB = EPUB3Create();
+
+  EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
+  EPUB3SetMetadata(blankEPUB, blankMetadata);
+
+  EPUB3ManifestRef blankManifest = EPUB3ManifestCreate();
+  EPUB3SetManifest(blankEPUB, blankManifest);
+
+  EPUB3SpineRef blankSpine = EPUB3SpineCreate();
+  EPUB3SetSpine(blankEPUB, blankSpine);
+
+  struct stat st;
+  stat(path, &st);
+  off_t bufferSize = st.st_size;
+  FILE *fp = fopen(path, "r");
+  char *newBuf = (char *)calloc(bufferSize, sizeof(char));
+  size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, fp);
+
+  fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
+  fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
+
+  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  fail_unless(error == kEPUB3Success);
+  fail_if(blankEPUB->manifest == NULL);
+  fail_unless(blankMetadata->version == kEPUB3Version_2);
+
+  ck_assert_int_eq(blankManifest->itemCount, expectedManifestItemCount);
+
+  EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(blankManifest, expItem1Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem1Id);
+  ck_assert_str_eq(item->href, expItem1Href);
+  ck_assert_str_eq(item->mediaType, expItem1MediaType);
+  EPUB3ManifestItemRelease(item);
+
+  item = EPUB3ManifestCopyItemWithId(blankManifest, expItem2Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem2Id);
+  ck_assert_str_eq(item->href, expItem2Href);
+  ck_assert_str_eq(item->mediaType, expItem2MediaType);
+  EPUB3ManifestItemRelease(item);
+
+  free(newBuf);
+  EPUB3MetadataRelease(blankMetadata);
+  EPUB3ManifestRelease(blankManifest);
+  EPUB3SpineRelease(blankSpine);
+  EPUB3Release(blankEPUB);
+}
+END_TEST
+
+#pragma mark test_epub3_parse_ncx_from_medallion
+START_TEST(test_epub3_parse_ncx_from_medallion)
+{
+  TEST_PATH_VAR_FOR_FILENAME(path, "broken_medallion_1.ncx");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 6709);
+  EPUB3Ref blankEPUB = EPUB3Create();
+
+  EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
+  EPUB3SetMetadata(blankEPUB, blankMetadata);
+
+  EPUB3ManifestRef blankManifest = EPUB3ManifestCreate();
+  EPUB3SetManifest(blankEPUB, blankManifest);
+
+  EPUB3SpineRef blankSpine = EPUB3SpineCreate();
+  EPUB3SetSpine(blankEPUB, blankSpine);
+
+  struct stat st;
+  stat(path, &st);
+  off_t bufferSize = st.st_size;
+  FILE *fp = fopen(path, "r");
+  char *newBuf = (char *)calloc(bufferSize, sizeof(char));
+  size_t bytesRead = fread(newBuf, sizeof(char), bufferSize, fp);
+
+  fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
+  fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 }
 END_TEST
 
@@ -422,6 +519,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
+  fail_unless(blankMetadata->version == kEPUB3Version_3);
 
   ck_assert_int_eq(blankManifest->itemCount, expectedManifestItemCount);
 
@@ -484,6 +582,8 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_parse_metadata_from_moby_dick_opf_data);
   tcase_add_test(test_case, test_epub3_parse_data_from_opf_using_real_epub);
   tcase_add_test(test_case, test_epub3_parse_manifest_from_shakespeare_opf_data);
+  tcase_add_test(test_case, test_epub3_parse_manifest_from_medallion_opf_data);
+  tcase_add_test(test_case, test_epub3_parse_ncx_from_medallion);
   tcase_add_test(test_case, test_epub3_parse_manifest_from_moby_dick_opf_data);
   tcase_add_test(test_case, test_epub3_copy_root_file_path_from_container);
   tcase_add_test(test_case, test_epub3_validate_mimetype);

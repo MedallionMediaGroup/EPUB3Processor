@@ -75,8 +75,8 @@ struct EPUB3Object {
 typedef struct EPUB3Object *EPUB3ObjectRef;
 
 typedef enum {
-  kEPUB3Version_201 = 201,
-  kEPUB3Version_3   = 300,
+  kEPUB3Version_2 = 200,
+  kEPUB3Version_3 = 300,
 } EPUB3Version;
 
 struct EPUB3 {
