@@ -93,6 +93,7 @@ struct EPUB3 {
 struct EPUB3Metadata {
   EPUB3Type _type;
   EPUB3Version version;
+  EPUB3ManifestItemRef ncxItem;
   char * title;
   char * _uniqueIdentifierID;
   char * identifier;
@@ -183,6 +184,7 @@ void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
 EPUB3MetadataRef EPUB3MetadataCreate();
 void EPUB3MetadataRetain(EPUB3MetadataRef metadata);
 void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
+void EPUB3MetadataSetNCXItem(EPUB3MetadataRef metadata, EPUB3ManifestItemRef ncxItem);
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
 void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);
 void EPUB3MetadataSetLanguage(EPUB3MetadataRef metadata, const char * language);
@@ -231,7 +233,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReade
 EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *context);
 EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3OPFParseContextPtr *currentContext);
-EPUB3Error EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
 
 #pragma mark - Validation
 

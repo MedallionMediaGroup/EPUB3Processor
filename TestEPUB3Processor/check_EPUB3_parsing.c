@@ -158,6 +158,8 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   const char * expectedLanguage = "en";
   const char * expectedCoverImgId = "item2";
   const char * expectedCoverImgPath = "cover.jpg";
+  const char * expectedNCXId = "ncx";
+  const char * expectedNCXPath = "toc.ncx";
 
   TEST_PATH_VAR_FOR_FILENAME(path, "pg_100_content.opf");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 24829);
@@ -182,7 +184,7 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseOPFFromData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   assert(blankEPUB->metadata != NULL);
@@ -202,6 +204,11 @@ START_TEST(test_epub3_parse_metadata_from_shakespeare_opf_data)
   fail_if(blankEPUB->metadata->coverImageId == NULL, "Cover image was not found.");
   assert(blankEPUB->metadata->coverImageId != NULL);
   ck_assert_str_eq(blankEPUB->metadata->coverImageId, expectedCoverImgId);
+
+  fail_if(blankEPUB->metadata->ncxItem == NULL, "NCX item was not found.");
+  assert(blankEPUB->metadata->ncxItem != NULL);
+  ck_assert_str_eq(blankEPUB->metadata->ncxItem->itemId, expectedNCXId);
+  ck_assert_str_eq(blankEPUB->metadata->ncxItem->href, expectedNCXPath);
 
   char * coverPath = EPUB3CopyCoverImagePath(blankEPUB);
   ck_assert_str_eq(coverPath, expectedCoverImgPath);
@@ -245,7 +252,7 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseOPFFromData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->metadata == NULL);
   assert(blankEPUB->metadata != NULL);
@@ -261,6 +268,9 @@ START_TEST(test_epub3_parse_metadata_from_moby_dick_opf_data)
   fail_if(blankEPUB->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
   assert(blankEPUB->metadata->language != NULL);
   ck_assert_str_eq(blankEPUB->metadata->language, expectedLanguage);
+
+  fail_unless(blankEPUB->metadata->ncxItem == NULL, "We should ignore the ncx in an EPUB 3 book.");
+  assert(blankEPUB->metadata->ncxItem == NULL);
 
   free(newBuf);
   EPUB3MetadataRelease(blankMetadata);
@@ -354,7 +364,7 @@ START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseOPFFromData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   fail_unless(blankMetadata->version == kEPUB3Version_2);
@@ -421,7 +431,7 @@ START_TEST(test_epub3_parse_manifest_from_medallion_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseOPFFromData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   fail_unless(blankMetadata->version == kEPUB3Version_2);
@@ -516,7 +526,7 @@ START_TEST(test_epub3_parse_manifest_from_moby_dick_opf_data)
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
 
-  EPUB3Error error = EPUB3ParseFromOPFData(blankEPUB, newBuf, (uint32_t)bufferSize);
+  EPUB3Error error = EPUB3ParseOPFFromData(blankEPUB, newBuf, (uint32_t)bufferSize);
   fail_unless(error == kEPUB3Success);
   fail_if(blankEPUB->manifest == NULL);
   fail_unless(blankMetadata->version == kEPUB3Version_3);

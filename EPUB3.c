@@ -177,6 +177,8 @@ EPUB3MetadataRef EPUB3CopyMetadata(EPUB3Ref epub)
     return NULL;
   }
   EPUB3MetadataRef copy = EPUB3MetadataCreate();
+  copy->ncxItem = epub->metadata->ncxItem;
+  EPUB3ManifestItemRetain(copy->ncxItem);
   (void)EPUB3MetadataSetTitle(copy, epub->metadata->title);
   (void)EPUB3MetadataSetIdentifier(copy, epub->metadata->identifier);
   (void)EPUB3MetadataSetLanguage(copy, epub->metadata->language);
@@ -399,6 +401,7 @@ void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
 {
   if(metadata == NULL) return;
 
+  EPUB3ManifestItemRetain(metadata->ncxItem);
   EPUB3ObjectRetain(metadata);
 }
 
@@ -407,6 +410,8 @@ void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
   if(metadata == NULL) return;
 
   if(metadata->_type.refCount == 1) {
+    EPUB3ManifestItemRelease(metadata->ncxItem);
+    metadata->ncxItem = NULL;
     EPUB3_FREE_AND_NULL(metadata->title);
     EPUB3_FREE_AND_NULL(metadata->_uniqueIdentifierID);
     EPUB3_FREE_AND_NULL(metadata->identifier);
@@ -420,12 +425,24 @@ EPUB3MetadataRef EPUB3MetadataCreate()
 {
   EPUB3MetadataRef memory = malloc(sizeof(struct EPUB3Metadata));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3MetadataTypeID);
+  memory->ncxItem = NULL;
   memory->title = NULL;
   memory->_uniqueIdentifierID = NULL;
   memory->identifier = NULL;
   memory->language = NULL;
   memory->coverImageId = NULL;
   return memory;
+}
+
+void EPUB3MetadataSetNCXItem(EPUB3MetadataRef metadata, EPUB3ManifestItemRef ncxItem)
+{
+  assert(metadata != NULL);
+
+  if(metadata->ncxItem != NULL) {
+    EPUB3ManifestItemRelease(metadata->ncxItem);
+  }
+  EPUB3ManifestItemRetain(ncxItem);
+  metadata->ncxItem = ncxItem;
 }
 
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title)
@@ -720,7 +737,13 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
 
   error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, opfFilename);
   if(error == kEPUB3Success) {
-    error = EPUB3ParseFromOPFData(epub, buffer, bufferSize);
+    error = EPUB3ParseOPFFromData(epub, buffer, bufferSize);
+    EPUB3_FREE_AND_NULL(buffer);
+  }
+  if(error == kEPUB3Success && epub->metadata->version == kEPUB3Version_2) {
+    // Parse NCX only if this is a v2 epub (per the EPUB 3 spec)
+//    error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, ncxFilename);
+//    error = EPUB3ParseNCXFromData(epub, &buffer, &bufferSize, &bytesCopied, ncxFilename);
     EPUB3_FREE_AND_NULL(buffer);
   }
   return error;
@@ -841,6 +864,12 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
               }
             }
             EPUB3_FREE_AND_NULL(tofree);
+          }
+          if(newItem->mediaType != NULL && strcmp(newItem->mediaType, "application/x-dtbncx+xml") == 0) {
+            //This is the ref for the ncx document. Set it for v2 epubs
+            if(epub->metadata->version == kEPUB3Version_2) {
+              EPUB3MetadataSetNCXItem(epub->metadata, newItem);
+            }
           }
           EPUB3ManifestInsertItem(epub->manifest, newItem);
         }
@@ -992,7 +1021,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader,
   return error;
 }
 
-EPUB3Error EPUB3ParseFromOPFData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
+EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize)
 {
   assert(epub != NULL);
   assert(buffer != NULL);
