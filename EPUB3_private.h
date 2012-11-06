@@ -48,7 +48,9 @@ typedef enum {
   kEPUB3OPFStateRoot = 0,
   kEPUB3OPFStateMetadata,
   kEPUB3OPFStateManifest,
-  kEPUB3OPFStateSpine
+  kEPUB3OPFStateSpine, 
+  kEPUB3NCXStateRoot,
+  kEPUB3NCXStateNavMap,
 } EPUB3XMLParseState;
 
 typedef struct _EPUB3OPFParseContext {
@@ -238,6 +240,8 @@ EPUB3Error EPUB3ParseOPFFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
 #pragma mark - NCX XML Parsing
 
 EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSize);
+EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *currentContext);
+EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
 
 #pragma mark - Validation
 

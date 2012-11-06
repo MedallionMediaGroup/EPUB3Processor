@@ -1089,7 +1089,7 @@ EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
     currentContext->tagName = xmlTextReaderConstName(reader);
     while(retVal == 1)
     {
-//      error = EPUB3ParseXMLReaderNodeForOPF(epub, reader, &currentContext);
+      error = EPUB3ParseXMLReaderNodeForNCX(epub, reader, &currentContext);
       retVal = xmlTextReaderRead(reader);
     }
     if(retVal < 0) {
@@ -1102,6 +1102,106 @@ EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
   xmlCleanupParser();
   return error;
 }
+
+EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *currentContext)
+{
+  assert(epub != NULL);
+  assert(reader != NULL);
+  assert(*currentContext != NULL);
+
+  EPUB3Error error = kEPUB3Success;
+  const xmlChar *name = xmlTextReaderConstLocalName(reader);
+  xmlReaderTypes currentNodeType = xmlTextReaderNodeType(reader);
+
+  if(name != NULL && currentNodeType != XML_READER_TYPE_COMMENT) {
+    switch((*currentContext)->state)
+    {
+      case kEPUB3OPFStateRoot:
+      {
+        fprintf(stdout, "NCX ROOT: %s\n", name);
+        if(currentNodeType == XML_READER_TYPE_ELEMENT) {
+          if(xmlStrcmp(name, BAD_CAST "navMap") == 0) {
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES);
+          }
+        }
+        break;
+      }
+      case kEPUB3NCXStateNavMap:
+      {
+        fprintf(stdout, "NCX NAV MAP: %s\n", name);
+        if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "navMap") == 0) {
+          (void)EPUB3PopAndFreeParseContext(currentContext);
+        } else {
+          error = EPUB3ProcessXMLReaderNodeForNavMapInNCX(epub, reader, currentContext);
+        }
+        break;
+      }
+      default: break;
+    }
+  }
+  return error;
+}
+
+EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context)
+{
+  assert(epub != NULL);
+  assert(reader != NULL);
+
+  EPUB3Error error = kEPUB3Success;
+//  const xmlChar *name = xmlTextReaderConstLocalName(reader);
+//  xmlReaderTypes nodeType = xmlTextReaderNodeType(reader);
+//
+//  switch(nodeType)
+//  {
+//    case XML_READER_TYPE_ELEMENT:
+//    {
+//      if(!xmlTextReaderIsEmptyElement(reader)) {
+//        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
+//
+//        // Only parse text node for the identifier marked as unique-identifier in the package tag
+//        // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
+//        if(xmlStrcmp(name, BAD_CAST "identifier") == 0) {
+//          if(xmlTextReaderHasAttributes(reader)) {
+//            xmlChar * itemId = xmlTextReaderGetAttribute(reader, BAD_CAST "id");
+//            if(itemId == NULL) {
+//              (*context)->shouldParseTextNode = kEPUB3_NO;
+//            }
+//            else if(itemId != NULL && xmlStrcmp(itemId, BAD_CAST epub->metadata->_uniqueIdentifierID) != 0) {
+//              (*context)->shouldParseTextNode = kEPUB3_NO; 
+//              EPUB3_FREE_AND_NULL(itemId);
+//            }
+//          }
+//        }
+//
+//      }
+//      break;
+//    }
+//    case XML_READER_TYPE_TEXT:
+//    {
+//      const xmlChar *value = xmlTextReaderValue(reader);
+//      if(value != NULL && (*context)->shouldParseTextNode) {
+//        if(xmlStrcmp((*context)->tagName, BAD_CAST "title") == 0) {
+//          (void)EPUB3MetadataSetTitle(epub->metadata, (const char *)value);
+//        }
+//        else if(xmlStrcmp((*context)->tagName, BAD_CAST "identifier") == 0) {
+//          (void)EPUB3MetadataSetIdentifier(epub->metadata, (const char *)value);
+//        }
+//        else if(xmlStrcmp((*context)->tagName, BAD_CAST "language") == 0) {
+//          (void)EPUB3MetadataSetLanguage(epub->metadata, (const char *)value);
+//        }
+//      }
+//      break;
+//    }
+//    case XML_READER_TYPE_END_ELEMENT:
+//    {
+//      (void)EPUB3PopAndFreeParseContext(context);
+//      break;
+//    }
+//    default: break;
+//  }
+  return error;
+}
+
 
 #pragma mark - Validation
 
