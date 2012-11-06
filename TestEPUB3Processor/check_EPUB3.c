@@ -166,8 +166,8 @@ START_TEST(test_epub3_toc)
 }
 END_TEST
 
-#pragma mark test_epub3_toc_list
-START_TEST(test_epub3_toc_list)
+#pragma mark test_epub3_toc_root_list
+START_TEST(test_epub3_toc_root_list)
 {
   EPUB3TocRef toc = EPUB3TocCreate();
   fail_unless(toc->rootItemCount == 0);
@@ -202,6 +202,39 @@ START_TEST(test_epub3_toc_list)
   fail_unless(toc->rootItemsHead->item == firstItem);
   fail_unless(toc->rootItemsTail == prev);
   fail_if(toc->rootItemsHead == toc->rootItemsTail);
+  EPUB3TocRelease(toc);
+}
+END_TEST
+
+#pragma mark test_epub3_toc_tree
+START_TEST(test_epub3_toc_tree)
+{
+  EPUB3TocRef toc = EPUB3TocCreate();
+  fail_unless(toc->rootItemCount == 0);
+
+  int itemCount = 20;
+
+  EPUB3TocItemRef rootItem = EPUB3TocItemCreate();
+  EPUB3TocAddRootItem(toc, rootItem);
+
+  EPUB3TocItemRef firstChild = NULL;
+
+  for(int i = 0; i < itemCount; i++) {
+    EPUB3TocItemRef item = EPUB3TocItemCreate();
+    EPUB3TocItemAppendChild(rootItem, item);
+
+    if(i == 0) {
+      fail_unless(rootItem->childrenHead->item == item);
+      firstChild = item;
+    }
+    fail_unless(rootItem->childrenTail->item == item);
+    fail_unless(item->parent == rootItem);
+    EPUB3TocItemRelease(item);
+  }
+
+  fail_unless(rootItem->childCount == itemCount);
+  fail_unless(firstChild == rootItem->childrenHead->item);
+  EPUB3TocItemRelease(rootItem);
   EPUB3TocRelease(toc);
 }
 END_TEST
@@ -429,7 +462,8 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_metadata_object);
   tcase_add_test(test_case, test_epub3_manifest_hash);
   tcase_add_test(test_case, test_epub3_toc);
-  tcase_add_test(test_case, test_epub3_toc_list);
+  tcase_add_test(test_case, test_epub3_toc_root_list);
+  tcase_add_test(test_case, test_epub3_toc_tree);
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
   tcase_add_test(test_case, test_epub3_copy_cover_image);
