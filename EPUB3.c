@@ -306,8 +306,8 @@ EPUB3TocRef EPUB3TocCreate()
   EPUB3TocRef memory = malloc(sizeof(struct EPUB3Toc));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocTypeID);
   memory->itemCount = 0;
-  memory->head = NULL;
-  memory->tail = NULL;
+  memory->rootItemsHead = NULL;
+  memory->rootItemsTail = NULL;
   return memory;
 }
 
@@ -315,8 +315,8 @@ void EPUB3TocRetain(EPUB3TocRef toc)
 {
   if(toc == NULL) return;
 
-  EPUB3TocItemListItemPtr itemPtr;
-  for(itemPtr = toc->head; itemPtr != NULL; itemPtr = itemPtr->next) {
+  EPUB3TocItemChildListItemPtr itemPtr;
+  for(itemPtr = toc->rootItemsHead; itemPtr != NULL; itemPtr = itemPtr->next) {
     EPUB3TocItemRetain(itemPtr->item);
   }
   EPUB3ObjectRetain(toc);
@@ -326,14 +326,14 @@ void EPUB3TocRelease(EPUB3TocRef toc)
 {
   if(toc == NULL) return;
   if(toc->_type.refCount == 1) {
-    EPUB3TocItemListItemPtr itemPtr = toc->head;
+    EPUB3TocItemChildListItemPtr itemPtr = toc->rootItemsHead;
     int totalItemsToFree = toc->itemCount;
     while(itemPtr != NULL) {
       assert(--totalItemsToFree >= 0);
       EPUB3TocItemRelease(itemPtr->item);
-      EPUB3TocItemListItemPtr tmp = itemPtr;
+      EPUB3TocItemChildListItemPtr tmp = itemPtr;
       itemPtr = itemPtr->next;
-      toc->head = itemPtr;
+      toc->rootItemsHead = itemPtr;
       EPUB3_FREE_AND_NULL(tmp);
     }
     toc->itemCount = 0;
@@ -381,16 +381,16 @@ void EPUB3TocAppendItem(EPUB3TocRef toc, EPUB3TocItemRef item)
   assert(item != NULL);
 
   EPUB3TocItemRetain(item);
-  EPUB3TocItemListItemPtr itemPtr = (EPUB3TocItemListItemPtr) calloc(1, sizeof(struct EPUB3TocItemListItem));
+  EPUB3TocItemChildListItemPtr itemPtr = (EPUB3TocItemChildListItemPtr) calloc(1, sizeof(struct EPUB3TocItemChildListItem));
   itemPtr->item = item;
 
-  if(toc->head == NULL) {
+  if(toc->rootItemsHead == NULL) {
     // First item
-    toc->head = itemPtr;
-    toc->tail = itemPtr;
+    toc->rootItemsHead = itemPtr;
+    toc->rootItemsTail = itemPtr;
   } else {
-    toc->tail->next = itemPtr;
-    toc->tail = itemPtr;
+    toc->rootItemsTail->next = itemPtr;
+    toc->rootItemsTail = itemPtr;
   }
   toc->itemCount++;
 }
@@ -1118,7 +1118,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
     {
       case kEPUB3OPFStateRoot:
       {
-        fprintf(stdout, "NCX ROOT: %s\n", name);
+//        fprintf(stdout, "NCX ROOT: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_ELEMENT) {
           if(xmlStrcmp(name, BAD_CAST "navMap") == 0) {
             (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES);
@@ -1128,7 +1128,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
       }
       case kEPUB3NCXStateNavMap:
       {
-        fprintf(stdout, "NCX NAV MAP: %s\n", name);
+//        fprintf(stdout, "NCX NAV MAP: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "navMap") == 0) {
           (void)EPUB3PopAndFreeParseContext(currentContext);
         } else {

@@ -145,16 +145,16 @@ struct EPUB3SpineItem {
   EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
-typedef struct EPUB3TocItemListItem {
+typedef struct EPUB3TocItemChildListItem {
   EPUB3TocItemRef item;
-  struct EPUB3TocItemListItem * next;
-} * EPUB3TocItemListItemPtr;
+  struct EPUB3TocItemChildListItem * next;
+} * EPUB3TocItemChildListItemPtr;
 
 struct EPUB3Toc {
   EPUB3Type _type;
   int32_t itemCount;
-  EPUB3TocItemListItemPtr head;
-  EPUB3TocItemListItemPtr tail;
+  EPUB3TocItemChildListItemPtr rootItemsHead;
+  EPUB3TocItemChildListItemPtr rootItemsTail;
 };
 
 struct EPUB3TocItem {
