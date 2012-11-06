@@ -152,7 +152,7 @@ typedef struct EPUB3TocItemChildListItem {
 
 struct EPUB3Toc {
   EPUB3Type _type;
-  int32_t itemCount;
+  int32_t rootItemCount;
   EPUB3TocItemChildListItemPtr rootItemsHead;
   EPUB3TocItemChildListItemPtr rootItemsTail;
 };
@@ -160,6 +160,10 @@ struct EPUB3Toc {
 struct EPUB3TocItem {
   EPUB3Type _type;
   char * idref;
+  EPUB3TocItemRef parent; //weak ref
+  int32_t childCount;
+  EPUB3TocItemChildListItemPtr childrenHead;
+  EPUB3TocItemChildListItemPtr childrenTail;
   EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
@@ -223,7 +227,8 @@ void EPUB3TocRetain(EPUB3TocRef toc);
 void EPUB3TocRelease(EPUB3TocRef toc);
 void EPUB3TocItemRetain(EPUB3TocItemRef item);
 void EPUB3TocItemRelease(EPUB3TocItemRef item);
-void EPUB3TocAppendItem(EPUB3TocRef toc, EPUB3TocItemRef item);
+void EPUB3TocAddRootItem(EPUB3TocRef toc, EPUB3TocItemRef item);
+void EPUB3TocItemAppendChild(EPUB3TocItemRef parent, EPUB3TocItemRef child);
 void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef manifestItem);
 
 #pragma mark - XML Parsing

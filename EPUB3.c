@@ -305,7 +305,7 @@ EPUB3TocRef EPUB3TocCreate()
 {
   EPUB3TocRef memory = malloc(sizeof(struct EPUB3Toc));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocTypeID);
-  memory->itemCount = 0;
+  memory->rootItemCount = 0;
   memory->rootItemsHead = NULL;
   memory->rootItemsTail = NULL;
   return memory;
@@ -327,7 +327,7 @@ void EPUB3TocRelease(EPUB3TocRef toc)
   if(toc == NULL) return;
   if(toc->_type.refCount == 1) {
     EPUB3TocItemChildListItemPtr itemPtr = toc->rootItemsHead;
-    int totalItemsToFree = toc->itemCount;
+    int totalItemsToFree = toc->rootItemCount;
     while(itemPtr != NULL) {
       assert(--totalItemsToFree >= 0);
       EPUB3TocItemRelease(itemPtr->item);
@@ -336,7 +336,7 @@ void EPUB3TocRelease(EPUB3TocRef toc)
       toc->rootItemsHead = itemPtr;
       EPUB3_FREE_AND_NULL(tmp);
     }
-    toc->itemCount = 0;
+    toc->rootItemCount = 0;
   }
   EPUB3ObjectRelease(toc);
 }
@@ -347,6 +347,9 @@ EPUB3TocItemRef EPUB3TocItemCreate()
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocItemTypeID);
   memory->idref = NULL;
   memory->manifestItem = NULL;
+  memory->childCount = 0;
+  memory->childrenHead = NULL;
+  memory->childrenTail = NULL;
   return memory;
 }
 
@@ -362,7 +365,19 @@ void EPUB3TocItemRelease(EPUB3TocItemRef item)
 
   if(item->_type.refCount == 1) {
     item->manifestItem = NULL; // zero weak ref
+    item->parent = NULL; // zero weak ref
     EPUB3_FREE_AND_NULL(item->idref);
+    int totalItemsToFree = item->childCount;
+    EPUB3TocItemChildListItemPtr itemPtr = item->childrenHead;
+    while(itemPtr != NULL) {
+      assert(--totalItemsToFree >= 0);
+      EPUB3TocItemRelease(itemPtr->item);
+      EPUB3TocItemChildListItemPtr tmp = itemPtr;
+      itemPtr = itemPtr->next;
+      item->childrenHead = itemPtr;
+      EPUB3_FREE_AND_NULL(tmp);
+    }
+    item->childCount = 0;
   }
 
   EPUB3ObjectRelease(item);
@@ -375,7 +390,7 @@ void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef m
   tocItem->idref = strdup(manifestItem->itemId);
 }
 
-void EPUB3TocAppendItem(EPUB3TocRef toc, EPUB3TocItemRef item)
+void EPUB3TocAddRootItem(EPUB3TocRef toc, EPUB3TocItemRef item)
 {
   assert(toc != NULL);
   assert(item != NULL);
@@ -392,7 +407,28 @@ void EPUB3TocAppendItem(EPUB3TocRef toc, EPUB3TocItemRef item)
     toc->rootItemsTail->next = itemPtr;
     toc->rootItemsTail = itemPtr;
   }
-  toc->itemCount++;
+  toc->rootItemCount++;
+}
+
+void EPUB3TocItemAppendChild(EPUB3TocItemRef parent, EPUB3TocItemRef child)
+{
+  assert(parent != NULL);
+  assert(child != NULL);
+
+  EPUB3TocItemRetain(child);
+  EPUB3TocItemChildListItemPtr itemPtr = (EPUB3TocItemChildListItemPtr) calloc(1, sizeof(struct EPUB3TocItemChildListItem));
+  itemPtr->item = child;
+
+  if(parent->childrenHead == NULL) {
+    // First item
+    parent->childrenHead = itemPtr;
+    parent->childrenTail = itemPtr;
+  } else {
+    parent->childrenTail->next = itemPtr;
+    parent->childrenTail = itemPtr;
+  }
+  child->parent = parent;
+  parent->childCount++;
 }
 
 #pragma mark - Metadata
@@ -1477,6 +1513,7 @@ EPUB3Error EPUB3CopyFileIntoBuffer(EPUB3Ref epub, void **buffer, uint32_t *buffe
           error = kEPUB3Success;
         } else {
           free(*buffer);
+          *buffer = NULL;
           error = kEPUB3FileReadFromArchiveError;
         }
       }

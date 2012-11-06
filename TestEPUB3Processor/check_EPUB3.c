@@ -149,7 +149,7 @@ START_TEST(test_epub3_toc)
   EPUB3TocRef toc = EPUB3TocCreate();
   ck_assert_int_eq(toc->_type.refCount, 1);
   ck_assert_str_eq(toc->_type.typeID, kEPUB3TocTypeID);
-  fail_unless(toc->itemCount == 0);
+  fail_unless(toc->rootItemCount == 0);
 
   EPUB3TocItemRef item = EPUB3TocItemCreate();
   ck_assert_int_eq(item->_type.refCount, 1);
@@ -170,7 +170,7 @@ END_TEST
 START_TEST(test_epub3_toc_list)
 {
   EPUB3TocRef toc = EPUB3TocCreate();
-  fail_unless(toc->itemCount == 0);
+  fail_unless(toc->rootItemCount == 0);
 
   int itemCount = 20;
 
@@ -178,7 +178,7 @@ START_TEST(test_epub3_toc_list)
 
   fail_unless(toc->rootItemsHead == NULL);
   fail_unless(toc->rootItemsTail == NULL);
-  EPUB3TocAppendItem(toc, firstItem);
+  EPUB3TocAddRootItem(toc, firstItem);
   ck_assert_int_eq(firstItem->_type.refCount, 2);
   EPUB3TocItemRelease(firstItem);
   ck_assert_int_eq(firstItem->_type.refCount, 1);
@@ -190,7 +190,7 @@ START_TEST(test_epub3_toc_list)
 
   for(int i = 1; i < itemCount; i++) {
     EPUB3TocItemRef item = EPUB3TocItemCreate();
-    EPUB3TocAppendItem(toc, item);
+    EPUB3TocAddRootItem(toc, item);
 
     fail_unless(toc->rootItemsTail->item == item);
     prev = toc->rootItemsTail;
@@ -198,7 +198,7 @@ START_TEST(test_epub3_toc_list)
     EPUB3TocItemRelease(item);
   }
 
-  ck_assert_int_eq(toc->itemCount, itemCount);
+  ck_assert_int_eq(toc->rootItemCount, itemCount);
   fail_unless(toc->rootItemsHead->item == firstItem);
   fail_unless(toc->rootItemsTail == prev);
   fail_if(toc->rootItemsHead == toc->rootItemsTail);
