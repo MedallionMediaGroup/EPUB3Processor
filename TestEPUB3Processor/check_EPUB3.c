@@ -156,9 +156,20 @@ START_TEST(test_epub3_toc)
   ck_assert_str_eq(item->_type.typeID, kEPUB3TocItemTypeID);
 
   EPUB3ManifestItemRef manifestItem = EPUB3ManifestItemCreate();
-  const char * itemId = "myid";
-  manifestItem->itemId = strdup(itemId);
+  const char * href = "a/path/to/something";
+  manifestItem->href = strdup(href);
   EPUB3TocItemSetManifestItem(item, manifestItem);
+  const char * myTitle = "My Title";
+  item->title = strdup(myTitle);
+
+  char * path = EPUB3TocItemCopyPath(item);
+  ck_assert_str_eq(path, href);
+  free(path);
+
+  char * title = EPUB3TocItemCopyTitle(item);
+  ck_assert_str_eq(title, myTitle);
+  free(title);
+
   ck_assert_int_eq(manifestItem->_type.refCount, 1);
   EPUB3TocItemRelease(item);
   ck_assert_int_eq(manifestItem->_type.refCount, 1);
@@ -216,10 +227,10 @@ START_TEST(test_epub3_toc_root_list_get)
   int32_t itemCount = 20;
   EPUB3TocItemRef items[itemCount];
 
-  const char * idref = "my_idref";
+  const char * myTitle = "My Title";
   for(int i = 0; i < itemCount; i++) {
     EPUB3TocItemRef item = EPUB3TocItemCreate();
-    item->idref = strdup(idref);
+    item->title = strdup(myTitle);
     EPUB3TocAddRootItem(toc, item);
     items[i] = item;
   }
@@ -235,7 +246,7 @@ START_TEST(test_epub3_toc_root_list_get)
   for (int i = 0; i < count; i++) {
     fail_if(rootList[i] == NULL);
     fail_unless(EPUB3TocItemHasParent(rootList[i]) == kEPUB3_NO);
-    ck_assert_str_eq(idref, rootList[i]->idref);
+    ck_assert_str_eq(myTitle, rootList[i]->title);
     fail_unless(items[i] == rootList[i]);
     EPUB3TocItemRelease(items[i]);
   }
@@ -250,14 +261,15 @@ START_TEST(test_epub3_toc_tree)
   EPUB3TocRef toc = EPUB3TocCreate();
   fail_unless(toc->rootItemCount == 0);
 
-  int itemCount = 20;
+  int childCount = 20;
+  EPUB3TocItemRef items[childCount];
 
   EPUB3TocItemRef rootItem = EPUB3TocItemCreate();
   EPUB3TocAddRootItem(toc, rootItem);
 
   EPUB3TocItemRef firstChild = NULL;
 
-  for(int i = 0; i < itemCount; i++) {
+  for(int i = 0; i < childCount; i++) {
     EPUB3TocItemRef item = EPUB3TocItemCreate();
     EPUB3TocItemAppendChild(rootItem, item);
 
@@ -266,13 +278,22 @@ START_TEST(test_epub3_toc_tree)
       firstChild = item;
     }
     fail_unless(rootItem->childrenTail->item == item);
-    fail_unless(EPUB3TocItemHasParent(item) == kEPUB3_YES);
-    fail_unless(item->parent == rootItem);
-    EPUB3TocItemRelease(item);
+    fail_unless(EPUB3TocItemGetParent(item) == rootItem);
+    items[i] = item;
+  }
+  fail_unless(firstChild == rootItem->childrenHead->item);
+
+  ck_assert_int_eq(EPUB3TocItemCountOfChildren(rootItem), childCount);
+  EPUB3TocItemRef children[childCount];
+
+  EPUB3Error error = EPUB3TocItemGetChildren(rootItem, children);
+  fail_unless(error == kEPUB3Success);
+  for (int i = 0; i < childCount; i++) {
+    fail_unless(EPUB3TocItemHasParent(children[i]) == kEPUB3_YES);
+    fail_unless(items[i] == children[i]);
+    EPUB3TocItemRelease(items[i]);
   }
 
-  fail_unless(rootItem->childCount == itemCount);
-  fail_unless(firstChild == rootItem->childrenHead->item);
   EPUB3TocItemRelease(rootItem);
   EPUB3TocRelease(toc);
 }

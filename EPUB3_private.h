@@ -156,7 +156,7 @@ struct EPUB3Toc {
 
 struct EPUB3TocItem {
   EPUB3Type _type;
-  char * idref;
+  char * title;
   EPUB3TocItemRef parent; //weak ref
   int32_t childCount;
   EPUB3TocItemChildListItemPtr childrenHead;

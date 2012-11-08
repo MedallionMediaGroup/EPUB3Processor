@@ -42,6 +42,12 @@ EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 int32_t EPUB3CountOfTocRootItems(EPUB3Ref epub);
 EPUB3Error EPUB3GetTocRootItems(EPUB3Ref epub, EPUB3TocItemRef *tocItems);
 EPUB3Bool EPUB3TocItemHasParent(EPUB3TocItemRef tocItem);
+EPUB3TocItemRef EPUB3TocItemGetParent(EPUB3TocItemRef tocItem);
+int32_t EPUB3TocItemCountOfChildren(EPUB3TocItemRef tocItem);
+EPUB3Error EPUB3TocItemGetChildren(EPUB3TocItemRef parent, EPUB3TocItemRef *children);
+char * EPUB3TocItemCopyTitle(EPUB3TocItemRef tocItem);
+char * EPUB3TocItemCopyPath(EPUB3TocItemRef tocItem);
+
 
 #if defined(__cplusplus)
 } //EXTERN "C"

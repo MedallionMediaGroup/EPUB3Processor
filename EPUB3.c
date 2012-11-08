@@ -83,6 +83,60 @@ EXPORT EPUB3Bool EPUB3TocItemHasParent(EPUB3TocItemRef tocItem)
   return tocItem->parent == NULL ? kEPUB3_NO : kEPUB3_YES;
 }
 
+EXPORT EPUB3TocItemRef EPUB3TocItemGetParent(EPUB3TocItemRef tocItem)
+{
+  assert(tocItem != NULL);
+
+  return tocItem->parent;
+}
+
+EXPORT int32_t EPUB3TocItemCountOfChildren(EPUB3TocItemRef tocItem)
+{
+  assert(tocItem != NULL);
+
+  return tocItem->childCount;
+}
+
+EXPORT EPUB3Error EPUB3TocItemGetChildren(EPUB3TocItemRef parent, EPUB3TocItemRef *children)
+{
+  assert(parent != NULL);
+
+  EPUB3Error error = kEPUB3Success;
+
+  if(parent->childCount > 0) {
+    int32_t count = 0;
+    EPUB3TocItemChildListItemPtr itemPtr = parent->childrenHead;
+    while(itemPtr != NULL) {
+      children[count] = itemPtr->item;
+      count++;
+      itemPtr = itemPtr->next;
+    }
+
+  }
+
+  return error;
+}
+
+EXPORT char * EPUB3TocItemCopyTitle(EPUB3TocItemRef tocItem)
+{
+  assert(tocItem != NULL);
+
+  if(tocItem->title == NULL) return NULL;
+
+  char * title = strdup(tocItem->title);
+  return title;
+}
+
+EXPORT char * EPUB3TocItemCopyPath(EPUB3TocItemRef tocItem)
+{
+  assert(tocItem != NULL);
+
+  if(tocItem->manifestItem == NULL || tocItem->manifestItem->href == NULL) return NULL;
+
+  char * path = strdup(tocItem->manifestItem->href);
+  return path;
+}
+
 #pragma mark - Base Object
 
 void EPUB3ObjectRelease(void *object)
@@ -381,8 +435,8 @@ EPUB3TocItemRef EPUB3TocItemCreate()
 {
   EPUB3TocItemRef memory = malloc(sizeof(struct EPUB3TocItem));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocItemTypeID);
-  memory->idref = NULL;
   memory->manifestItem = NULL;
+  memory->title = NULL;
   memory->parent = NULL;
   memory->childCount = 0;
   memory->childrenHead = NULL;
@@ -403,11 +457,11 @@ void EPUB3TocItemRelease(EPUB3TocItemRef item)
   if(item->_type.refCount == 1) {
     item->manifestItem = NULL; // zero weak ref
     item->parent = NULL; // zero weak ref
-    EPUB3_FREE_AND_NULL(item->idref);
-    int totalItemsToFree = item->childCount;
+    EPUB3_FREE_AND_NULL(item->title);
+    int totalChildrenToFree = item->childCount;
     EPUB3TocItemChildListItemPtr itemPtr = item->childrenHead;
     while(itemPtr != NULL) {
-      assert(--totalItemsToFree >= 0);
+      assert(--totalChildrenToFree >= 0);
       EPUB3TocItemRelease(itemPtr->item);
       EPUB3TocItemChildListItemPtr tmp = itemPtr;
       itemPtr = itemPtr->next;
@@ -424,7 +478,6 @@ void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef m
 {
   assert(tocItem != NULL);
   tocItem->manifestItem = manifestItem;
-  tocItem->idref = strdup(manifestItem->itemId);
 }
 
 void EPUB3TocAddRootItem(EPUB3TocRef toc, EPUB3TocItemRef item)
