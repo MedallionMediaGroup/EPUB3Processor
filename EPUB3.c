@@ -47,12 +47,40 @@ EXPORT EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char *
   return error;
 }
 
-EXPORT int32_t EPUB3GetCountOfTocRootItems(EPUB3Ref epub)
+EXPORT int32_t EPUB3CountOfTocRootItems(EPUB3Ref epub)
 {
   assert(epub != NULL);
   assert(epub->toc != NULL);
 
   return epub->toc->rootItemCount;
+}
+
+EXPORT EPUB3Error EPUB3GetTocRootItems(EPUB3Ref epub, EPUB3TocItemRef *tocItems)
+{
+  assert(epub != NULL);
+  assert(epub->toc != NULL);
+
+  EPUB3Error error = kEPUB3Success;
+
+  if(epub->toc->rootItemCount > 0) {
+    int32_t count = 0;
+    EPUB3TocItemChildListItemPtr itemPtr = epub->toc->rootItemsHead;
+    while(itemPtr != NULL) {
+      tocItems[count] = itemPtr->item;
+      count++;
+      itemPtr = itemPtr->next;
+    }
+
+  }
+
+  return error;
+}
+
+EXPORT EPUB3Bool EPUB3TocItemHasParent(EPUB3TocItemRef tocItem)
+{
+  assert(tocItem != NULL);
+
+  return tocItem->parent == NULL ? kEPUB3_NO : kEPUB3_YES;
 }
 
 #pragma mark - Base Object
@@ -355,6 +383,7 @@ EPUB3TocItemRef EPUB3TocItemCreate()
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocItemTypeID);
   memory->idref = NULL;
   memory->manifestItem = NULL;
+  memory->parent = NULL;
   memory->childCount = 0;
   memory->childrenHead = NULL;
   memory->childrenTail = NULL;

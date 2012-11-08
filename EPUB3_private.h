@@ -20,8 +20,6 @@
 
 #define EXPORT __attribute__((visibility("default")))
 
-typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
-
 #pragma mark - Object Pointer Types
 
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
@@ -30,7 +28,6 @@ typedef struct EPUB3Manifest * EPUB3ManifestRef;
 typedef struct EPUB3Spine * EPUB3SpineRef;
 typedef struct EPUB3SpineItem * EPUB3SpineItemRef;
 typedef struct EPUB3Toc * EPUB3TocRef;
-typedef struct EPUB3TocItem * EPUB3TocItemRef;
 
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;

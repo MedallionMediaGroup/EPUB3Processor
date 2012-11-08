@@ -166,8 +166,8 @@ START_TEST(test_epub3_toc)
 }
 END_TEST
 
-#pragma mark test_epub3_toc_root_list
-START_TEST(test_epub3_toc_root_list)
+#pragma mark test_epub3_toc_root_list_addition
+START_TEST(test_epub3_toc_root_list_addition)
 {
   EPUB3TocRef toc = EPUB3TocCreate();
   fail_unless(toc->rootItemCount == 0);
@@ -206,6 +206,44 @@ START_TEST(test_epub3_toc_root_list)
 }
 END_TEST
 
+#pragma mark test_epub3_toc_root_list_get
+START_TEST(test_epub3_toc_root_list_get)
+{
+  EPUB3Ref blankEpub = EPUB3Create();
+  EPUB3TocRef toc = EPUB3TocCreate();
+  blankEpub->toc = toc;
+
+  int32_t itemCount = 20;
+  EPUB3TocItemRef items[itemCount];
+
+  const char * idref = "my_idref";
+  for(int i = 0; i < itemCount; i++) {
+    EPUB3TocItemRef item = EPUB3TocItemCreate();
+    item->idref = strdup(idref);
+    EPUB3TocAddRootItem(toc, item);
+    items[i] = item;
+  }
+
+  int32_t count = EPUB3CountOfTocRootItems(blankEpub);
+  ck_assert_int_eq(itemCount, count);
+
+  EPUB3TocItemRef rootList[count];
+
+  EPUB3Error error = EPUB3GetTocRootItems(blankEpub, rootList);
+  fail_unless(error == kEPUB3Success);
+
+  for (int i = 0; i < count; i++) {
+    fail_if(rootList[i] == NULL);
+    fail_unless(EPUB3TocItemHasParent(rootList[i]) == kEPUB3_NO);
+    ck_assert_str_eq(idref, rootList[i]->idref);
+    fail_unless(items[i] == rootList[i]);
+    EPUB3TocItemRelease(items[i]);
+  }
+
+  EPUB3TocRelease(toc);
+}
+END_TEST
+
 #pragma mark test_epub3_toc_tree
 START_TEST(test_epub3_toc_tree)
 {
@@ -228,6 +266,7 @@ START_TEST(test_epub3_toc_tree)
       firstChild = item;
     }
     fail_unless(rootItem->childrenTail->item == item);
+    fail_unless(EPUB3TocItemHasParent(item) == kEPUB3_YES);
     fail_unless(item->parent == rootItem);
     EPUB3TocItemRelease(item);
   }
@@ -462,8 +501,9 @@ TEST_EXPORT TCase * check_EPUB3_make_tcase(void)
   tcase_add_test(test_case, test_metadata_object);
   tcase_add_test(test_case, test_epub3_manifest_hash);
   tcase_add_test(test_case, test_epub3_toc);
-  tcase_add_test(test_case, test_epub3_toc_root_list);
+  tcase_add_test(test_case, test_epub3_toc_root_list_addition);
   tcase_add_test(test_case, test_epub3_toc_tree);
+  tcase_add_test(test_case, test_epub3_toc_root_list_get);
   tcase_add_test(test_case, test_epub3_spine);
   tcase_add_test(test_case, test_epub3_spine_list);
   tcase_add_test(test_case, test_epub3_copy_cover_image);

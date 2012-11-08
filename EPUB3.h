@@ -21,7 +21,10 @@ typedef enum _EPUB3Error {
   kEPUB3XMLXDocumentInvalidError = 1010,
 } EPUB3Error;
 
+typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
+
 typedef struct EPUB3 * EPUB3Ref;
+typedef struct EPUB3TocItem * EPUB3TocItemRef;
 
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path, EPUB3Error *error);
 void EPUB3Retain(EPUB3Ref epub);
@@ -36,7 +39,9 @@ EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resou
 EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 
-int32_t EPUB3GetCountOfTocRootItems(EPUB3Ref epub);
+int32_t EPUB3CountOfTocRootItems(EPUB3Ref epub);
+EPUB3Error EPUB3GetTocRootItems(EPUB3Ref epub, EPUB3TocItemRef *tocItems);
+EPUB3Bool EPUB3TocItemHasParent(EPUB3TocItemRef tocItem);
 
 #if defined(__cplusplus)
 } //EXTERN "C"
