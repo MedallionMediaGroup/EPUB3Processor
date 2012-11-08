@@ -47,6 +47,14 @@ EXPORT EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char *
   return error;
 }
 
+EXPORT int32_t EPUB3GetCountOfTocRootItems(EPUB3Ref epub)
+{
+  assert(epub != NULL);
+  assert(epub->toc != NULL);
+
+  return epub->toc->rootItemCount;
+}
+
 #pragma mark - Base Object
 
 void EPUB3ObjectRelease(void *object)

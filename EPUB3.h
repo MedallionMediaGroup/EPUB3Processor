@@ -36,6 +36,8 @@ EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resou
 EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path);
 EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 
+int32_t EPUB3GetCountOfTocRootItems(EPUB3Ref epub);
+
 #if defined(__cplusplus)
 } //EXTERN "C"
 #endif
