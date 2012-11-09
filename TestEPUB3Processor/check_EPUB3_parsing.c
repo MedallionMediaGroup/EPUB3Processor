@@ -462,6 +462,44 @@ START_TEST(test_epub3_parse_manifest_from_medallion_opf_data)
 }
 END_TEST
 
+const char * kMedallionTOCTitles[] = {
+  "Cover",
+  "Title Page",
+  "Dedication",
+  "Copyright",
+  "Acknowledgments",
+  "Table of Contents",
+  "Chapter 1",
+  "Chapter 2",
+  "Chapter 3",
+  "Chapter 4",
+  "Chapter 5",
+  "Chapter 6",
+  "Chapter 7",
+  "Chapter 8",
+  "Chapter 9",
+  "Chapter 10",
+  "Chapter 11",
+  "Chapter 12",
+  "Chapter 13",
+  "Chapter 14",
+  "Chapter 15",
+  "Chapter 16",
+  "Chapter 17",
+  "Chapter 18",
+  "Chapter 19",
+  "Chapter 20",
+  "Chapter 21",
+  "Chapter 22",
+  "Chapter 23",
+  "Chapter 24",
+  "Chapter 25",
+  "Chapter 26",
+  "Chapter 27",
+  "Chapter 28",
+  "Epilogue"
+};
+
 #pragma mark test_epub3_parse_ncx_from_medallion
 START_TEST(test_epub3_parse_ncx_from_medallion)
 {
@@ -485,7 +523,15 @@ START_TEST(test_epub3_parse_ncx_from_medallion)
   EPUB3Error error = EPUB3ParseNCXFromData(blankEPUB, newBuf, (int32_t)bytesRead);
   fail_unless(error == kEPUB3Success);
 
-  ck_assert_int_eq(toc->rootItemCount, 35);
+  int32_t rootItemCount = EPUB3CountOfTocRootItems(blankEPUB);
+  ck_assert_int_eq(rootItemCount, 35);
+  EPUB3TocItemRef rootItems[rootItemCount];
+  error = EPUB3GetTocRootItems(blankEPUB, rootItems);
+  fail_unless(error == kEPUB3Success);
+
+  for (int i = 0; i < rootItemCount; i++) {
+    ck_assert_str_eq(rootItems[i]->title, kMedallionTOCTitles[i]);
+  }
 
   EPUB3Release(blankEPUB);
 }

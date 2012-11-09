@@ -1298,23 +1298,28 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
           EPUB3TocItemRef newTocItem = EPUB3TocItemCreate();
           (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, newTocItem);
         }
+        else if(xmlStrcmp(name, BAD_CAST "text") == 0 && xmlStrcmp((*context)->tagName, BAD_CAST "navLabel") == 0) {
+          void * userInfo = (*context)->userInfo;
+          (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES, userInfo);
+        }
+        else {
+          void * userInfo = (*context)->userInfo;
+          (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, userInfo);
+        }
       }
       break;
     }
     case XML_READER_TYPE_TEXT:
     {
-//      const xmlChar *value = xmlTextReaderValue(reader);
-//      if(value != NULL && (*context)->shouldParseTextNode) {
-//        if(xmlStrcmp((*context)->tagName, BAD_CAST "title") == 0) {
-//          (void)EPUB3MetadataSetTitle(epub->metadata, (const char *)value);
-//        }
-//        else if(xmlStrcmp((*context)->tagName, BAD_CAST "identifier") == 0) {
-//          (void)EPUB3MetadataSetIdentifier(epub->metadata, (const char *)value);
-//        }
-//        else if(xmlStrcmp((*context)->tagName, BAD_CAST "language") == 0) {
-//          (void)EPUB3MetadataSetLanguage(epub->metadata, (const char *)value);
-//        }
-//      }
+      if((*context)->shouldParseTextNode) {
+        const xmlChar *value = xmlTextReaderValue(reader);
+        if(value != NULL) {
+          if(xmlStrcmp((*context)->tagName, BAD_CAST "text") == 0) {
+            EPUB3TocItemRef tocItem = (*context)->userInfo;
+            tocItem->title = strdup((const char *)value);
+          }
+        }
+      }
       break;
     }
     case XML_READER_TYPE_END_ELEMENT:
@@ -1325,8 +1330,8 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
           EPUB3TocAddRootItem(epub->toc, newTocItem);
           EPUB3TocItemRelease(newTocItem);
         }
-        (void)EPUB3PopAndFreeParseContext(context);
       }
+      (void)EPUB3PopAndFreeParseContext(context);
       break;
     }
     default: break;
