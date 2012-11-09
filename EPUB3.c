@@ -131,10 +131,9 @@ EXPORT char * EPUB3TocItemCopyPath(EPUB3TocItemRef tocItem)
 {
   assert(tocItem != NULL);
 
-  if(tocItem->manifestItem == NULL || tocItem->manifestItem->href == NULL) return NULL;
+  if(tocItem->href == NULL) return NULL;
 
-  char * path = strdup(tocItem->manifestItem->href);
-  return path;
+  return strdup(tocItem->href);
 }
 
 #pragma mark - Base Object
@@ -176,6 +175,7 @@ EPUB3Ref EPUB3Create()
   memory->metadata = NULL;
   memory->manifest = NULL;
   memory->spine = NULL;
+  memory->toc = NULL;
   memory->archive = NULL;
   memory->archivePath = NULL;
   memory->archiveFileCount = 0;
@@ -435,8 +435,8 @@ EPUB3TocItemRef EPUB3TocItemCreate()
 {
   EPUB3TocItemRef memory = malloc(sizeof(struct EPUB3TocItem));
   memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3TocItemTypeID);
-  memory->manifestItem = NULL;
   memory->title = NULL;
+  memory->href = NULL;
   memory->parent = NULL;
   memory->childCount = 0;
   memory->childrenHead = NULL;
@@ -455,9 +455,9 @@ void EPUB3TocItemRelease(EPUB3TocItemRef item)
   if(item == NULL) return;
 
   if(item->_type.refCount == 1) {
-    item->manifestItem = NULL; // zero weak ref
     item->parent = NULL; // zero weak ref
     EPUB3_FREE_AND_NULL(item->title);
+    EPUB3_FREE_AND_NULL(item->href);
     int totalChildrenToFree = item->childCount;
     EPUB3TocItemChildListItemPtr itemPtr = item->childrenHead;
     while(itemPtr != NULL) {
@@ -472,12 +472,6 @@ void EPUB3TocItemRelease(EPUB3TocItemRef item)
   }
 
   EPUB3ObjectRelease(item);
-}
-
-void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef manifestItem)
-{
-  assert(tocItem != NULL);
-  tocItem->manifestItem = manifestItem;
 }
 
 void EPUB3TocAddRootItem(EPUB3TocRef toc, EPUB3TocItemRef item)
@@ -855,6 +849,10 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
     epub->spine = EPUB3SpineCreate();
   }
 
+  if(epub->toc == NULL) {
+    epub->toc = EPUB3TocCreate();
+  }
+
   void *buffer = NULL;
   uint32_t bufferSize = 0;
   uint32_t bytesCopied;
@@ -888,7 +886,19 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
   return error;
 }
 
-void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode)
+void _EPUB3DumpXMLParseContextStack(EPUB3XMLParseContextPtr *ctxPtr)
+{
+  EPUB3XMLParseContextPtr top = *ctxPtr;
+  fprintf(stderr, "== Parse Context Stack ==\n");
+  for(;;) {
+    fprintf(stderr, "%s\n", (const char *)top->tagName);
+    if(top->state == kEPUB3NCXStateRoot || top->state == kEPUB3OPFStateRoot) break;
+    top--;
+  }
+  fprintf(stderr, "== END Context Stack ==\n");
+}
+
+void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode, void * userInfo)
 {
   (*ctxPtr)++;
   (*ctxPtr)->state = state;
@@ -896,6 +906,7 @@ void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState s
   (*ctxPtr)->attributeCount = attrCount;
   (*ctxPtr)->attributes = attrs;
   (*ctxPtr)->shouldParseTextNode = shouldParseTextNode;
+  (*ctxPtr)->userInfo = userInfo;
 }
 
 void EPUB3PopAndFreeParseContext(EPUB3XMLParseContextPtr *contextPtr)
@@ -924,7 +935,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReade
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES, NULL);
 
         // Only parse text node for the identifier marked as unique-identifier in the package tag
         // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
@@ -984,7 +995,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES, NULL);
       } else {
         if(xmlStrcmp(name, BAD_CAST "item") == 0) {
           EPUB3ManifestItemRef newItem = EPUB3ManifestItemCreate();
@@ -1043,7 +1054,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPt
     case XML_READER_TYPE_ELEMENT:
     {
       if(!xmlTextReaderIsEmptyElement(reader)) {
-        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES, NULL);
       } else {
         if(xmlStrcmp(name, BAD_CAST "itemref") == 0) {
           EPUB3SpineItemRef newItem = EPUB3SpineItemCreate();
@@ -1113,13 +1124,13 @@ EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader,
             }
           }
           else if(xmlStrcmp(name, BAD_CAST "metadata") == 0) {
-            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES, NULL);
           }
           else if(xmlStrcmp(name, BAD_CAST "manifest") == 0) {
-            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateManifest, name, 0, NULL, kEPUB3_YES, NULL);
           }
           else if(xmlStrcmp(name, BAD_CAST "spine") == 0) {
-            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateSpine, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3OPFStateSpine, name, 0, NULL, kEPUB3_YES, NULL);
           }
         }
         break;
@@ -1211,10 +1222,11 @@ EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
     EPUB3XMLParseContextPtr currentContext = &contextStack[0];
 
     int retVal = xmlTextReaderRead(reader);
-    currentContext->state = kEPUB3OPFStateRoot;
+    currentContext->state = kEPUB3NCXStateRoot;
     currentContext->tagName = xmlTextReaderConstName(reader);
     while(retVal == 1)
     {
+//      _EPUB3DumpXMLParseContextStack(&currentContext);
       error = EPUB3ParseXMLReaderNodeForNCX(epub, reader, &currentContext);
       retVal = xmlTextReaderRead(reader);
     }
@@ -1242,12 +1254,12 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
   if(name != NULL && currentNodeType != XML_READER_TYPE_COMMENT) {
     switch((*currentContext)->state)
     {
-      case kEPUB3OPFStateRoot:
+      case kEPUB3NCXStateRoot:
       {
 //        fprintf(stdout, "NCX ROOT: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_ELEMENT) {
           if(xmlStrcmp(name, BAD_CAST "navMap") == 0) {
-            (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES);
+            (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES, NULL);
           }
         }
         break;
@@ -1274,36 +1286,23 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
   assert(reader != NULL);
 
   EPUB3Error error = kEPUB3Success;
-//  const xmlChar *name = xmlTextReaderConstLocalName(reader);
-//  xmlReaderTypes nodeType = xmlTextReaderNodeType(reader);
-//
-//  switch(nodeType)
-//  {
-//    case XML_READER_TYPE_ELEMENT:
-//    {
-//      if(!xmlTextReaderIsEmptyElement(reader)) {
-//        (void)EPUB3SaveParseContext(context, kEPUB3OPFStateMetadata, name, 0, NULL, kEPUB3_YES);
-//
-//        // Only parse text node for the identifier marked as unique-identifier in the package tag
-//        // see: http://idpf.org/epub/30/spec/epub30-publications.html#sec-opf-dcidentifier
-//        if(xmlStrcmp(name, BAD_CAST "identifier") == 0) {
-//          if(xmlTextReaderHasAttributes(reader)) {
-//            xmlChar * itemId = xmlTextReaderGetAttribute(reader, BAD_CAST "id");
-//            if(itemId == NULL) {
-//              (*context)->shouldParseTextNode = kEPUB3_NO;
-//            }
-//            else if(itemId != NULL && xmlStrcmp(itemId, BAD_CAST epub->metadata->_uniqueIdentifierID) != 0) {
-//              (*context)->shouldParseTextNode = kEPUB3_NO; 
-//              EPUB3_FREE_AND_NULL(itemId);
-//            }
-//          }
-//        }
-//
-//      }
-//      break;
-//    }
-//    case XML_READER_TYPE_TEXT:
-//    {
+  const xmlChar *name = xmlTextReaderConstLocalName(reader);
+  xmlReaderTypes nodeType = xmlTextReaderNodeType(reader);
+
+  switch(nodeType)
+  {
+    case XML_READER_TYPE_ELEMENT:
+    {
+      if(!xmlTextReaderIsEmptyElement(reader)) {
+        if(xmlStrcmp(name, BAD_CAST "navPoint") == 0) {
+          EPUB3TocItemRef newTocItem = EPUB3TocItemCreate();
+          (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, newTocItem);
+        }
+      }
+      break;
+    }
+    case XML_READER_TYPE_TEXT:
+    {
 //      const xmlChar *value = xmlTextReaderValue(reader);
 //      if(value != NULL && (*context)->shouldParseTextNode) {
 //        if(xmlStrcmp((*context)->tagName, BAD_CAST "title") == 0) {
@@ -1316,15 +1315,22 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
 //          (void)EPUB3MetadataSetLanguage(epub->metadata, (const char *)value);
 //        }
 //      }
-//      break;
-//    }
-//    case XML_READER_TYPE_END_ELEMENT:
-//    {
-//      (void)EPUB3PopAndFreeParseContext(context);
-//      break;
-//    }
-//    default: break;
-//  }
+      break;
+    }
+    case XML_READER_TYPE_END_ELEMENT:
+    {
+      if(xmlStrcmp(name, BAD_CAST "navPoint") == 0) {
+        if((*context)->userInfo != NULL) {
+          EPUB3TocItemRef newTocItem = (*context)->userInfo;
+          EPUB3TocAddRootItem(epub->toc, newTocItem);
+          EPUB3TocItemRelease(newTocItem);
+        }
+        (void)EPUB3PopAndFreeParseContext(context);
+      }
+      break;
+    }
+    default: break;
+  }
   return error;
 }
 

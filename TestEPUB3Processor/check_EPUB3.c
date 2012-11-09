@@ -155,12 +155,10 @@ START_TEST(test_epub3_toc)
   ck_assert_int_eq(item->_type.refCount, 1);
   ck_assert_str_eq(item->_type.typeID, kEPUB3TocItemTypeID);
 
-  EPUB3ManifestItemRef manifestItem = EPUB3ManifestItemCreate();
   const char * href = "a/path/to/something";
-  manifestItem->href = strdup(href);
-  EPUB3TocItemSetManifestItem(item, manifestItem);
   const char * myTitle = "My Title";
   item->title = strdup(myTitle);
+  item->href = strdup(href);
 
   char * path = EPUB3TocItemCopyPath(item);
   ck_assert_str_eq(path, href);
@@ -169,11 +167,6 @@ START_TEST(test_epub3_toc)
   char * title = EPUB3TocItemCopyTitle(item);
   ck_assert_str_eq(title, myTitle);
   free(title);
-
-  ck_assert_int_eq(manifestItem->_type.refCount, 1);
-  EPUB3TocItemRelease(item);
-  ck_assert_int_eq(manifestItem->_type.refCount, 1);
-  EPUB3ManifestItemRelease(manifestItem);
 }
 END_TEST
 

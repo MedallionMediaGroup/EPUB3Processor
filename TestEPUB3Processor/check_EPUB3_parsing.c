@@ -469,14 +469,8 @@ START_TEST(test_epub3_parse_ncx_from_medallion)
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 6709);
   EPUB3Ref blankEPUB = EPUB3Create();
 
-  EPUB3MetadataRef blankMetadata = EPUB3MetadataCreate();
-  EPUB3SetMetadata(blankEPUB, blankMetadata);
-
-  EPUB3ManifestRef blankManifest = EPUB3ManifestCreate();
-  EPUB3SetManifest(blankEPUB, blankManifest);
-
-  EPUB3SpineRef blankSpine = EPUB3SpineCreate();
-  EPUB3SetSpine(blankEPUB, blankSpine);
+  EPUB3TocRef toc = EPUB3TocCreate();
+  blankEPUB->toc = toc;
 
   struct stat st;
   stat(path, &st);
@@ -487,6 +481,13 @@ START_TEST(test_epub3_parse_ncx_from_medallion)
 
   fail_if(ferror(fp) != 0, "Problem reading test data file %s: %s", path, strerror(ferror(fp)));
   fail_unless(bytesRead == bufferSize, "Only read %d bytes of the %d byte test data file.", bytesRead, bufferSize);
+
+  EPUB3Error error = EPUB3ParseNCXFromData(blankEPUB, newBuf, (int32_t)bytesRead);
+  fail_unless(error == kEPUB3Success);
+
+  ck_assert_int_eq(toc->rootItemCount, 35);
+
+  EPUB3Release(blankEPUB);
 }
 END_TEST
 

@@ -56,6 +56,7 @@ typedef struct _EPUB3OPFParseContext {
   int32_t attributeCount;
   char ** attributes;
   EPUB3Bool shouldParseTextNode;
+  void * userInfo;
 } EPUB3XMLParseContext;
 
 typedef EPUB3XMLParseContext * EPUB3XMLParseContextPtr;
@@ -157,11 +158,12 @@ struct EPUB3Toc {
 struct EPUB3TocItem {
   EPUB3Type _type;
   char * title;
+  char * href;
   EPUB3TocItemRef parent; //weak ref
   int32_t childCount;
   EPUB3TocItemChildListItemPtr childrenHead;
   EPUB3TocItemChildListItemPtr childrenTail;
-  EPUB3ManifestItemRef manifestItem; //weak ref
+//  EPUB3ManifestItemRef manifestItem; //weak ref
 };
 
 #pragma mark - Base Object
@@ -226,12 +228,11 @@ void EPUB3TocItemRetain(EPUB3TocItemRef item);
 void EPUB3TocItemRelease(EPUB3TocItemRef item);
 void EPUB3TocAddRootItem(EPUB3TocRef toc, EPUB3TocItemRef item);
 void EPUB3TocItemAppendChild(EPUB3TocItemRef parent, EPUB3TocItemRef child);
-void EPUB3TocItemSetManifestItem(EPUB3TocItemRef tocItem, EPUB3ManifestItemRef manifestItem);
 
 #pragma mark - XML Parsing
 
 EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename);
-void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode);
+void EPUB3SaveParseContext(EPUB3XMLParseContextPtr *ctxPtr, EPUB3XMLParseState state, const xmlChar * tagName, int32_t attrCount, char ** attrs, EPUB3Bool shouldParseTextNode, void * userInfo);
 void EPUB3PopAndFreeParseContext(EPUB3XMLParseContextPtr *contextPtr);
 EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
 EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReaderPtr reader, EPUB3XMLParseContextPtr *context);
