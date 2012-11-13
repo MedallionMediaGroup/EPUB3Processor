@@ -126,6 +126,7 @@
 		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
 		DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = check_EPUB3_parsing.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF8CE04115DEA71000F0857B /* test_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_common.h; sourceTree = "<group>"; };
+		DFA81D001652C15F00B9023D /* broken_medallion2.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = broken_medallion2.epub; sourceTree = "<group>"; };
 		DFFEB7E715F7E5BA0037977A /* pg100_cover.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pg100_cover.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -314,6 +315,7 @@
 			children = (
 				DF1AD1701641944600690341 /* broken_medallion_1.ncx */,
 				DF1AD1711641944600690341 /* broken_medallion_1.opf */,
+				DFA81D001652C15F00B9023D /* broken_medallion2.epub */,
 				DFFEB7E715F7E5BA0037977A /* pg100_cover.jpg */,
 				DF204B6015E69BFC00F0AA4D /* pg_100_content.opf */,
 				DF204B6215E69C1C00F0AA4D /* moby_dick_package.opf */,

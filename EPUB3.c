@@ -1687,7 +1687,7 @@ char * EPUB3CopyOfPathByAppendingPathComponent(const char * path, const char * c
 
   EPUB3Bool shouldAddSeparator = kEPUB3_NO;
 
-  if(path[basePathLen - 1] != '/') {
+  if(basePathLen > 0 && path[basePathLen - 1] != '/') {
     shouldAddSeparator = kEPUB3_YES;
     basePathLen++;
   }

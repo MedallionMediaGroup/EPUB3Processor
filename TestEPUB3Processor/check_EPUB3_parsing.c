@@ -328,6 +328,60 @@ START_TEST(test_epub3_parse_data_from_opf_using_real_epub)
 }
 END_TEST
 
+#pragma mark test_epub3_parse_data_from_opf_using_broken_medallion_epub
+START_TEST(test_epub3_parse_data_from_opf_using_broken_medallion_epub)
+{
+  const char * expectedTitle = "A Lost Touch of Innocence";
+  const char * expectedIdentifier = "978-1-60542-842-0";
+  const char * expectedLanguage = "en-US";
+
+  const char * expItem1Id = "c01";
+  const char * expItem1Href = "OEBPS/9781605428420_epub_c01_r1.htm";
+  const char * expItem1MediaType = "application/xhtml+xml";
+
+  const char * expItem2Id = "css";
+  const char * expItem2Href = "OEBPS/9781605428420_epub_css_r1.css";
+  const char * expItem2MediaType = "text/css";
+
+  EPUB3Release(epub);
+  TEST_PATH_VAR_FOR_FILENAME(path, "broken_medallion2.epub");
+  TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 2293984);
+  epub = EPUB3Create();
+  (void)EPUB3PrepareArchiveAtPath(epub, path);
+
+
+  EPUB3Error error = EPUB3InitFromOPF(epub, "9781605428420_epub_opf_r1.opf");
+  fail_unless(error == kEPUB3Success);
+  fail_if(epub->metadata == NULL);
+  fail_unless(epub->metadata->version == kEPUB3Version_2);
+
+  fail_if(epub->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->title, expectedTitle);
+
+  fail_if(epub->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->identifier, expectedIdentifier);
+
+  fail_if(epub->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  ck_assert_str_eq(epub->metadata->language, expectedLanguage);
+
+  EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(epub->manifest, expItem1Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem1Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem1Id);
+  ck_assert_str_eq(item->href, expItem1Href);
+  ck_assert_str_eq(item->mediaType, expItem1MediaType);
+  EPUB3ManifestItemRelease(item);
+
+  item = EPUB3ManifestCopyItemWithId(epub->manifest, expItem2Id);
+  fail_if(item == NULL, "Could not fetch item with itemId %s from the manifest.", expItem2Id);
+  assert(item != NULL);
+  ck_assert_str_eq(item->itemId, expItem2Id);
+  ck_assert_str_eq(item->href, expItem2Href);
+  ck_assert_str_eq(item->mediaType, expItem2MediaType);
+  EPUB3ManifestItemRelease(item);
+}
+END_TEST
+
 #pragma mark test_epub3_parse_manifest_from_shakespeare_opf_data
 START_TEST(test_epub3_parse_manifest_from_shakespeare_opf_data)
 {
@@ -638,6 +692,7 @@ TEST_EXPORT TCase * check_EPUB3_parsing_make_tcase(void)
   tcase_add_test(test_case, test_epub3_parse_metadata_from_shakespeare_opf_data);
   tcase_add_test(test_case, test_epub3_parse_metadata_from_moby_dick_opf_data);
   tcase_add_test(test_case, test_epub3_parse_data_from_opf_using_real_epub);
+  tcase_add_test(test_case, test_epub3_parse_data_from_opf_using_broken_medallion_epub);
   tcase_add_test(test_case, test_epub3_parse_manifest_from_shakespeare_opf_data);
   tcase_add_test(test_case, test_epub3_parse_manifest_from_medallion_opf_data);
   tcase_add_test(test_case, test_epub3_parse_ncx_from_medallion);
