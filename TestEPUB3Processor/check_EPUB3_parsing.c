@@ -353,15 +353,19 @@ START_TEST(test_epub3_parse_data_from_opf_using_broken_medallion_epub)
   EPUB3Error error = EPUB3InitFromOPF(epub, "9781605428420_epub_opf_r1.opf");
   fail_unless(error == kEPUB3Success);
   fail_if(epub->metadata == NULL);
+  assert(epub->metadata != NULL);
   fail_unless(epub->metadata->version == kEPUB3Version_2);
 
   fail_if(epub->metadata->title == NULL, "A title is required by the EPUB 3 spec.");
+  assert(epub->metadata->title != NULL);
   ck_assert_str_eq(epub->metadata->title, expectedTitle);
 
   fail_if(epub->metadata->identifier == NULL, "An identifier is required by the EPUB 3 spec.");
+  assert(epub->metadata->identifier != NULL);
   ck_assert_str_eq(epub->metadata->identifier, expectedIdentifier);
 
   fail_if(epub->metadata->language == NULL, "A language is required by the EPUB 3 spec.");
+  assert(epub->metadata->language != NULL);
   ck_assert_str_eq(epub->metadata->language, expectedLanguage);
 
   EPUB3ManifestItemRef item = EPUB3ManifestCopyItemWithId(epub->manifest, expItem1Id);
@@ -462,6 +466,9 @@ START_TEST(test_epub3_parse_manifest_from_medallion_opf_data)
   const char * expItem2Href = "broken_medallion_1.ncx";
   const char * expItem2MediaType = "application/x-dtbncx+xml";
 
+  const char * expectedCoverImgId = "my_cover_image";
+  const char * expectedCoverImgPath = "OEBPS/images/9781605421490_cvi.jpg";
+
   TEST_PATH_VAR_FOR_FILENAME(path, "broken_medallion_1.opf");
   TEST_DATA_FILE_SIZE_SANITY_CHECK(path, 9265);
   EPUB3Ref blankEPUB = EPUB3Create();
@@ -507,6 +514,14 @@ START_TEST(test_epub3_parse_manifest_from_medallion_opf_data)
   ck_assert_str_eq(item->href, expItem2Href);
   ck_assert_str_eq(item->mediaType, expItem2MediaType);
   EPUB3ManifestItemRelease(item);
+
+  fail_if(blankEPUB->metadata->coverImageId == NULL, "Cover image was not found.");
+  assert(blankEPUB->metadata->coverImageId != NULL);
+  ck_assert_str_eq(blankEPUB->metadata->coverImageId, expectedCoverImgId);
+
+  char * coverPath = EPUB3CopyCoverImagePath(blankEPUB);
+  ck_assert_str_eq(coverPath, expectedCoverImgPath);
+  free(coverPath);
 
   free(newBuf);
   EPUB3MetadataRelease(blankMetadata);

@@ -269,6 +269,14 @@ char * EPUB3CopyOfPathByDeletingLastPathComponent(const char * path);
   } \
 } while(0);
 
+#define EPUB3_XML_FREE_AND_NULL(__epub3_xml_ptr_to_null) do { \
+  if(__epub3_xml_ptr_to_null != NULL) { \
+    xmlFree(__epub3_xml_ptr_to_null); \
+    __epub3_xml_ptr_to_null = NULL; \
+  } \
+} while(0);
+
+
 #pragma mark - Hash function
 // via: http://www.azillionmonkeys.com/qed/hash.html
 #undef get16bits

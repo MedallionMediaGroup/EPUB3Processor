@@ -947,11 +947,29 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReade
             }
             else if(itemId != NULL && xmlStrcmp(itemId, BAD_CAST epub->metadata->_uniqueIdentifierID) != 0) {
               (*context)->shouldParseTextNode = kEPUB3_NO; 
-              EPUB3_FREE_AND_NULL(itemId);
             }
+            EPUB3_XML_FREE_AND_NULL(itemId);
+          }
+          break;
+        }
+      }
+
+      if(epub->metadata->version == kEPUB3Version_2) {
+        // There is no standard for cover images in EPUB 2. This is the accepted ad hoc method for defining one
+        // http://blog.threepress.org/2009/11/20/best-practices-in-epub-cover-images/
+        // http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=cover.htm#IDPF2
+
+        if(xmlStrcmp(name, BAD_CAST "meta") == 0) {
+          if(xmlTextReaderHasAttributes(reader)) {
+            xmlChar * metaName = xmlTextReaderGetAttribute(reader, BAD_CAST "name");
+            if(metaName != NULL && xmlStrcmp(metaName, BAD_CAST "cover") == 0) {
+              xmlChar * coverId = xmlTextReaderGetAttribute(reader, BAD_CAST "content");
+              EPUB3MetadataSetCoverImageId(epub->metadata, (const char *)coverId);
+              EPUB3_XML_FREE_AND_NULL(coverId);
+            }
+            EPUB3_XML_FREE_AND_NULL(metaName);
           }
         }
-
       }
       break;
     }
@@ -1064,7 +1082,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForSpineInOPF(EPUB3Ref epub, xmlTextReaderPt
             newItem->isLinear = kEPUB3_YES;
             epub->spine->linearItemCount++;
           }
-          EPUB3_FREE_AND_NULL(linear);
+          EPUB3_XML_FREE_AND_NULL(linear);
           newItem->idref = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "idref");
           if(newItem->idref != NULL) {
             EPUB3ManifestItemListItemPtr manifestPtr = EPUB3ManifestFindItemWithId(epub->manifest, newItem->idref);
@@ -1120,7 +1138,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForOPF(EPUB3Ref epub, xmlTextReaderPtr reader,
               } else if(*versionString == '3') {
                 epub->metadata->version = kEPUB3Version_3;
               }
-              EPUB3_FREE_AND_NULL(versionString);
+              EPUB3_XML_FREE_AND_NULL(versionString);
             }
           }
           else if(xmlStrcmp(name, BAD_CAST "metadata") == 0) {
@@ -1315,8 +1333,10 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
         const xmlChar *value = xmlTextReaderValue(reader);
         if(value != NULL) {
           if(xmlStrcmp((*context)->tagName, BAD_CAST "text") == 0) {
-            EPUB3TocItemRef tocItem = (*context)->userInfo;
-            tocItem->title = strdup((const char *)value);
+            EPUB3TocItemRef tocItem = (EPUB3TocItemRef) (*context)->userInfo;
+            if(tocItem != NULL) {
+              tocItem->title = strdup((const char *)value);
+            }
           }
         }
       }
