@@ -15,6 +15,10 @@ const char * kEPUB3TocItemTypeID = "_EPUB3TocItem_t";
 #define PARSE_CONTEXT_STACK_DEPTH 64
 #endif
 
+#ifndef PARSE_CONTEXT_NCX_STACK_DEPTH
+#define PARSE_CONTEXT_NCX_STACK_DEPTH 128
+#endif
+
 #pragma mark - Public Query API
 
 EXPORT int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub)
@@ -875,6 +879,7 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
         free(opfRoot);
         ncxPath = fullPath;
       }
+      bufferSize = 0;
       error = EPUB3CopyFileIntoBuffer(epub, &buffer, &bufferSize, &bytesCopied, ncxPath);
       if(error == kEPUB3Success) {
         error = EPUB3ParseNCXFromData(epub, buffer, bufferSize);
@@ -1236,7 +1241,7 @@ EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
   xmlTextReaderPtr reader = NULL;
   reader = xmlReaderForMemory(buffer, bufferSize, NULL, NULL, XML_PARSE_RECOVER | XML_PARSE_NONET);
   if(reader != NULL) {
-    EPUB3XMLParseContext contextStack[PARSE_CONTEXT_STACK_DEPTH];
+    EPUB3XMLParseContext contextStack[PARSE_CONTEXT_NCX_STACK_DEPTH];
     EPUB3XMLParseContextPtr currentContext = &contextStack[0];
 
     int retVal = xmlTextReaderRead(reader);
@@ -1245,8 +1250,14 @@ EPUB3Error EPUB3ParseNCXFromData(EPUB3Ref epub, void * buffer, uint32_t bufferSi
     while(retVal == 1)
     {
 //      _EPUB3DumpXMLParseContextStack(&currentContext);
-      error = EPUB3ParseXMLReaderNodeForNCX(epub, reader, &currentContext);
-      retVal = xmlTextReaderRead(reader);
+        error = EPUB3ParseXMLReaderNodeForNCX(epub, reader, &currentContext);
+        if (error != kEPUB3NCXNavMapEnd && reader != NULL) {
+            retVal = xmlTextReaderRead(reader);
+        }
+        else {
+            retVal = 0;
+            error = kEPUB3Success;
+        }
     }
     if(retVal < 0) {
       error = kEPUB3XMLParseError;
@@ -1287,6 +1298,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
 //        fprintf(stdout, "NCX NAV MAP: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "navMap") == 0) {
           (void)EPUB3PopAndFreeParseContext(currentContext);
+            return kEPUB3NCXNavMapEnd;
         } else {
           error = EPUB3ProcessXMLReaderNodeForNavMapInNCX(epub, reader, currentContext);
         }
@@ -1306,12 +1318,11 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
   EPUB3Error error = kEPUB3Success;
   const xmlChar *name = xmlTextReaderConstLocalName(reader);
   xmlReaderTypes nodeType = xmlTextReaderNodeType(reader);
-
+    
   switch(nodeType)
   {
     case XML_READER_TYPE_ELEMENT:
     {
-      if(!xmlTextReaderIsEmptyElement(reader)) {
         if(xmlStrcmp(name, BAD_CAST "navPoint") == 0) {
           EPUB3TocItemRef newTocItem = EPUB3TocItemCreate();
           (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, newTocItem);
@@ -1320,11 +1331,21 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForNavMapInNCX(EPUB3Ref epub, xmlTextReaderP
           void * userInfo = (*context)->userInfo;
           (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES, userInfo);
         }
-        else {
+        else if(xmlStrcmp(name, BAD_CAST "content") == 0) {
+            void * userInfo = (*context)->userInfo;
+            (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, userInfo);
+            const xmlChar *value = xmlTextReaderGetAttribute(reader, BAD_CAST "src");
+            if(value != NULL) {
+                EPUB3TocItemRef tocItem = (EPUB3TocItemRef)userInfo;
+                if(tocItem != NULL) {
+                    tocItem->href = strdup((const char *)value);
+                }
+            }
+        }
+        else if(!xmlTextReaderIsEmptyElement(reader)) {
           void * userInfo = (*context)->userInfo;
           (void)EPUB3SaveParseContext(context, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_NO, userInfo);
         }
-      }
       break;
     }
     case XML_READER_TYPE_TEXT:

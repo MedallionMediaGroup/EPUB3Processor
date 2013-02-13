@@ -19,6 +19,7 @@ typedef enum _EPUB3Error {
   kEPUB3XMLParseError = 1008,
   kEPUB3XMLXElementNotFoundError = 1009,
   kEPUB3XMLXDocumentInvalidError = 1010,
+  kEPUB3NCXNavMapEnd = 1011,
 } EPUB3Error;
 
 typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
