@@ -16,7 +16,7 @@ const char * kEPUB3TocItemTypeID = "_EPUB3TocItem_t";
 #endif
 
 #ifndef PARSE_CONTEXT_NCX_STACK_DEPTH
-#define PARSE_CONTEXT_NCX_STACK_DEPTH 128
+#define PARSE_CONTEXT_NCX_STACK_DEPTH 1024
 #endif
 
 #pragma mark - Public Query API
@@ -213,9 +213,15 @@ EPUB3Error EPUB3PrepareArchiveAtPath(EPUB3Ref epub, const char * path)
 
   EPUB3Error error = kEPUB3Success;
   unzFile archive = unzOpen(path);
-  epub->archive = archive;
-  epub->archiveFileCount = EPUB3GetFileCountInArchive(archive);
-  epub->archivePath = strdup(path);
+  if (archive != NULL)
+  {
+    epub->archive = archive;
+    epub->archiveFileCount = EPUB3GetFileCountInArchive(archive);
+    epub->archivePath = strdup(path);
+  }
+  else // unzOpen can return a NULL filestream
+    error = kEPUB3UnknownError;
+    
   return error;
 }
 
@@ -868,7 +874,7 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
     error = EPUB3ParseOPFFromData(epub, buffer, bufferSize);
     EPUB3_FREE_AND_NULL(buffer);
   }
-  if(error == kEPUB3Success && epub->metadata->version == kEPUB3Version_2) {
+    if(error == kEPUB3Success && epub->metadata->version == kEPUB3Version_2) {
     // Parse NCX only if this is a v2 epub (per the EPUB 3 spec)
     if(epub->metadata->ncxItem != NULL) {
       char * ncxPath = strdup(epub->metadata->ncxItem->href);
@@ -1285,7 +1291,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
     {
       case kEPUB3NCXStateRoot:
       {
-//        fprintf(stdout, "NCX ROOT: %s\n", name);
+        fprintf(stdout, "NCX ROOT: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_ELEMENT) {
           if(xmlStrcmp(name, BAD_CAST "navMap") == 0) {
             (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES, NULL);
@@ -1295,7 +1301,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
       }
       case kEPUB3NCXStateNavMap:
       {
-//        fprintf(stdout, "NCX NAV MAP: %s\n", name);
+        fprintf(stdout, "NCX NAV MAP: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "navMap") == 0) {
           (void)EPUB3PopAndFreeParseContext(currentContext);
             return kEPUB3NCXNavMapEnd;
