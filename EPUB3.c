@@ -874,7 +874,7 @@ EPUB3Error EPUB3InitFromOPF(EPUB3Ref epub, const char * opfFilename)
     error = EPUB3ParseOPFFromData(epub, buffer, bufferSize);
     EPUB3_FREE_AND_NULL(buffer);
   }
-    if(error == kEPUB3Success && epub->metadata->version == kEPUB3Version_2) {
+    if(error == kEPUB3Success) { //&& epub->metadata->version == kEPUB3Version_2) {
     // Parse NCX only if this is a v2 epub (per the EPUB 3 spec)
     if(epub->metadata->ncxItem != NULL) {
       char * ncxPath = strdup(epub->metadata->ncxItem->href);
@@ -1046,9 +1046,9 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
           }
           if(newItem->mediaType != NULL && strcmp(newItem->mediaType, "application/x-dtbncx+xml") == 0) {
             //This is the ref for the ncx document. Set it for v2 epubs
-            if(epub->metadata->version == kEPUB3Version_2) {
+            //if(epub->metadata->version == kEPUB3Version_2) {
               EPUB3MetadataSetNCXItem(epub->metadata, newItem);
-            }
+            //}
           }
           EPUB3ManifestInsertItem(epub->manifest, newItem);
         }
