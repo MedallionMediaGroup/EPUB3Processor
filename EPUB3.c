@@ -1291,7 +1291,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
     {
       case kEPUB3NCXStateRoot:
       {
-        fprintf(stdout, "NCX ROOT: %s\n", name);
+//        fprintf(stdout, "NCX ROOT: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_ELEMENT) {
           if(xmlStrcmp(name, BAD_CAST "navMap") == 0) {
             (void)EPUB3SaveParseContext(currentContext, kEPUB3NCXStateNavMap, name, 0, NULL, kEPUB3_YES, NULL);
@@ -1301,7 +1301,7 @@ EPUB3Error EPUB3ParseXMLReaderNodeForNCX(EPUB3Ref epub, xmlTextReaderPtr reader,
       }
       case kEPUB3NCXStateNavMap:
       {
-        fprintf(stdout, "NCX NAV MAP: %s\n", name);
+//        fprintf(stdout, "NCX NAV MAP: %s\n", name);
         if(currentNodeType == XML_READER_TYPE_END_ELEMENT && xmlStrcmp(name, BAD_CAST "navMap") == 0) {
           (void)EPUB3PopAndFreeParseContext(currentContext);
             return kEPUB3NCXNavMapEnd;
