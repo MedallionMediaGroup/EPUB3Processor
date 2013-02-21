@@ -372,7 +372,7 @@ EXPORT char * EPUB3CopyCoverImagePath(EPUB3Ref epub)
   if(epub->metadata->coverImageId == NULL) return NULL;
 
   EPUB3ManifestItemListItemPtr coverItemPtr = EPUB3ManifestFindItemWithId(epub->manifest, epub->metadata->coverImageId);
-  return EPUB3CopyStringValue(&(coverItemPtr->item->href));
+    return (coverItemPtr != NULL) ? EPUB3CopyStringValue(&(coverItemPtr->item->href)) : NULL;
 }
 
 EXPORT EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * byteCount)
