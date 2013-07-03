@@ -543,7 +543,7 @@ extern int ZEXPORT unzGetGlobalInfo (file,pglobal_info)
     if (file==NULL)
         return UNZ_PARAMERROR;
     s=(unz_s*)file;
-    *pglobal_info=s->gi;
+    memcpy(pglobal_info, &(s->gi), sizeof(unz_global_info));
     return UNZ_OK;
 }
 
@@ -1291,7 +1291,7 @@ extern int ZEXPORT unzReadCurrentFile  (file, buf, len)
         return UNZ_PARAMERROR;
 
 
-    if ((pfile_in_zip_read_info->read_buffer == NULL))
+    if (pfile_in_zip_read_info->read_buffer == NULL)
         return UNZ_END_OF_LIST_OF_FILE;
     if (len==0)
         return 0;
