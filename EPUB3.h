@@ -27,19 +27,32 @@ typedef enum { kEPUB3_NO = 0 , kEPUB3_YES = 1 } EPUB3Bool;
 typedef struct EPUB3 * EPUB3Ref;
 typedef struct EPUB3TocItem * EPUB3TocItemRef;
 
+/* Creates and returns reference to an EPUB stored at path */
 EPUB3Ref EPUB3CreateWithArchiveAtPath(const char * path, EPUB3Error *error);
+
+/* Memory management */
 void EPUB3Retain(EPUB3Ref epub);
 void EPUB3Release(EPUB3Ref epub);
+
+/* metadata copy and return functions */
 char * EPUB3CopyTitle(EPUB3Ref epub);
 char * EPUB3CopyIdentifier(EPUB3Ref epub);
 char * EPUB3CopyLanguage(EPUB3Ref epub);
 char * EPUB3CopyCoverImagePath(EPUB3Ref epub);
+
+/* locates cover image in epub and copies to bytes */
 EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * byteCount);
+    
+/* Returns count of linear items in OPF spine */
 int32_t EPUB3CountOfSequentialResources(EPUB3Ref epub);
+/* Adds the href attribute of linear spine resource to array of resources */
 EPUB3Error EPUB3GetPathsOfSequentialResources(EPUB3Ref epub, const char ** resources);
+/* Extracts epub archive to path  */
 EPUB3Error EPUB3ExtractArchiveToPath(EPUB3Ref epub, const char * path);
+/* in container.xml copied rootfile element full-path attribute into rootPath */
 EPUB3Error EPUB3CopyRootFilePathFromContainer(EPUB3Ref epub, char ** rootPath);
 
+/* TOC functions */
 int32_t EPUB3CountOfTocRootItems(EPUB3Ref epub);
 EPUB3Error EPUB3GetTocRootItems(EPUB3Ref epub, EPUB3TocItemRef *tocItems);
 EPUB3Bool EPUB3TocItemHasParent(EPUB3TocItemRef tocItem);
@@ -48,7 +61,6 @@ int32_t EPUB3TocItemCountOfChildren(EPUB3TocItemRef tocItem);
 EPUB3Error EPUB3TocItemGetChildren(EPUB3TocItemRef parent, EPUB3TocItemRef *children);
 char * EPUB3TocItemCopyTitle(EPUB3TocItemRef tocItem);
 char * EPUB3TocItemCopyPath(EPUB3TocItemRef tocItem);
-
 
 #if defined(__cplusplus)
 } //EXTERN "C"
