@@ -107,7 +107,8 @@ struct EPUB3ManifestItem {
   char * itemId;
   char * href;
   char * mediaType;
-  char * properties;
+  char * properties; // EPUB3
+  char * requiredModules;
 };
 
 #define MANIFEST_HASH_SIZE 128

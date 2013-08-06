@@ -679,6 +679,7 @@ EPUB3ManifestItemRef EPUB3ManifestItemCreate()
   memory->href = NULL;
   memory->mediaType = NULL;
   memory->properties = NULL;
+  memory->requiredModules = NULL;
   return memory;
 }
 
@@ -720,6 +721,7 @@ EPUB3ManifestItemRef EPUB3ManifestCopyItemWithId(EPUB3ManifestRef manifest, cons
   copy->href = item->href != NULL ? strdup(item->href) : NULL;
   copy->mediaType = item->mediaType != NULL ? strdup(item->mediaType) : NULL;
   copy->properties = item->properties != NULL ? strdup(item->properties) : NULL;
+  copy->requiredModules = item->requiredModules != NULL ? strdup(item->requiredModules) : NULL;
   return copy;
 }
 
@@ -1032,6 +1034,7 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
           newItem->href = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "href");
           newItem->mediaType = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "media-type");
           newItem->properties = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "properties");
+          newItem->requiredModules = (char*)xmlTextReaderGetAttribute(reader, BAD_CAST "required-modules");
 
           if(newItem->properties != NULL) {
             // Look for the cover-image property
