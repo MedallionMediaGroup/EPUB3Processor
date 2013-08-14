@@ -23,6 +23,7 @@
 #pragma mark - Object Pointer Types
 
 typedef struct EPUB3Metadata * EPUB3MetadataRef;
+typedef struct EPUB3MetadataMetaItem * EPUB3MetadataMetaItemRef;
 typedef struct EPUB3ManifestItem * EPUB3ManifestItemRef;
 typedef struct EPUB3Manifest * EPUB3ManifestRef;
 typedef struct EPUB3Spine * EPUB3SpineRef;
@@ -31,6 +32,7 @@ typedef struct EPUB3Toc * EPUB3TocRef;
 
 const char * kEPUB3TypeID;
 const char * kEPUB3MetadataTypeID;
+const char * kEPUB3MetadataItemTypeID;
 const char * kEPUB3ManifestTypeID;
 const char * kEPUB3ManifestItemTypeID;
 const char * kEPUB3SpineTypeID;
@@ -90,16 +92,25 @@ struct EPUB3 {
   uint32_t archiveFileCount;
 };
 
+struct EPUB3MetadataMetaItem {
+    EPUB3Type _type;
+    char * name;
+    char * content;
+};
+
+#define META_ITEM_HASH_SIZE 16
+
 struct EPUB3Metadata {
-  EPUB3Type _type;
-  EPUB3Version version;
-  EPUB3ManifestItemRef ncxItem;
-  char * title;
-  char * _uniqueIdentifierID;
-  char * identifier;
-  char * language;
-  char * coverImageId;
-  // char * modified;
+    EPUB3Type _type;
+    EPUB3Version version;
+    EPUB3ManifestItemRef ncxItem;
+    char * title;
+    char * _uniqueIdentifierID;
+    char * identifier;
+    char * language;
+    char * coverImageId;
+    EPUB3MetadataMetaItemRef metaTable[META_ITEM_HASH_SIZE];
+    int32_t itemCount;
 };
 
 struct EPUB3ManifestItem {
@@ -188,8 +199,14 @@ void EPUB3SetSpine(EPUB3Ref epub, EPUB3SpineRef spine);
 #pragma mark - Metadata
 
 EPUB3MetadataRef EPUB3MetadataCreate();
+EPUB3MetadataMetaItemRef EPUB3MetadataItemCreate();
 void EPUB3MetadataRetain(EPUB3MetadataRef metadata);
 void EPUB3MetadataRelease(EPUB3MetadataRef metadata);
+void EPUB3MetadataMetaItemRetain(EPUB3MetadataMetaItemRef item);
+void EPUB3MetadataMetaItemRelease(EPUB3MetadataMetaItemRef item);
+void EPUB3MetadataInsertItem(EPUB3MetadataRef metadata, EPUB3MetadataMetaItemRef item);
+EPUB3MetadataMetaItemRef EPUB3MetadataCopyItemWithId(EPUB3MetadataRef metadata, const char * itemId);
+EPUB3MetadataMetaItemRef EPUB3MetadataFindItemWithId(EPUB3MetadataRef metadata, const char * itemId);
 void EPUB3MetadataSetNCXItem(EPUB3MetadataRef metadata, EPUB3ManifestItemRef ncxItem);
 void EPUB3MetadataSetTitle(EPUB3MetadataRef metadata, const char * title);
 void EPUB3MetadataSetIdentifier(EPUB3MetadataRef metadata, const char * identifier);

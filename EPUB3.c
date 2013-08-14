@@ -3,6 +3,7 @@
 
 const char * kEPUB3TypeID = "_EPUB3_t";
 const char * kEPUB3MetadataTypeID = "_EPUB3Metadata_t";
+const char * kEPUB3MetadataItemTypeID = "_EPUB3MetadataItem_t";
 const char * kEPUB3ManifestTypeID = "_EPUB3Manifest_t";
 const char * kEPUB3ManifestItemTypeID = "_EPUB3ManifestItem_t";
 const char * kEPUB3SpineTypeID = "_EPUB3Spine_t";
@@ -375,6 +376,44 @@ EXPORT char * EPUB3CopyCoverImagePath(EPUB3Ref epub)
     return (coverItemPtr != NULL) ? EPUB3CopyStringValue(&(coverItemPtr->item->href)) : NULL;
 }
 
+EXPORT char * EPUB3CopyMetaElementPathWithName(EPUB3Ref epub, const char * name)
+{
+    assert(epub != NULL);
+    assert(epub->metadata != NULL);
+    assert(epub->manifest != NULL);
+    
+    char * fullPathCopy = NULL;
+    
+    if (epub->metadata->itemCount > 0)
+    {
+        EPUB3MetadataMetaItemRef item = EPUB3MetadataFindItemWithId(epub->metadata, name);
+        if (item != NULL)
+        {
+            char * contentId = item->content;
+            
+            EPUB3ManifestItemListItemPtr manifestItem = EPUB3ManifestFindItemWithId(epub->manifest, contentId);
+            if (manifestItem != NULL)
+            {
+                char * rootFilePath = NULL;
+                EPUB3Error error = EPUB3CopyRootFilePathFromContainer(epub, &rootFilePath);
+                if(error == kEPUB3Success)
+                {
+                    char * rootPath = EPUB3CopyOfPathByDeletingLastPathComponent(rootFilePath);
+                    char * fullPath = EPUB3CopyOfPathByAppendingPathComponent(rootPath, manifestItem->item->href);
+                    fullPathCopy = strdup(fullPath);
+                    
+                    EPUB3_FREE_AND_NULL(rootPath);
+                    EPUB3_FREE_AND_NULL(fullPath);
+                }
+                EPUB3_FREE_AND_NULL(rootFilePath);
+            }
+            
+        }
+    }
+    
+    return fullPathCopy;
+}
+
 EXPORT EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * byteCount)
 {
   assert(epub != NULL);
@@ -532,6 +571,15 @@ void EPUB3MetadataRetain(EPUB3MetadataRef metadata)
   if(metadata == NULL) return;
 
   EPUB3ManifestItemRetain(metadata->ncxItem);
+    
+    for(int i = 0; i < META_ITEM_HASH_SIZE; i++) {
+        EPUB3MetadataMetaItemRef itemPtr = metadata->metaTable[i];
+        if (itemPtr != NULL)
+        {
+            EPUB3MetadataMetaItemRetain(itemPtr);
+        }
+    }
+    
   EPUB3ObjectRetain(metadata);
 }
 
@@ -547,8 +595,35 @@ void EPUB3MetadataRelease(EPUB3MetadataRef metadata)
     EPUB3_FREE_AND_NULL(metadata->identifier);
     EPUB3_FREE_AND_NULL(metadata->language);
     EPUB3_FREE_AND_NULL(metadata->coverImageId);
+      
+      for(int i = 0; i < META_ITEM_HASH_SIZE; i++) {
+          
+          EPUB3MetadataMetaItemRef next = metadata->metaTable[i];
+          EPUB3_FREE_AND_NULL(next);
+          metadata->metaTable[i] = NULL;
+      }
+      metadata->itemCount = 0;
   }
   EPUB3ObjectRelease(metadata);
+}
+
+void EPUB3MetadataMetaItemRetain(EPUB3MetadataMetaItemRef item)
+{
+    if(item == NULL) return;
+    
+    EPUB3ObjectRetain(item);
+}
+
+void EPUB3MetadataMetaItemRelease(EPUB3MetadataMetaItemRef item)
+{
+    if(item == NULL) return;
+    
+    if(item->_type.refCount == 1) {
+        EPUB3_FREE_AND_NULL(item->name);
+        EPUB3_FREE_AND_NULL(item->content);
+    }
+    
+    EPUB3ObjectRelease(item);
 }
 
 EPUB3MetadataRef EPUB3MetadataCreate()
@@ -561,7 +636,74 @@ EPUB3MetadataRef EPUB3MetadataCreate()
   memory->identifier = NULL;
   memory->language = NULL;
   memory->coverImageId = NULL;
+  memory->itemCount = 0;
+  for(int i = 0; i < META_ITEM_HASH_SIZE; i++) {
+      memory->metaTable[i] = NULL;
+  }
   return memory;
+}
+
+EPUB3MetadataMetaItemRef EPUB3MetadataItemCreate()
+{
+    EPUB3MetadataMetaItemRef memory = malloc(sizeof(struct EPUB3MetadataMetaItem));
+    memory = EPUB3ObjectInitWithTypeID(memory, kEPUB3MetadataItemTypeID);
+    memory->name = NULL;
+    memory->content = NULL;
+    return memory;
+}
+
+void EPUB3MetadataInsertItem(EPUB3MetadataRef metadata, EPUB3MetadataMetaItemRef item)
+{
+    assert(metadata != NULL);
+    assert(item != NULL);
+    assert(item->name != NULL);
+    
+    EPUB3MetadataMetaItemRetain(item);
+    EPUB3MetadataMetaItemRef itemPtr = EPUB3MetadataFindItemWithId(metadata, item->name);
+    if(itemPtr == NULL) {
+        itemPtr = (EPUB3MetadataMetaItemRef) malloc(sizeof(struct EPUB3MetadataMetaItem));
+        if (metadata->itemCount < META_ITEM_HASH_SIZE)
+        {
+            itemPtr->name = item->name;
+            itemPtr->content = item->content;
+            metadata->metaTable[metadata->itemCount++] = itemPtr;
+        }
+    } else {
+        EPUB3MetadataMetaItemRelease(itemPtr);
+        itemPtr = item;
+    }
+}
+
+EPUB3MetadataMetaItemRef EPUB3MetadataCopyItemWithId(EPUB3MetadataRef metadata, const char * itemId)
+{
+    assert(metadata != NULL);
+    assert(itemId != NULL);
+    
+    EPUB3MetadataMetaItemRef itemPtr = EPUB3MetadataFindItemWithId(metadata, itemId);
+    
+    if(itemPtr == NULL) {
+        return NULL;
+    }
+    
+    EPUB3MetadataMetaItemRef item = itemPtr;
+    EPUB3MetadataMetaItemRef copy = EPUB3MetadataItemCreate();
+    copy->name = item->name != NULL ? strdup(item->name) : NULL;
+    copy->content = item->content != NULL ? strdup(item->content) : NULL;
+    return copy;
+}
+
+EPUB3MetadataMetaItemRef EPUB3MetadataFindItemWithId(EPUB3MetadataRef metadata, const char * itemId) // name
+{
+    assert(metadata != NULL);
+    assert(itemId != NULL);
+    
+    for (int idx=0; idx < META_ITEM_HASH_SIZE; idx++)
+    {
+        EPUB3MetadataMetaItemRef itemPtr = metadata->metaTable[idx];
+        if (itemPtr != NULL && strcmp(itemPtr->name, itemId) == 0)
+            return itemPtr;
+    }
+    return NULL;
 }
 
 void EPUB3MetadataSetNCXItem(EPUB3MetadataRef metadata, EPUB3ManifestItemRef ncxItem)
@@ -655,6 +797,7 @@ void EPUB3ManifestItemRelease(EPUB3ManifestItemRef item)
     EPUB3_FREE_AND_NULL(item->href);
     EPUB3_FREE_AND_NULL(item->mediaType);
     EPUB3_FREE_AND_NULL(item->properties);
+    EPUB3_FREE_AND_NULL(item->requiredModules);
   }
 
   EPUB3ObjectRelease(item);
@@ -966,24 +1109,35 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForMetadataInOPF(EPUB3Ref epub, xmlTextReade
           break;
         }
       }
-
-      if(epub->metadata->version == kEPUB3Version_2) {
-        // There is no standard for cover images in EPUB 2. This is the accepted ad hoc method for defining one
-        // http://blog.threepress.org/2009/11/20/best-practices-in-epub-cover-images/
-        // http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=cover.htm#IDPF2
-
         if(xmlStrcmp(name, BAD_CAST "meta") == 0) {
           if(xmlTextReaderHasAttributes(reader)) {
             xmlChar * metaName = xmlTextReaderGetAttribute(reader, BAD_CAST "name");
-            if(metaName != NULL && xmlStrcmp(metaName, BAD_CAST "cover") == 0) {
-              xmlChar * coverId = xmlTextReaderGetAttribute(reader, BAD_CAST "content");
-              EPUB3MetadataSetCoverImageId(epub->metadata, (const char *)coverId);
-              EPUB3_XML_FREE_AND_NULL(coverId);
+            if (metaName != NULL)
+            {
+                if (epub->metadata->version == kEPUB3Version_2 && xmlStrcmp(metaName, BAD_CAST "cover") == 0)
+                {
+                    // There is no standard for cover images in EPUB 2. This is the accepted ad hoc method for defining one
+                    // http://blog.threepress.org/2009/11/20/best-practices-in-epub-cover-images/
+                    // http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=cover.htm#IDPF2
+                    xmlChar * coverId = xmlTextReaderGetAttribute(reader, BAD_CAST "content");
+                    EPUB3MetadataSetCoverImageId(epub->metadata, (const char *)coverId);
+                    EPUB3_XML_FREE_AND_NULL(coverId);
+                }
+                else
+                {
+                    /*
+                     One or more optional instances of a meta element, analogous to the XHTML 1.1 meta element but applicable to the publication as a whole, may be placed within the metadata element or within the deprecated x-metadata element. This allows content providers to express arbitrary metadata beyond the data described by the Dublin Core specification. Individual OPS Content Documents may include the meta element directly (as in XHTML 1.1) for document-specific metadata. This specification uses the OPF Package Document alone as the basis for expressing publication-level Dublin Core metadata.
+                     */
+                    EPUB3MetadataMetaItemRef newItem = EPUB3MetadataItemCreate();
+                    newItem->name = strdup((char *)metaName);
+                    newItem->content = (char *)xmlTextReaderGetAttribute(reader, BAD_CAST "content");
+                    
+                    EPUB3MetadataInsertItem(epub->metadata, newItem);
+                }
             }
             EPUB3_XML_FREE_AND_NULL(metaName);
           }
         }
-      }
       break;
     }
     case XML_READER_TYPE_TEXT:

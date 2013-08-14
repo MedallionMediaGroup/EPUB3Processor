@@ -39,7 +39,8 @@ char * EPUB3CopyTitle(EPUB3Ref epub);
 char * EPUB3CopyIdentifier(EPUB3Ref epub);
 char * EPUB3CopyLanguage(EPUB3Ref epub);
 char * EPUB3CopyCoverImagePath(EPUB3Ref epub);
-
+char * EPUB3CopyMetaElementPathWithName(EPUB3Ref epub, const char * name);
+    
 /* locates cover image in epub and copies to bytes */
 EPUB3Error EPUB3CopyCoverImage(EPUB3Ref epub, void ** bytes, uint32_t * byteCount);
     
