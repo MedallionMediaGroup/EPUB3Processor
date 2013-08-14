@@ -122,7 +122,7 @@ struct EPUB3ManifestItem {
   char * requiredModules;
 };
 
-#define MANIFEST_HASH_SIZE 128
+#define MANIFEST_HASH_SIZE 512
 
 typedef struct EPUB3ManifestItemListItem {
   EPUB3ManifestItemRef item;

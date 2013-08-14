@@ -831,7 +831,7 @@ void EPUB3ManifestInsertItem(EPUB3ManifestRef manifest, EPUB3ManifestItemRef ite
   assert(manifest != NULL);
   assert(item != NULL);
   assert(item->itemId != NULL);
-
+    
   EPUB3ManifestItemRetain(item);
   EPUB3ManifestItemListItemPtr itemPtr = EPUB3ManifestFindItemWithId(manifest, item->itemId);
   if(itemPtr == NULL) {
@@ -882,6 +882,29 @@ EPUB3ManifestItemListItemPtr EPUB3ManifestFindItemWithId(EPUB3ManifestRef manife
     itemPtr = itemPtr->next;
   }
   return NULL;
+}
+
+EXPORT void EPUB3ManifestFindItemsMatchingRequiredModuleWithName(EPUB3Ref epub, const char * moduleName, char ** matchingItems, int32_t matchSize)
+{
+    assert(epub != NULL);
+    
+    int32_t matchCount = 0, manifestItemCount = 0;
+    EPUB3ManifestItemListItemPtr itemPtr;
+    
+    while (manifestItemCount < MANIFEST_HASH_SIZE)
+    {
+        do {
+            itemPtr = epub->manifest->itemTable[manifestItemCount++];
+        } while (itemPtr == NULL);
+        
+        while (itemPtr != NULL && matchCount < matchSize) {
+            char * modules = itemPtr->item->requiredModules;
+            if (modules != NULL && strcmp(moduleName, itemPtr->item->requiredModules) == 0)
+                matchingItems[matchCount++] = strdup(itemPtr->item->href);
+            
+            itemPtr = itemPtr->next;
+        }
+    }
 }
 
 #pragma mark - Spine
@@ -1201,7 +1224,8 @@ EPUB3Error EPUB3ProcessXMLReaderNodeForManifestInOPF(EPUB3Ref epub, xmlTextReade
             }
             EPUB3_FREE_AND_NULL(tofree);
           }
-          if(newItem->mediaType != NULL && strcmp(newItem->mediaType, "application/x-dtbncx+xml") == 0) {
+          if(newItem->mediaType != NULL && strcmp(newItem->mediaType, "application/x-dtbncx+xml") == 0)
+          {
             //This is the ref for the ncx document. Set it for v2 epubs
             //if(epub->metadata->version == kEPUB3Version_2) {
               EPUB3MetadataSetNCXItem(epub->metadata, newItem);
