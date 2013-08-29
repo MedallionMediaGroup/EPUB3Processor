@@ -376,6 +376,25 @@ EXPORT char * EPUB3CopyCoverImagePath(EPUB3Ref epub)
     return (coverItemPtr != NULL) ? EPUB3CopyStringValue(&(coverItemPtr->item->href)) : NULL;
 }
 
+EXPORT char * EPUB3CopyMetaElementContentWithName(EPUB3Ref epub, const char * name)
+{
+    assert(epub != NULL);
+    assert(epub->metadata != NULL);
+    
+    char * contentValue = NULL;
+    
+    if (epub->metadata->itemCount > 0)
+    {
+        EPUB3MetadataMetaItemRef item = EPUB3MetadataFindItemWithId(epub->metadata, name);
+        if (item != NULL)
+        {
+            contentValue = item->content;
+        }
+    }
+    
+    return contentValue;
+}
+
 EXPORT char * EPUB3CopyMetaElementPathWithName(EPUB3Ref epub, const char * name)
 {
     assert(epub != NULL);

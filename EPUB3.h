@@ -40,6 +40,7 @@ char * EPUB3CopyIdentifier(EPUB3Ref epub);
 char * EPUB3CopyLanguage(EPUB3Ref epub);
 char * EPUB3CopyCoverImagePath(EPUB3Ref epub);
 char * EPUB3CopyMetaElementPathWithName(EPUB3Ref epub, const char * name);
+char * EPUB3CopyMetaElementContentWithName(EPUB3Ref epub, const char * name);
 
 /* builds an array of manifest items mathching a single required-module attribute */
 void EPUB3ManifestFindItemsMatchingRequiredModuleWithName(EPUB3Ref epub, const char * moduleName, char ** matchingItems, int32_t matchSize);
