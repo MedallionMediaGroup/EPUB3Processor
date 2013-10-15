@@ -121,7 +121,7 @@
 		DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libz.1.dylib; sourceTree = DEVELOPER_DIR; };
 		DF59F19215DDA9E7004A37D5 /* pg100.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = pg100.epub; sourceTree = "<group>"; };
 		DF59F19815DDB19F004A37D5 /* EPUB3_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = EPUB3_private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEPUB3Processor.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF75581515D2FDF5004153C6 /* libEPUB3Processor-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libEPUB3Processor-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF819DF415D4240D0074F9C2 /* EPUB3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = EPUB3.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		DF819DF715D4241E0074F9C2 /* EPUB3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPUB3.h; sourceTree = "<group>"; };
 		DF8CE03E15DEA03C00F0857B /* check_EPUB3_parsing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = check_EPUB3_parsing.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
@@ -196,7 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				D05B96971598DC4C00C375CC /* libEPUB3Processor.a */,
-				DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */,
+				DF75581515D2FDF5004153C6 /* libEPUB3Processor-iOS.a */,
 				DF06B6D015DC33CC00675923 /* TestEPUB3Processor */,
 			);
 			name = Products;
@@ -394,9 +394,9 @@
 			productReference = DF06B6D015DC33CC00675923 /* TestEPUB3Processor */;
 			productType = "com.apple.product-type.tool";
 		};
-		DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOSDevice */ = {
+		DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOSDevice" */;
+			buildConfigurationList = DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOS" */;
 			buildPhases = (
 				DF7557D215D2FDF5004153C6 /* Sources */,
 				DF7557EF15D2FDF5004153C6 /* Frameworks */,
@@ -407,9 +407,9 @@
 			);
 			dependencies = (
 			);
-			name = "EPUB3Processor-iOSDevice";
+			name = "EPUB3Processor-iOS";
 			productName = EPUB3Processor;
-			productReference = DF75581515D2FDF5004153C6 /* libEPUB3Processor.a */;
+			productReference = DF75581515D2FDF5004153C6 /* libEPUB3Processor-iOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -434,7 +434,7 @@
 			projectRoot = "";
 			targets = (
 				D05B96961598DC4C00C375CC /* EPUB3Processor */,
-				DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOSDevice */,
+				DF7557D115D2FDF5004153C6 /* EPUB3Processor-iOS */,
 				DF06B6CF15DC33CC00675923 /* TestEPUB3Processor */,
 			);
 		};
@@ -676,7 +676,7 @@
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
 				);
-				PRODUCT_NAME = EPUB3Processor;
+				PRODUCT_NAME = "EPUB3Processor-iOS";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -693,7 +693,7 @@
 					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_NAME = EPUB3Processor;
+				PRODUCT_NAME = "EPUB3Processor-iOS";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -728,7 +728,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOSDevice" */ = {
+		DF75581215D2FDF5004153C6 /* Build configuration list for PBXNativeTarget "EPUB3Processor-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DF75581315D2FDF5004153C6 /* Debug */,
