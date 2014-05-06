@@ -914,7 +914,7 @@ EXPORT void EPUB3ManifestFindItemsMatchingRequiredModuleWithName(EPUB3Ref epub, 
     {
         do {
             itemPtr = epub->manifest->itemTable[manifestItemCount++];
-        } while (itemPtr == NULL);
+        } while (itemPtr == NULL && manifestItemCount < MANIFEST_HASH_SIZE-1);
         
         while (itemPtr != NULL && matchCount < matchSize) {
             char * modules = itemPtr->item->requiredModules;
