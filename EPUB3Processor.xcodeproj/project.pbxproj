@@ -17,6 +17,8 @@
 		D05B96CC1598FF7200C375CC /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A71598FF7200C375CC /* zip.c */; };
 		D05B96CD1598FF7200C375CC /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = D05B96A81598FF7200C375CC /* zip.h */; };
 		D05B96EA1598FFAA00C375CC /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D05B96E91598FFAA00C375CC /* libxml2.dylib */; };
+		D07125E419A3D5F70017DF16 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D07125E319A3D5F70017DF16 /* libz.1.dylib */; };
+		D07125E619A3EC030017DF16 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D07125E519A3EC030017DF16 /* libz.1.dylib */; };
 		DF06B6D415DC33CC00675923 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B6D315DC33CC00675923 /* main.c */; };
 		DF06B77115DC34B400675923 /* localtime_r.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B71615DC34B300675923 /* localtime_r.c */; };
 		DF06B77B15DC34B400675923 /* check.c in Sources */ = {isa = PBXBuildFile; fileRef = DF06B73015DC34B400675923 /* check.c */; };
@@ -36,8 +38,6 @@
 		DF59F18515DDA65C004A37D5 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A71598FF7200C375CC /* zip.c */; };
 		DF59F18A15DDA6BA004A37D5 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D05B96E91598FFAA00C375CC /* libxml2.dylib */; };
 		DF59F18D15DDA6C9004A37D5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */; };
-		DF59F18E15DDA6DF004A37D5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */; };
-		DF59F18F15DDA6E2004A37D5 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DF59F18B15DDA6BE004A37D5 /* libz.1.dylib */; };
 		DF7557D315D2FDF5004153C6 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A11598FF7200C375CC /* ioapi.c */; };
 		DF7557D415D2FDF5004153C6 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A31598FF7200C375CC /* mztools.c */; };
 		DF7557D515D2FDF5004153C6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = D05B96A51598FF7200C375CC /* unzip.c */; };
@@ -72,6 +72,8 @@
 		D05B96A71598FF7200C375CC /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
 		D05B96A81598FF7200C375CC /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		D05B96E91598FFAA00C375CC /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		D07125E319A3D5F70017DF16 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/lib/libz.1.dylib; sourceTree = DEVELOPER_DIR; };
+		D07125E519A3EC030017DF16 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = usr/lib/libz.1.dylib; sourceTree = SDKROOT; };
 		DF06B6D015DC33CC00675923 /* TestEPUB3Processor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestEPUB3Processor; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF06B6D315DC33CC00675923 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		DF06B71315DC34B300675923 /* fileno.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fileno.c; sourceTree = "<group>"; };
@@ -136,7 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D05B96EA1598FFAA00C375CC /* libxml2.dylib in Frameworks */,
-				DF59F18F15DDA6E2004A37D5 /* libz.1.dylib in Frameworks */,
+				D07125E419A3D5F70017DF16 /* libz.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,8 +155,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D07125E619A3EC030017DF16 /* libz.1.dylib in Frameworks */,
 				DF7557F015D2FDF5004153C6 /* libxml2.dylib in Frameworks */,
-				DF59F18E15DDA6DF004A37D5 /* libz.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +183,8 @@
 		D05B968C1598DC4C00C375CC = {
 			isa = PBXGroup;
 			children = (
+				D07125E519A3EC030017DF16 /* libz.1.dylib */,
+				D07125E319A3D5F70017DF16 /* libz.1.dylib */,
 				DF819DF715D4241E0074F9C2 /* EPUB3.h */,
 				DF59F19815DDB19F004A37D5 /* EPUB3_private.h */,
 				DF819DF415D4240D0074F9C2 /* EPUB3.c */,
@@ -548,7 +552,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -576,7 +580,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -674,7 +678,7 @@
 				GCC_VERSION = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode6-Beta6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = "EPUB3Processor-iOS";
 				SKIP_INSTALL = YES;
@@ -690,7 +694,7 @@
 				GCC_VERSION = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode45-DP4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode6-Beta6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib\"",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "EPUB3Processor-iOS";
