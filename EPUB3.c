@@ -1,3 +1,9 @@
+#define _POSIX_C_SOURCE 200809L
+#include <limits.h>
+#ifndef MAXNAMLEN
+#define MAXNAMLEN NAME_MAX
+#endif
+
 #include "EPUB3.h"
 #include "EPUB3_private.h"
 

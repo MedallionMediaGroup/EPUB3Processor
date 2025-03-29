@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/xmlreader.h>
@@ -6,7 +8,12 @@
 #include <libxml/xpathInternals.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef __linux__
+#include <dirent.h>
+#else
 #include <sys/dirent.h>
+#endif
+
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
